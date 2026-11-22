@@ -1,7 +1,6 @@
 # Checks every push to main and every pull request, and looks for new
-# security advisories once a week. While the repository is private, macOS
-# minutes are costly, so the jobs on macOS run only in the weekly run and when
-# started by hand, not for pushes or pull requests.
+# security advisories once a week. The jobs on macOS run only in the weekly
+# run and when started by hand, not for pushes or pull requests.
 # Third-party actions are pinned to commits; the comment names the version.
 
 name: CI
