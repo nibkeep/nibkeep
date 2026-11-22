@@ -1,0 +1,68 @@
+[package]
+name = "nibkeep-node"
+description = "The NibKeep engine: everything an app needs to work with a library"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+nibkeep-base = { workspace = true }
+nibkeep-crypto = { workspace = true }
+nibkeep-governance = { workspace = true }
+nibkeep-keys = { workspace = true }
+nibkeep-log = { workspace = true }
+nibkeep-model = { workspace = true }
+nibkeep-net = { workspace = true }
+nibkeep-std = { workspace = true }
+nibkeep-store = { workspace = true }
+nibkeep-sync = { workspace = true }
+nibkeep-time = { workspace = true }
+base64ct = { workspace = true }
+blake3 = { workspace = true }
+# Diffs, blame and three-way merges of trees' files.
+diffy = { workspace = true }
+fs4 = { workspace = true }
+# The random numbers of the encrypted index of each replica's copies of trees.
+getrandom = { workspace = true }
+# What the commits of trees leave out, as `.nibignore` files say.
+ignore = { workspace = true }
+infer = { workspace = true }
+jiff = { workspace = true }
+# A missing key, told apart from the keystore's other failures.
+keyring-core = { workspace = true }
+md-5 = { workspace = true }
+nom-exif = { workspace = true }
+# The records of the sync role, in a database that nibkeep-store encrypts.
+rusqlite = { workspace = true }
+serde_json = { workspace = true }
+sha2 = { workspace = true }
+thiserror = { workspace = true }
+unicode-normalization = { workspace = true }
+
+# The person's folders, for the list of libraries synced from login.
+[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+directories = { workspace = true }
+
+# Opening the copies of trees' files without following a link or waiting on a pipe.
+[target.'cfg(unix)'.dependencies]
+libc = { workspace = true }
+
+[target.'cfg(windows)'.dependencies]
+file-id = { workspace = true }
+nibkeep-drives = { workspace = true }
+sysinfo = { workspace = true }
+winreg = { workspace = true }
+
+[target.'cfg(target_vendor = "apple")'.dependencies]
+rustix = { workspace = true }
+
+[dev-dependencies]
+nibkeep-testkit = { workspace = true }
+nibkeep-thumbnails = { workspace = true }
+# Pictures with pixels, for the tests of thumbnails.
+image = { workspace = true }
+
+[lints]
+workspace = true

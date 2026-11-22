@@ -1,0 +1,22 @@
+# Summary
+
+[Introduction](README.md)
+
+- [Design guidelines](Design.md)
+- [Technical design](Technical-design.md)
+- [Specifications](spec/README.md)
+  - [Encoding](spec/encoding.md)
+  - [Time](spec/time.md)
+  - [Cryptography](spec/crypto.md)
+  - [Data model](spec/model.md)
+  - [Log](spec/log.md)
+  - [Storage](spec/storage.md)
+  - [Key file](spec/keys.md)
+  - [Identity](spec/identity.md)
+  - [Export](spec/export.md)
+  - [Storage policies](spec/policies.md)
+  - [Sync](spec/sync.md)
+- [Development plan](Plan.md)
+- [Known limits](Known-limits.md)
+- [Working with AI agents](Agents.md)
+- [Prior art](Prior-Art.md)

@@ -1,0 +1,5 @@
+# Compatibility fixtures are kept byte for byte, with no conversion of line endings.
+/fixtures/** -text
+
+# Git writes the commit's hash into this file when it makes an archive, for nib --version.
+/apps/nib/commit export-subst

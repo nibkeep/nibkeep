@@ -1,0 +1,2 @@
+# Names that documentation may write without backticks; ".." keeps the defaults.
+doc-valid-idents = ["LazyFS", "MusicBrainz", "NibKeep", "OneDrive", ".."]

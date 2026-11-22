@@ -1,0 +1,14 @@
+[package]
+name = "nibkeep-git"
+description = "The person's own Git, run for the repositories in NibKeep's trees, which the engine knows nothing of"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+nibkeep-node = { workspace = true }
+
+[lints]
+workspace = true

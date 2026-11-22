@@ -1,0 +1,20 @@
+[package]
+name = "nibkeep-bonjour"
+description = "Apple's DNS-SD, Bonjour, by which replicas find each other on macOS and iOS"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[target.'cfg(any(target_os = "macos", target_os = "ios"))'.dependencies]
+libc = { workspace = true }
+
+[lints.rust]
+missing_docs = "warn"
+unreachable_pub = "warn"
+unsafe_op_in_unsafe_fn = "deny"
+
+[lints.clippy]
+pedantic = { level = "warn", priority = -1 }
+undocumented_unsafe_blocks = "deny"

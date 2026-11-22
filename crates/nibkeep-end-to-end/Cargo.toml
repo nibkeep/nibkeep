@@ -1,0 +1,39 @@
+[package]
+name = "nibkeep-end-to-end"
+description = "The end-to-end tests of nib: the program itself, on devices that are folders of one computer"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+# Not nibkeep-cli: the tests reach nib as a program alone (technical design: end-to-end tests).
+[dependencies]
+nibkeep-testkit = { workspace = true }
+regex = { workspace = true }
+serde_json = { workspace = true }
+snapbox = { workspace = true }
+
+[dev-dependencies]
+# A photo with a picture, of which nib makes a thumbnail.
+image = { workspace = true }
+
+[target.'cfg(unix)'.dependencies]
+ctrlc = { workspace = true }
+libc = { workspace = true }
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { workspace = true }
+
+# The workspace's lints, but with `unsafe` code where it is marked and its safety written
+# down, as in the other crates that need it: to run each command in a session or a job of its
+# own, and to end it with what it started.
+[lints.rust]
+unsafe_code = "deny"
+missing_docs = "warn"
+unreachable_pub = "warn"
+unsafe_op_in_unsafe_fn = "deny"
+
+[lints.clippy]
+pedantic = { level = "warn", priority = -1 }
+undocumented_unsafe_blocks = "deny"

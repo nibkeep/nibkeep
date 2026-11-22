@@ -1,0 +1,26 @@
+[package]
+name = "nibkeep-sync"
+description = "How NibKeep replicas pair and sync their spaces, without I/O"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+nibkeep-base = { workspace = true }
+nibkeep-crypto = { workspace = true }
+nibkeep-governance = { workspace = true }
+nibkeep-log = { workspace = true }
+blake3 = { workspace = true }
+negentropy = { workspace = true }
+thiserror = { workspace = true }
+
+[dev-dependencies]
+nibkeep-model = { workspace = true }
+nibkeep-testkit = { workspace = true }
+nibkeep-time = { workspace = true }
+proptest = { workspace = true }
+
+[lints]
+workspace = true

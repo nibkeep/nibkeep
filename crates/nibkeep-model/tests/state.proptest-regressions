@@ -1,0 +1,8 @@
+# Seeds for failure cases proptest has generated in the past. It is
+# automatically read and these particular cases re-run before any
+# novel cases are generated.
+#
+# It is recommended to check this file in to source control so that
+# everyone who runs the test benefits from these saved cases.
+cc 0c432fdb35ed91a2aeb5bf554031057acc6795c21d72ca70b83e0e5b1f5483c7 # shrinks to operations = [(Retract { statements: {StatementId(00050000-0000-4000-8000-000000000000)} }, Timestamp { millis: 0, counter: 0 })], n = 2, later = (Assert { statement: Statement { id: StatementId(00050000-0000-4000-8000-000000000000), entity: EntityId(00020000-0000-4000-8000-000000000000), field: FieldName("org.nibkeep.name"), value: Integer(0), qualifiers: Qualifiers({}) }, supersedes: {} }, Timestamp { millis: 0, counter: 0 })
+cc 528470229d64497e0e5e58739bbfd599c9c6b3240d48183ce5c48511d2890016 # shrinks to operations = [(Assert { statement: Statement { id: StatementId(00000000-0000-4000-8000-000000000000), entity: EntityId(00010000-0000-4000-8000-000000000000), field: FieldName("org.nibkeep.name"), value: Integer(0), qualifiers: Qualifiers({}) }, supersedes: {} }, Timestamp { millis: 0, counter: 0 })], n = 0, later = (Assert { statement: Statement { id: StatementId(00000000-0000-4000-8000-000000000000), entity: EntityId(00000000-0000-4000-8000-000000000000), field: FieldName("org.nibkeep.merged-into"), value: Reference(EntityId(00010000-0000-4000-8000-000000000000)), qualifiers: Qualifiers({}) }, supersedes: {} }, Timestamp { millis: 0, counter: 0 })

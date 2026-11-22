@@ -1,0 +1,206 @@
+# Checks every push to main and every pull request, and looks for new
+# security advisories once a week. While the repository is private, macOS
+# minutes are costly, so the jobs on macOS run only in the weekly run and when
+# started by hand, not for pushes or pull requests.
+# Third-party actions are pinned to commits; the comment names the version.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# A new push to a pull request cancels the checks still running for the old one.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  fmt:
+    name: Formatting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f # master, 2026-10-09
+        with:
+          toolchain: stable
+          components: rustfmt
+      - run: cargo fmt --all --check
+
+  clippy:
+    name: Clippy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f # master, 2026-10-09
+        with:
+          toolchain: stable
+          components: clippy
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      - run: cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
+
+  test:
+    name: Tests (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        # macOS only in the weekly run and when started by hand.
+        exclude: ${{ fromJSON((github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && '[]' || '[{"os":"macos-latest"}]') }}
+    runs-on: ${{ matrix.os }}
+    env:
+      # The tests' programs with all their debug information fill the Linux runner's
+      # disk; line tables still say where a test failed.
+      CARGO_PROFILE_DEV_DEBUG: line-tables-only
+    steps:
+      # Even so, the tests' programs leave the Linux runner's disk less than 1 GiB free,
+      # below which a library refuses what it receives, so the tests that sync miss it.
+      # Tools that this job never uses go, in the background while it builds.
+      - name: Make room on the disk
+        if: runner.os == 'Linux'
+        run: sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL > /dev/null 2>&1 &
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f # master, 2026-10-09
+        with:
+          toolchain: stable
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      - run: cargo test --locked --workspace --all-features
+      - name: The room the tests left on the disk
+        if: always() && runner.os == 'Linux'
+        run: df -h .
+
+  msrv:
+    name: Minimum Rust version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f # master, 2026-10-09
+        with:
+          # Keep in sync with `rust-version` in Cargo.toml.
+          toolchain: "1.98"
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      - run: cargo check --locked --workspace --all-targets --all-features
+
+  phones:
+    name: Phone targets (${{ matrix.target }})
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [aarch64-apple-ios, aarch64-linux-android]
+        # iOS, which needs macOS, only in the weekly run and when started by hand.
+        exclude: ${{ fromJSON((github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && '[]' || '[{"target":"aarch64-apple-ios"}]') }}
+    runs-on: ${{ matrix.target == 'aarch64-apple-ios' && 'macos-latest' || 'ubuntu-latest' }}
+    env:
+      # The crates that phones run: the engine with its storage, sync and networking,
+      # and nibkeep-generate, whose benchmarks run on Android. Left
+      # out are nib, the importers, the Rust decoders of thumbnails, the drives of
+      # Windows, and the tests' crates. Some compile C code, such as BLAKE3's NEON
+      # implementation, which needs the platform's toolchain: Xcode on macOS, the
+      # Android NDK on Linux.
+      PHONE_CRATES: -p nibkeep-base -p nibkeep-time -p nibkeep-crypto -p nibkeep-model -p nibkeep-log -p nibkeep-sqlite-vfs -p nibkeep-store -p nibkeep-keys -p nibkeep-governance -p nibkeep-std -p nibkeep-sync -p nibkeep-bonjour -p nibkeep-net -p nibkeep-node -p nibkeep-generate -p nibkeep-passwords
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f # master, 2026-10-09
+        with:
+          toolchain: stable
+          targets: ${{ matrix.target }}
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      - name: Use the Android NDK's compiler
+        if: matrix.target == 'aarch64-linux-android'
+        run: |
+          bin="$ANDROID_NDK_LATEST_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin"
+          echo "CC_aarch64_linux_android=$bin/aarch64-linux-android24-clang" >> "$GITHUB_ENV"
+          echo "AR_aarch64_linux_android=$bin/llvm-ar" >> "$GITHUB_ENV"
+      - run: cargo check --locked $PHONE_CRATES --target ${{ matrix.target }}
+      # The crates that kept iOS from building unnoticed, which need no Xcode: on every run.
+      - name: Check the networking crates for iOS
+        if: matrix.target == 'aarch64-linux-android'
+        run: |
+          rustup target add aarch64-apple-ios
+          cargo check --locked --target aarch64-apple-ios -p netdev@0.46.3 -p netwatch
+
+  fuzz-seeds:
+    name: Fuzz seeds
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f # master, 2026-10-09
+        with:
+          toolchain: stable
+          components: clippy, rustfmt
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        with:
+          workspaces: fuzz
+      # The fuzz workspace starts from the workspace's lock file, so that shared
+      # dependencies have the versions the shipped crates use.
+      - run: cp Cargo.lock fuzz/Cargo.lock
+      - run: cargo fmt --manifest-path fuzz/Cargo.toml --check
+      # The fuzz targets replay their seeds, every input that once failed among them.
+      - run: cargo test --manifest-path fuzz/Cargo.toml
+      - run: cargo clippy --manifest-path fuzz/Cargo.toml --all-targets -- -D warnings
+
+  docs:
+    name: Documentation
+    runs-on: ubuntu-latest
+    env:
+      RUSTDOCFLAGS: -D warnings
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f # master, 2026-10-09
+        with:
+          toolchain: stable
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        with:
+          # The versions of the book's tools are part of the key, so that the cache that
+          # holds them is saved once they change.
+          key: mdbook-0.5.4-mermaid-0.17.1
+      - run: cargo doc --locked --workspace --all-features --no-deps
+      - name: Install mdBook
+        run: cargo install --locked mdbook@0.5.4 mdbook-mermaid@0.17.1
+      - name: Build the book
+        run: |
+          mdbook-mermaid install .
+          mdbook build
+      - name: Check the links
+        run: python3 scripts/check-links.py
+      - name: Test the scripts
+        run: python3 -m unittest discover -s scripts/tests
+
+  deny:
+    name: Dependencies (${{ matrix.checks }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        checks: [advisories, bans licenses sources]
+    # A newly published advisory should not block unrelated pull requests.
+    # The weekly run reports it instead.
+    continue-on-error: ${{ matrix.checks == 'advisories' }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: EmbarkStudios/cargo-deny-action@3c6349835b2b7b196a839186cb8b78e02f7b5f25 # v2.1.1
+        with:
+          command: check ${{ matrix.checks }}
+      - name: The license lists in deny.toml and about.toml match
+        if: matrix.checks != 'advisories'
+        shell: python
+        run: |
+          import sys, tomllib
+          with open("deny.toml", "rb") as f:
+              deny = set(tomllib.load(f)["licenses"]["allow"])
+          with open("about.toml", "rb") as f:
+              about = set(tomllib.load(f)["accepted"])
+          if deny != about:
+              print("Only in deny.toml:", sorted(deny - about))
+              print("Only in about.toml:", sorted(about - deny))
+              sys.exit(1)

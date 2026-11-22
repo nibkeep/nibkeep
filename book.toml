@@ -1,0 +1,24 @@
+# The documentation as a book: `mdbook serve --open` shows it, and rebuilds it on every
+# save. See CONTRIBUTING.md for the tools it needs.
+
+[book]
+title = "NibKeep"
+description = "A local-first, peer-to-peer system for personal data"
+language = "en"
+src = "docs"
+
+[build]
+build-dir = "target/book"
+create-missing = false
+# Without the preprocessor that renames README.md to index.html, links to README.md
+# reach their page in the book as they do on GitHub.
+use-default-preprocessors = false
+
+[preprocessor.links]
+
+[preprocessor.mermaid]
+command = "mdbook-mermaid"
+
+[output.html]
+# Written by `mdbook-mermaid install .`, and not kept in the repository.
+additional-js = ["mermaid.min.js", "mermaid-init.js"]

@@ -1,0 +1,12 @@
+[alias]
+# The end-to-end tests of nib (technical design: end-to-end tests), which run only when asked for:
+# `cargo end-to-end`, or `cargo end-to-end NAME` for those whose names hold NAME.
+end-to-end = "test --package nibkeep-end-to-end -- --include-ignored"
+
+# What cargo starts here, such as `cargo run --bin nib` and the tests, looks for its library only
+# below this folder, never in a library above it, such as the project's own, nor in the one that
+# the shell's NIBKEEP_LIBRARY names (the plan: guards for builds under development).
+# `relative` makes "." the folder that holds this .cargo, and `force` overrides the shell's.
+[env]
+NIBKEEP_CEILING = { value = ".", relative = true, force = true }
+NIBKEEP_LIBRARY = { value = "", force = true }

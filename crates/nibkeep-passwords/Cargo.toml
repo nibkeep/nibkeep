@@ -1,0 +1,28 @@
+[package]
+name = "nibkeep-passwords"
+description = "Handling passwords: the password generator, one-time codes, and copying secrets to the clipboard"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+blake3 = { workspace = true }
+# Wiping what HMAC keeps of a one-time code's key.
+hmac = { workspace = true, features = ["zeroize"] }
+rand_core = { workspace = true }
+sha1 = { workspace = true, features = ["zeroize"] }
+sha2 = { workspace = true, features = ["zeroize"] }
+thiserror = { workspace = true }
+zeroize = { workspace = true }
+
+# The platform's clipboard on computers; on phones, the app's own code reaches it.
+[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+arboard = { workspace = true }
+
+[dev-dependencies]
+nibkeep-testkit = { workspace = true }
+
+[lints]
+workspace = true

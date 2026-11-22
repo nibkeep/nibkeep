@@ -1,0 +1,46 @@
+recipe 2
+1990-06-01 - [std.portrayal] std.performer=->Daniel Radcliffe std.portrayed=->Harry Potter std.production=->Harry Potter and the Philosopher's Stone
+1990-06-01 Bill Gates [std.person] org.nibkeep.name=name "Bill Gates"
+1990-06-01 Bruno [local.animal] org.nibkeep.name=name "Bruno"
+1990-06-01 Daniel Radcliffe [std.person] org.nibkeep.name=name "Daniel Radcliffe" std.birth-name="Daniel Jacob Radcliffe" std.born=1989-07-23
+1990-06-01 Harry Potter [std.character] org.nibkeep.name=name "Harry Potter" std.appears-in=->Harry Potter and the Philosopher's Stone std.father=->James Potter
+1990-06-01 Harry Potter [std.series] org.nibkeep.name=name "Harry Potter"
+1990-06-01 Harry Potter and the Philosopher's Stone [std.film] org.nibkeep.name=name "Harry Potter and the Philosopher's Stone" std.based-on=->Гарри Поттер и философский камень std.duration=152 min std.in-series=->Harry Potter std.producer=->Bill Gates std.published=2001-11-04
+1990-06-01 Harry Potter och De vises sten [std.audiobook, std.edition] org.nibkeep.name=name "Harry Potter och De vises sten" std.edition-of=->Гарри Поттер и философский камень std.narrator=->Krister Henriksson std.published=2004
+1990-06-01 James Potter [std.character] org.nibkeep.name=name "James Potter" std.child=->Harry Potter
+1990-06-01 Krister Henriksson [std.person] org.nibkeep.name=name "Krister Henriksson"
+1990-06-01 Leo [std.person] org.nibkeep.name=name "Leo"
+1990-06-01 Microsoft [std.organization] local.chief-executive=->Bill Gates@1975-04/2000-01 org.nibkeep.name=name "Microsoft"
+1990-06-01 Satya Nadella [std.person] org.nibkeep.name=name "Satya Nadella" std.employer=->Microsoft
+1990-06-01 Steve Ballmer [std.person] org.nibkeep.name=name "Steve Ballmer"
+1990-06-01 Гарри Поттер и философский камень [std.book] org.nibkeep.name=name "Гарри Поттер и философский камень"
+2016-06-01 - [std.portrayal] std.performer=->Daniel Radcliffe std.portrayed=->Harry Potter std.production=->Harry Potter and the Philosopher's Stone
+2016-06-01 Bill Gates [std.person] org.nibkeep.name=name "Bill Gates"
+2016-06-01 Bruno [local.animal] local.weight=4.63 kg@2016-05-17 org.nibkeep.name=name "Bruno"
+2016-06-01 Daniel Radcliffe [std.person] org.nibkeep.name=name "Daniel Radcliffe" std.birth-name="Daniel Jacob Radcliffe" std.born=1989-07-23
+2016-06-01 Harry Potter [std.character] org.nibkeep.name=name "Harry Potter" std.appears-in=->Harry Potter and the Philosopher's Stone std.father=->James Potter
+2016-06-01 Harry Potter [std.series] org.nibkeep.name=name "Harry Potter"
+2016-06-01 Harry Potter and the Philosopher's Stone [std.film] org.nibkeep.name=name "Harry Potter and the Philosopher's Stone" std.based-on=->Гарри Поттер и философский камень std.duration=152 min std.in-series=->Harry Potter std.producer=->Bill Gates std.published=2001-11-04
+2016-06-01 Harry Potter och De vises sten [std.audiobook, std.edition] org.nibkeep.name=name "Harry Potter och De vises sten" std.edition-of=->Гарри Поттер и философский камень std.narrator=->Krister Henriksson std.published=2004
+2016-06-01 James Potter [std.character] org.nibkeep.name=name "James Potter" std.child=->Harry Potter
+2016-06-01 Krister Henriksson [std.person] org.nibkeep.name=name "Krister Henriksson"
+2016-06-01 Leo [std.person] local.height=94.5 cm@2016-01-05 org.nibkeep.name=name "Leo"
+2016-06-01 Microsoft [std.organization] local.chief-executive=->Satya Nadella@2014-02-04/.. local.employees=118000@2015-06-30 org.nibkeep.name=name "Microsoft"
+2016-06-01 Satya Nadella [std.person] org.nibkeep.name=name "Satya Nadella" std.employer=->Microsoft
+2016-06-01 Steve Ballmer [std.person] org.nibkeep.name=name "Steve Ballmer"
+2016-06-01 Гарри Поттер и философский камень [std.book] org.nibkeep.name=name "Гарри Поттер и философский камень"
+2026-10-15 - [std.portrayal] std.performer=->Daniel Radcliffe std.portrayed=->Harry Potter std.production=->Harry Potter and the Philosopher's Stone
+2026-10-15 Bill Gates [std.person] org.nibkeep.name=name "Bill Gates"
+2026-10-15 Bruno [local.animal] local.weight=23.1 kg@2019-03-12 org.nibkeep.name=name "Bruno"
+2026-10-15 Daniel Radcliffe [std.person] org.nibkeep.name=name "Daniel Radcliffe" std.birth-name="Daniel Jacob Radcliffe" std.born=1989-07-23
+2026-10-15 Harry Potter [std.character] org.nibkeep.name=name "Harry Potter" std.appears-in=->Harry Potter and the Philosopher's Stone std.father=->James Potter
+2026-10-15 Harry Potter [std.series] org.nibkeep.name=name "Harry Potter"
+2026-10-15 Harry Potter and the Philosopher's Stone [std.film] org.nibkeep.name=name "Harry Potter and the Philosopher's Stone" std.based-on=->Гарри Поттер и философский камень std.duration=152 min std.in-series=->Harry Potter std.producer=->Bill Gates std.published=2001-11-04
+2026-10-15 Harry Potter och De vises sten [std.audiobook, std.edition] org.nibkeep.name=name "Harry Potter och De vises sten" std.edition-of=->Гарри Поттер и философский камень std.narrator=->Krister Henriksson std.published=2004
+2026-10-15 James Potter [std.character] org.nibkeep.name=name "James Potter" std.child=->Harry Potter
+2026-10-15 Krister Henriksson [std.person] org.nibkeep.name=name "Krister Henriksson"
+2026-10-15 Leo [std.person] local.height=40.25 [in_i]@2016-07-12 org.nibkeep.name=name "Leo"
+2026-10-15 Microsoft [std.organization] local.chief-executive=->Satya Nadella@2014-02-04/.. local.employees=221000@2022 org.nibkeep.name=name "Microsoft"
+2026-10-15 Satya Nadella [std.person] org.nibkeep.name=name "Satya Nadella" std.employer=->Microsoft
+2026-10-15 Steve Ballmer [std.person] org.nibkeep.name=name "Steve Ballmer"
+2026-10-15 Гарри Поттер и философский камень [std.book] org.nibkeep.name=name "Гарри Поттер и философский камень"

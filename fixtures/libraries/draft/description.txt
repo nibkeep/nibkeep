@@ -1,0 +1,343 @@
+user 28ce86c8-c289-42db-a7e9-5f09c069e806 Ada
+device f7c2e2f5-2514-4b83-8e76-2994266a2118 laptop
+replica 541f67ca-416c-48ee-9745-a334ad9ea392 nib
+space ea06efa2-9411-4717-9331-af8b702456d6 Personal: 12 entities, 34 changes
+  verified: 34 changes, 1 blobs, 0 waiting, problems []
+  type local.book 3, labels en "Book", ru "Книга", sv "Bok"
+    local.author Reference, many, role
+    local.notes Text, one, secret
+    local.pages Integer, one
+    local.price Decimal, one
+    local.read Boolean, one
+    local.scan Blob, one
+    local.shelf Text, one
+    local.status Text, last writer wins, labels en "Status"
+    local.tag Text, many
+    local.title Text, one, labels en "Title", und "Titel?"
+    local.weight Quantity, one
+    local.year Date, one
+  type local.login 1
+    local.password Text, one, secret
+    local.site Text, one
+  type std.audiobook 1, labels en "Audiobook"
+    std.author Reference, many, labels en "Author"
+    std.duration Quantity, one, labels en "Duration"
+    std.narrator Reference, many, labels en "Narrator"
+  type std.book 2, labels en "Book"
+    org.nibkeep.name Name, one, labels en "Name"
+    std.author Reference, many, labels en "Author"
+    std.based-on Reference, many, labels en "Based on"
+    std.genre Reference, many, labels en "Genre"
+    std.in-series Reference, many, labels en "Series"
+    std.language Text, one, labels en "Language"
+    std.number-in-series Text, one, labels en "Number in series"
+    std.pages Integer, one, labels en "Pages"
+    std.published Date, one, labels en "Published"
+  type std.character 2, labels en "Character"
+    org.nibkeep.name Name, one, labels en "Name"
+    std.appears-in Reference, many, labels en "Appears in"
+    std.based-on Reference, many, labels en "Based on"
+    std.child Reference, many, labels en "Child"
+    std.father Reference, many, labels en "Father"
+    std.mother Reference, many, labels en "Mother"
+    std.partner Reference, many, labels en "Partner"
+    std.sibling Reference, many, labels en "Sibling"
+    std.spouse Reference, many, labels en "Spouse"
+  type std.checkout 1, labels en "Checkout"
+    std.checked-out-on Reference, one, labels en "Checked out on"
+    std.checkout-of Reference, one, labels en "Checkout of"
+    std.content Blob, one, labels en "Content"
+    std.modified Date, one, labels en "Modified"
+    std.path Text, one, labels en "Path"
+    std.size Integer, one, labels en "Size"
+  type std.edition 2, labels en "Edition"
+    org.nibkeep.name Name, one, labels en "Name"
+    std.edition-of Reference, many, labels en "Edition of"
+    std.isbn Text, many, labels en "ISBN"
+    std.language Text, one, labels en "Language"
+    std.pages Integer, one, labels en "Pages"
+    std.published Date, one, labels en "Published"
+    std.publisher Reference, many, labels en "Publisher"
+    std.translator Reference, many, labels en "Translator"
+  type std.episode 1, labels en "Episode"
+    org.nibkeep.name Name, one, labels en "Name"
+    std.based-on Reference, many, labels en "Based on"
+    std.broadcaster Reference, many, labels en "Broadcaster"
+    std.cast Reference, many, labels en "Cast"
+    std.composer Reference, many, labels en "Composer"
+    std.director Reference, many, labels en "Director"
+    std.distributor Reference, many, labels en "Distributor"
+    std.duration Quantity, one, labels en "Duration"
+    std.genre Reference, many, labels en "Genre"
+    std.in-season Reference, many, labels en "Season"
+    std.in-series Reference, many, labels en "Series"
+    std.number-in-series Text, one, labels en "Number in series"
+    std.producer Reference, many, labels en "Producer"
+    std.published Date, one, labels en "Published"
+    std.publisher Reference, many, labels en "Publisher"
+    std.screenwriter Reference, many, labels en "Screenwriter"
+    std.voice-cast Reference, many, labels en "Voice cast"
+  type std.file 7, labels en "File"
+    org.nibkeep.name Name, one, labels en "Name"
+    std.committed-in Reference, one, labels en "Committed in"
+    std.content Blob, one, labels en "Content"
+    std.copy-of Reference, one, labels en "Copy of"
+    std.cover-of Reference, many, labels en "Cover of"
+    std.crop Text, one, labels en "Crop"
+    std.edit-of Reference, one, labels en "Edit of"
+    std.executable Boolean, one, labels en "Executable"
+    std.in-folder Reference, many, labels en "Folder"
+    std.in-tree Reference, one, labels en "In tree"
+    std.media-type Text, one, labels en "Media type"
+    std.size Integer, one, labels en "Size"
+    std.tree-path Text, one, labels en "Path in tree"
+  type std.film 1, labels en "Film"
+    org.nibkeep.name Name, one, labels en "Name"
+    std.based-on Reference, many, labels en "Based on"
+    std.broadcaster Reference, many, labels en "Broadcaster"
+    std.cast Reference, many, labels en "Cast"
+    std.composer Reference, many, labels en "Composer"
+    std.director Reference, many, labels en "Director"
+    std.distributor Reference, many, labels en "Distributor"
+    std.duration Quantity, one, labels en "Duration"
+    std.genre Reference, many, labels en "Genre"
+    std.in-series Reference, many, labels en "Series"
+    std.number-in-series Text, one, labels en "Number in series"
+    std.producer Reference, many, labels en "Producer"
+    std.published Date, one, labels en "Published"
+    std.publisher Reference, many, labels en "Publisher"
+    std.screenwriter Reference, many, labels en "Screenwriter"
+    std.voice-cast Reference, many, labels en "Voice cast"
+  type std.folder 1, labels en "Folder"
+    org.nibkeep.name Name, one, labels en "Name"
+    std.description Text, one, labels en "Description"
+    std.in-folder Reference, many, labels en "Folder"
+  type std.game 1, labels en "Game"
+    org.nibkeep.name Name, one, labels en "Name"
+    std.based-on Reference, many, labels en "Based on"
+    std.cast Reference, many, labels en "Cast"
+    std.composer Reference, many, labels en "Composer"
+    std.developer Reference, many, labels en "Developer"
+    std.director Reference, many, labels en "Director"
+    std.distributor Reference, many, labels en "Distributor"
+    std.genre Reference, many, labels en "Genre"
+    std.in-series Reference, many, labels en "Series"
+    std.number-in-series Text, one, labels en "Number in series"
+    std.platform Reference, many, labels en "Platform"
+    std.producer Reference, many, labels en "Producer"
+    std.published Date, one, labels en "Published"
+    std.publisher Reference, many, labels en "Publisher"
+    std.screenwriter Reference, many, labels en "Screenwriter"
+    std.voice-cast Reference, many, labels en "Voice cast"
+  type std.git-repository 2, labels en "Git repository"
+    org.nibkeep.name Name, one, labels en "Name"
+    std.committed-in Reference, one, labels en "Committed in"
+    std.git-branch Text, one, labels en "Branch"
+    std.git-commit Text, one, labels en "Pinned commit"
+    std.git-remote Text, many, labels en "Remote"
+    std.git-upstream Text, one, labels en "Upstream"
+    std.in-tree Reference, one, labels en "In tree"
+    std.tree-path Text, one, labels en "Path in tree"
+  type std.login 1, labels en "Login"
+    org.nibkeep.name Name, one, labels en "Name"
+    std.in-folder Reference, many, labels en "Folder"
+    std.one-time-code Text, one, secret, labels en "One-time codes"
+    std.password Text, one, secret, labels en "Password"
+    std.recovery-code Text, many, secret, labels en "Recovery codes"
+    std.secret-notes Text, one, secret, labels en "Secret notes"
+    std.username Text, one, labels en "User name"
+    std.website Text, many, labels en "Web site"
+  type std.organization 1, labels en "Organization"
+    org.nibkeep.name Name, one, labels en "Name"
+    std.dissolved Date, one, labels en "Dissolved"
+    std.founded Date, one, labels en "Founded"
+    std.member-of Reference, many, labels en "Member of"
+    std.website Text, many, labels en "Web site"
+  type std.origin 2, labels en "Where it was found"
+    std.content Blob, one, labels en "Content"
+    std.created Date, one, labels en "Created"
+    std.found-on Reference, one, labels en "Found on"
+    std.from-source Reference, one, labels en "From"
+    std.modified Date, one, labels en "Modified"
+    std.origin-of Reference, one, labels en "Found as"
+    std.path Text, one, labels en "Path"
+    std.size Integer, one, labels en "Size"
+    std.source-name Text, one, labels en "Name in its source"
+    std.source-path Text, one, labels en "Path in its source"
+  type std.pen-name 1, labels en "Pen name"
+    org.nibkeep.name Name, one, labels en "Name"
+    std.used-by Reference, many, labels en "Used by"
+  type std.person 2, labels en "Person"
+    org.nibkeep.name Name, one, labels en "Name"
+    std.award Reference, many, labels en "Award"
+    std.birth-name Text, one, labels en "Birth name"
+    std.born Date, one, labels en "Born"
+    std.child Reference, many, labels en "Child"
+    std.died Date, one, labels en "Died"
+    std.employer Reference, many, labels en "Employer"
+    std.father Reference, many, labels en "Father"
+    std.member-of Reference, many, labels en "Member of"
+    std.mother Reference, many, labels en "Mother"
+    std.partner Reference, many, labels en "Partner"
+    std.sibling Reference, many, labels en "Sibling"
+    std.spouse Reference, many, labels en "Spouse"
+  type std.photo 2, labels en "Photo"
+    std.camera-make Text, one, labels en "Camera make"
+    std.camera-model Text, one, labels en "Camera model"
+    std.description Text, one, labels en "Description"
+    std.height Integer, one, labels en "Height"
+    std.latitude Decimal, one, labels en "Latitude"
+    std.longitude Decimal, one, labels en "Longitude"
+    std.taken Date, one, labels en "Taken"
+    std.width Integer, one, labels en "Width"
+  type std.play 1, labels en "Play"
+    org.nibkeep.name Name, one, labels en "Name"
+    std.author Reference, many, labels en "Author"
+    std.based-on Reference, many, labels en "Based on"
+    std.genre Reference, many, labels en "Genre"
+    std.in-series Reference, many, labels en "Series"
+    std.number-in-series Text, one, labels en "Number in series"
+    std.pages Integer, one, labels en "Pages"
+    std.published Date, one, labels en "Published"
+  type std.portrayal 1, labels en "Portrayal"
+    std.performer Reference, one, role, labels en "Performer"
+    std.portrayal-kind Text, one, labels en "Kind of portrayal"
+    std.portrayed Reference, one, role, labels en "Character"
+    std.production Reference, one, role, labels en "Production"
+  type std.revision 2, labels en "Revision"
+    std.in-tree Reference, one, labels en "In tree"
+    std.message Text, one, labels en "Message"
+    std.parts Integer, one, labels en "Parts"
+  type std.season 1, labels en "Season"
+    org.nibkeep.name Name, one, labels en "Name"
+    std.based-on Reference, many, labels en "Based on"
+    std.broadcaster Reference, many, labels en "Broadcaster"
+    std.genre Reference, many, labels en "Genre"
+    std.in-series Reference, many, labels en "Series"
+    std.number-in-series Text, one, labels en "Number in series"
+    std.published Date, one, labels en "Published"
+  type std.secret-file 2, labels en "Secret file"
+    org.nibkeep.name Name, one, labels en "Name"
+    std.attached-to Reference, many, labels en "Attached to"
+    std.committed-in Reference, one, labels en "Committed in"
+    std.executable Boolean, one, labels en "Executable"
+    std.in-folder Reference, many, labels en "Folder"
+    std.in-tree Reference, one, labels en "In tree"
+    std.media-type Text, one, labels en "Media type"
+    std.secret-content Blob, one, secret, labels en "Content"
+    std.size Integer, one, labels en "Size"
+    std.tree-path Text, one, labels en "Path in tree"
+  type std.series 1, labels en "Series"
+    org.nibkeep.name Name, one, labels en "Name"
+    std.author Reference, many, labels en "Author"
+    std.based-on Reference, many, labels en "Based on"
+    std.broadcaster Reference, many, labels en "Broadcaster"
+    std.cast Reference, many, labels en "Cast"
+    std.composer Reference, many, labels en "Composer"
+    std.director Reference, many, labels en "Director"
+    std.distributor Reference, many, labels en "Distributor"
+    std.genre Reference, many, labels en "Genre"
+    std.in-series Reference, many, labels en "Series"
+    std.number-in-series Text, one, labels en "Number in series"
+    std.producer Reference, many, labels en "Producer"
+    std.published Date, one, labels en "Published"
+    std.publisher Reference, many, labels en "Publisher"
+    std.screenwriter Reference, many, labels en "Screenwriter"
+    std.voice-cast Reference, many, labels en "Voice cast"
+  type std.source 1, labels en "Source"
+    org.nibkeep.name Name, one, labels en "Name"
+    std.description Text, one, labels en "Description"
+  type std.symbolic-link 2, labels en "Symbolic link"
+    org.nibkeep.name Name, one, labels en "Name"
+    std.committed-in Reference, one, labels en "Committed in"
+    std.in-tree Reference, one, labels en "In tree"
+    std.link-target Text, one, labels en "Link target"
+    std.tree-path Text, one, labels en "Path in tree"
+  type std.thumbnail 2, labels en "Thumbnail"
+    std.content Blob, one, labels en "Content"
+    std.height Integer, one, labels en "Height"
+    std.made-with Text, one, labels en "Made with"
+    std.media-type Text, one, labels en "Media type"
+    std.picture-hash Integer, one, labels en "Picture hash"
+    std.thumbnail-of Blob, one, labels en "Thumbnail of"
+    std.width Integer, one, labels en "Width"
+  type std.tree 2, labels en "Tree"
+    org.nibkeep.name Name, one, labels en "Name"
+    std.committed-in Reference, one, labels en "Committed in"
+  type std.tree-root 1, labels en "Tree's folder"
+    std.on-device Reference, one, labels en "On device"
+    std.path Text, one, labels en "Path"
+    std.root-of Reference, one, labels en "Folder of"
+  type std.video 2, labels en "Video"
+    std.camera-make Text, one, labels en "Camera make"
+    std.camera-model Text, one, labels en "Camera model"
+    std.description Text, one, labels en "Description"
+    std.duration Quantity, one, labels en "Duration"
+    std.height Integer, one, labels en "Height"
+    std.latitude Decimal, one, labels en "Latitude"
+    std.longitude Decimal, one, labels en "Longitude"
+    std.taken Date, one, labels en "Taken"
+    std.width Integer, one, labels en "Width"
+  defined by 31 types and 244 fields
+  entity fc2cdf16-ef6f-4c3a-90a1-eb3b2533f101 "A Wizard of Earthsea": local.book
+    local.price decimal 12.50 (a573b5c8-1702-45b8-b46a-0357dd856a21)
+    local.shelf "hall" [2026-10-12T09:23:00Z] (d8141fdd-8e9a-400f-b88e-a4b467b6cdf9)
+    local.title "A Wizard of Earthsea" (c0cedd52-fabc-4fc0-91d0-8c0de45449c1)
+    local.weight quantity 0.31 kg (1b645bd1-64fe-4b85-b2e3-22ee29de40f5)
+    on 2022-01-01: local.shelf "the living room" [2020/2023] (e246baee-0233-4c50-835e-f47a01bff16a)
+  entity 1bcd03b2-62b3-4509-ab45-4c094e4d7a18 "Ada": std.person
+    org.nibkeep.name name {full "Ada"} (9c240313-ba77-49a7-a1fb-3ef10a7749ac)
+  entity 28ce86c8-c289-42db-a7e9-5f09c069e806 "Ada": org.nibkeep.user
+    org.nibkeep.languages "en, *-Latn, ru" (d7c42338-fa01-437e-8810-1979786593b3)
+    org.nibkeep.linked-person -> 1bcd03b2-62b3-4509-ab45-4c094e4d7a18 (3b405f8b-39c8-4468-995d-c7795ed20475)
+    org.nibkeep.name name {full "Ada"} (cab89a7d-0600-4152-8a9e-50b6201d4cce)
+  entity 25b6b81f-afe6-499b-bc99-529194665a1c "Always Coming Home": local.book
+    local.title "Always Coming Home" (e6bee44d-9e65-4e6b-8972-c3fa23d259dd)
+  entity f7c2e2f5-2514-4b83-8e76-2994266a2118 "laptop": org.nibkeep.device
+    org.nibkeep.name name {full "laptop"} (2a14616f-ec44-4d08-ad62-756793aa3f02)
+  entity 6fd2a84e-ca4a-4a4c-b659-c26db918b3c9 "Lavinia": local.book
+    local.title "Lavinia" (17077a1a-dfd2-4d11-b458-b77f30cc1bc3)
+  entity 1717d636-19d8-471d-b026-4862849ba154 "Leviathan Wakes": local.book
+    local.read false (009915dd-a932-4048-b977-67ec20e1331f)
+    local.status "read" (70e63673-2405-477e-bcaf-369d9c0080d6)
+    local.tag "space" (2c9c0e0e-dbd2-4844-a7d5-8f8c7b43dadb)
+    local.title "Leviathan Wakes", competing (d49c9971-a342-4f02-946b-fd6a7b3086b7)
+    local.title "Leviathan wakes", competing (da223f21-89f1-4aa8-84ba-b2972c3246b7)
+    local.year date 2011-06~ (d27ffef4-d056-4617-963a-22d8877927bb)
+  entity 541f67ca-416c-48ee-9745-a334ad9ea392 "nib": org.nibkeep.replica
+    org.nibkeep.encryption-key "xRJbLdsSrXwBE1BG5YE72VKDmSGU7MKd-UJWdOAp6VR_ZgumAbov4TOl7dyrpEt8tSaaizyAaOrPvLZvbKSkM9wLUbRV95G8qqo5ufBMOeovfIN7ScRs3lSxjBM93ozF6rGMDdJ6eNIYOgmOINZLHFib8jea7CoCDepVUeY2UUhRUBcRmoAc4YWDYbbDKDU4nJQdOSMcDua0cBFP-cYSRSkTGfAO-nkT9kYaWukeRPYVq4sDXTOdAEczeDhKCdYROpKM1ouZ4CFWfUWdG-lnZGAt-By9fUeCWXc62TpCH0sXUwc2PYdCi0BYpyFH2VynPFJjx-mfBBCUvdkF_XPC7HEA_IaeV8pei8mT-6R1UnVR8bpyBTUKzAMVT_qWc4HIjTLBEYQnKoFO8uET1qKpr4J_rFlE6rYAa2Ctdguwqtsnl6e6ztoG0UWeLHRCgdhxICuiBlapInWW_bADXWKuPsUT3qma4byhygiOVhw0hWPJ6viwhWSMTFeltvFYrJdbsByEp-gMHYqu7upgHWwHFaxH8DfGMBVEJBZOsxEIVoSVs9O7_6DCRDcz9GIxrPqIE1BOKvmMmXpQNWJ_Sul8VipDYUJigKkiyidoLkJcfGNH39HIUDFanuxERQHKfWYmoUrGk-ShbrcxmkGS-ZxKZ-avvyW81ukOLEkNRoo_0IMKSiwVJFcv9qtdDEcQ5cOWePxD2zxLZUwqNBV0IsszxZq5NxeQblM9CcYD3zNmAfes-XCXgtoxoQaE9MsAyaee-EwoYwcZJUIaOyKrOKpiwLpxdsfMO0hlbSVF0DgD-MWAhAlq1qwbappNh9A__vqRmiNyN4AzBCK8sJcz6WzAvltcWpd5sYZjD3q9mnEbNfQPmVEFSNFibNDKkxgy30k1ivJgTCY-6OIKESyuKToIIaaAVflNRuqro_VTPlZwKaFVuLVRv7Km0faPxHmFR9kkFoHB5qxD9LJ3_kEv6kMascK0KdkniEuevWUN8ikRhjEbqhyyXNMD5obOzxc_85tMvmYqGMGU4Dedcge4KTuikfDF_UZxS_eDwfHE-VIQmBWJtPl6dMhcroemyKBZOWdEd-aK9MJ0axQ46zWyMrs4VfMVZTymbESQSBuLoMJrtQKqkyFbDWOxraR0GUWnkyK8NuA4BuNlu3efTLgunAchtRe3LLNrKXldGbNjW-c5yhkb13UYXaNCXlcl6mG_B4CVFulsXwdtgtWAMDp2TWCElTLJKeWAZrUkhZZ1-hKL38WZyGYYkKfC7oldtvTPu_eGuAO_IfrC4ZacnkqIxhN-iIWpFmoy1QI2hWXHoxszhPEwj1aQVvwOxLeL8ti0mnA5GWWd9JaypcQcigKEigMLF_hG5kaCW3KKcHJu6lFSf_aR8kAbY4p1TciUOgyhdHOqI6HMLGuuoIFQp_FrwSUIU6eyVJKyzpHK7mK52DXNkwcmQVrCnmQ61eO3appHrpKhuocsxJVmSmnFosx5aYI4WpwMYDS34ddzVqGPd4EXHJkRMgN9wVQhygiKbsZmCdOJcTvoocHyI4t6HydojTQSDNWKDvy5JSKLw-nU_tk-Bk3vxgzX4jj2klDvizU3i_jhuvCz7uxhfgL-KXOL2tItZg" (6cb03e80-0be0-4ea8-a948-7934708f8c37)
+    org.nibkeep.listing "h9glUOoG76KUEUcXkzGvi3AkVtbYJVBUH2fKQWxI7pdFozStnqOS2CVQKM6GyMKJQtun6V8JwGnoBvRYIh4gKD6RlxH1N-T0iYFC0Z1A86gzeaG33qCYYxxEVov06zGCAVggdP0oG5lItRiX7V816KHp4lDs3dHeez6ntTClStyHV0-CAVhAQ6T1u4cr5HcVS8SBmR02nnNTBVLwPAqr28pdOCxa5mlsBv9NxZV490WOjT7Ux1fKbfLbh5Ul_1GL7CVPKyd3AA" (d6e6f3a6-aaf3-4f8b-9e76-11f5fb6216a2)
+    org.nibkeep.name name {full "nib"} (fbe9df68-97f9-47d2-927f-6269fa6324d5)
+    org.nibkeep.on-device -> f7c2e2f5-2514-4b83-8e76-2994266a2118 (086e1d46-6010-465b-925a-401cd1f1e887)
+    org.nibkeep.owner -> 28ce86c8-c289-42db-a7e9-5f09c069e806 (0b9719b7-4124-4290-aa47-862e1c82ff82)
+    org.nibkeep.secret-field "local.password" (38b975ff-9343-4749-b1ac-69796042bba4)
+    org.nibkeep.secret-field "std.secret-notes" (4216355c-968e-488e-b751-5ef6ca35462a)
+    org.nibkeep.secret-field "std.secret-content" (ad12ca56-77a5-4fba-bc7f-1ac8947db839)
+    org.nibkeep.secret-field "std.recovery-code" (b4d90555-1f87-48bd-90df-db5cf6180dcd)
+    org.nibkeep.secret-field "std.one-time-code" (c3181afb-2abe-47ae-8535-bc2f9ad41bec)
+    org.nibkeep.secret-field "std.password" (ecfcd3c2-9f45-4443-a183-df0d9070b895)
+    org.nibkeep.secret-field "local.notes" (f92037b1-2cc9-48d8-95a7-e26561f5bb53)
+    org.nibkeep.signing-key "dP0oG5lItRiX7V816KHp4lDs3dHeez6ntTClStyHV08" (67853a46-126f-477a-b516-3853de0521f9)
+  entity 0be9712b-af96-4d16-86b1-b6d5c46f4451 "Personal": org.nibkeep.space
+    org.nibkeep.name name {full "Personal"} (553b7a14-b71e-4ab0-a6c2-7c58aa062f36)
+  entity f41b3510-b1fe-43d1-a542-0ff0bf7ce333 "The Dispossessed": local.book
+    local.author -> b572ad83-eb48-478d-8b47-5383f65f9c6c (a582204e-861b-4979-8b17-6bdf39177edc)
+    local.pages 387 (7f61fb0d-9f6d-4b4c-82af-ac18983f24e7)
+    local.read true (a41e4f29-6a18-450d-bc52-fe7523d10fd9)
+    local.scan blob blake3:21277c6518cd4e775f9d66e5055545fe0333cb859a919a91e4e71d6d7db17169 (c808d6d8-11a5-4ded-a42d-79b740efe60d)
+    local.tag "anarchy" (35e14744-3f66-4949-8488-630537fe3a9a)
+    local.tag "physics" (54b07549-0c90-4321-8a61-176d9d7634b3)
+    local.title "The Dispossessed" (6784881a-93d0-4d49-897c-92e63315e60d)
+    local.year date 1974 (f2e5e7d4-f24a-4586-8daa-3994dc8ea002)
+  entity b572ad83-eb48-478d-8b47-5383f65f9c6c "Ursula K. Le Guin": std.person
+    org.nibkeep.name name {additional "K.", family "Le Guin", full "Ursula K. Le Guin", given "Ursula"} @en, 1 other forms (cad27a03-a993-4f9e-8428-e3120ef5ee4e)
+  entity 425847e9-2e1f-4612-a881-23feef794e61 "-": local.login
+    local.site "library.example" (da8a7188-1508-45c4-b7ab-f4f4f4b22869)
+  entity b2744946-0618-49c4-bbda-ff3aa4ac7df9 "Tehanu", deleted: local.book
+    local.title "Tehanu" (60418bde-dac7-4faf-8ba3-4f3e365bd4f9)
+  search "leviathan": [1717d636-19d8-471d-b026-4862849ba154]
+  search "anarchy physics": [f41b3510-b1fe-43d1-a542-0ff0bf7ce333]
+  search "le guin": [b572ad83-eb48-478d-8b47-5383f65f9c6c]
+  search "dispo": [f41b3510-b1fe-43d1-a542-0ff0bf7ce333]
+  search "password": []
+  search "library": [425847e9-2e1f-4612-a881-23feef794e61]

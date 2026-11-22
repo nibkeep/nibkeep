@@ -1,0 +1,33 @@
+[package]
+name = "nibkeep-net"
+description = "Connections between NibKeep replicas on the home network, through iroh"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+nibkeep-sync = { workspace = true }
+iroh = { workspace = true }
+netdev = { workspace = true }
+thiserror = { workspace = true }
+tokio = { workspace = true }
+
+# Discovery: Bonjour, the system's, on Apple's systems, and mdns-sd elsewhere (technical design: finding replicas).
+[target.'cfg(any(target_os = "macos", target_os = "ios"))'.dependencies]
+nibkeep-bonjour = { workspace = true }
+
+[target.'cfg(not(any(target_os = "macos", target_os = "ios")))'.dependencies]
+mdns-sd = { workspace = true }
+
+# Not used here: it holds libc, for every platform, at a version with which netdev and
+# netwatch build for iOS (see the workspace's Cargo.toml).
+[target.'cfg(target_os = "ios")'.dependencies]
+libc = { workspace = true }
+
+[package.metadata.cargo-machete]
+ignored = ["libc"]
+
+[lints]
+workspace = true

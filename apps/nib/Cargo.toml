@@ -1,0 +1,69 @@
+[package]
+name = "nibkeep-cli"
+description = "nib, the generic command-line tool for NibKeep"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[lib]
+name = "nibkeep_cli"
+path = "src/lib.rs"
+
+[[bin]]
+name = "nib"
+path = "src/main.rs"
+
+# Syncs the libraries that the person chose from login (technical design: syncing from login).
+[[bin]]
+name = "nibkeep-sync"
+path = "src/bin/nibkeep-sync.rs"
+# Its documentation would take the place of the crate nibkeep-sync's.
+doc = false
+
+[dependencies]
+nibkeep-base = { workspace = true }
+nibkeep-crypto = { workspace = true }
+nibkeep-model = { workspace = true }
+nibkeep-import = { workspace = true }
+nibkeep-git = { workspace = true }
+nibkeep-node = { workspace = true }
+nibkeep-passwords = { workspace = true }
+nibkeep-std = { workspace = true }
+nibkeep-thumbnails = { workspace = true }
+nibkeep-time = { workspace = true }
+clap = { workspace = true }
+ctrlc = { workspace = true }
+directories = { workspace = true }
+gethostname = { workspace = true }
+jiff = { workspace = true }
+getrandom = { workspace = true }
+keyring-core = { workspace = true }
+rpassword = { workspace = true }
+serde_json = { workspace = true }
+sys-locale = { workspace = true }
+thiserror = { workspace = true }
+whoami = { workspace = true }
+zeroize = { workspace = true }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+apple-native-keyring-store = { workspace = true }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+windows-native-keyring-store = { workspace = true }
+
+[target.'cfg(all(unix, not(any(target_os = "macos", target_os = "ios", target_os = "android"))))'.dependencies]
+zbus-secret-service-keyring-store = { workspace = true }
+# Whether the keyring is locked, asked without a prompt, for nibkeep-sync.
+secret-service = { workspace = true }
+
+[dev-dependencies]
+nibkeep-testkit = { workspace = true }
+# Pictures with pixels, for the tests of thumbnails.
+image = { workspace = true }
+# Takeout archives, for the tests of imports.
+zip = { workspace = true }
+
+[lints]
+workspace = true

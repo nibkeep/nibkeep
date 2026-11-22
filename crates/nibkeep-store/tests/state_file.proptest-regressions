@@ -1,0 +1,7 @@
+# Seeds for failure cases proptest has generated in the past. It is
+# automatically read and these particular cases re-run before any
+# novel cases are generated.
+#
+# It is recommended to check this file in to source control so that
+# everyone who runs the test benefits from these saved cases.
+cc b65b9573cbe0824d5d7dd2c097b3d3d398cba859a3abcb2300663b8221ce6834 # shrinks to operations = [], secrets = [(Statement { id: StatementId(000a0000-0000-4000-8000-000000000000), entity: EntityId(00000000-0000-4000-8000-000000000000), field: FieldName("org.nibkeep.name"), value: Integer(0), qualifiers: Qualifiers({}) }, Timestamp { millis: 0, counter: 0 })], batch = 1, opened_after = 0

@@ -1,0 +1,13 @@
+# Seeds for failure cases proptest has generated in the past. It is
+# automatically read and these particular cases re-run before any
+# novel cases are generated.
+#
+# It is recommended to check this file in to source control so that
+# everyone who runs the test benefits from these saved cases.
+cc 8780762e001f43b3db6627828fb1ebbddddc9a72aa3340f5f3340b34e265affe # shrinks to steps = [Arrive(0, 0), Deliver(0), Keep, Deliver(0), LogBehind]
+cc 1b70ddbb5234076ea57e7814a4606a0c5d5b7d023c355f35e49ab63b18f2fbee # shrinks to steps = [LogBehind, Commit(2, 53653, true), Cut(7898), Arrive(1, 22340), Reopen, Deliver(5377016292123291322), LogBehind, Deliver(16141234422234299712), Deliver(12288913014414297062), Keep, Commit(2, 51597, false), Deliver(4019082970201152407), Commit(2, 40744, false), Purge(18166619856231532958), StateBehind, Deliver(16540427515132655916)]
+cc 70d6775f51f0e019968e3c44542e1138062f6b5668c61684f69a6383f678bec4 # shrinks to steps = [Cut(4200), Deliver(8245769531321262254), Deliver(7703597192407665758), Reopen, Commit(0, 37332, true), Arrive(2, 20091), Commit(2, 11761, true), Keep, Purge(7676677871110325304), Cut(16377), Deliver(3450648503020997594), LogBehind, Delete, Deliver(8913085948880448128), Reopen, Flip(8779898808748155891), LogBehind, Arrive(1, 48898), StateBehind]
+cc 47bfdcb136626afe75fcac74caac06ba22bbffe62064330448d5cba78c7001e9 # shrinks to steps = [Keep, Commit(0, 20879, true), Commit(0, 6313, false), Commit(1, 55586, true), Arrive(0, 8278), Commit(1, 29561, true), Arrive(0, 27953), Delete, Cut(3283), Commit(0, 3591, true), Commit(2, 37352, false), Commit(0, 38914, false), Commit(2, 21692, true), Commit(2, 9531, false), Commit(0, 24105, true), StateBehind, Purge(18292183103619951180), Commit(0, 2995, false), Deliver(6594078003459838357)]
+cc 37640babebdd645be3d910b7af070ad28a2d5783e352a348ca1d8b019b65e256 # shrinks to steps = [Flip(6134584163473059552), Arrive(0, 0), Arrive(0, 0), Commit(0, 366, false)]
+cc 98e69c292895564dd02048bcdf99537c99039776944b1fa172b187e3e593a26b # shrinks to steps = [Commit(2, 0, false), Commit(2, 0, false), Purge(0), Flip(2228137567656771544)]
+cc 64350dce71cc29ed4e6f2dafc7156f25a85a26a64c89206e74f115229a8dc8e6 # shrinks to steps = [LogBehind, Commit(0, 42041, true), Commit(1, 57570, false), Receive([(2, 62677)], Some(5069909920049364421), true), Commit(0, 18128, true), Reopen, Wait(1200), Flip(1103276967435401066), Wait(10), Receive([(0, 54729), (0, 32496)], Some(1886735882765428252), true), Commit(1, 39843, true), Receive([], Some(1404459749571408375), true), Deliver(15212239588460091069), Deliver(2161379497411954513)]

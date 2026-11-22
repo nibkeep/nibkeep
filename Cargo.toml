@@ -1,0 +1,185 @@
+[workspace]
+resolver = "3"
+# Everything in crates/ is a library; apps/nib is the command-line tool.
+members = ["apps/nib", "crates/*"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.98"
+license = "MIT OR Apache-2.0"
+publish = false
+
+# Versions of external crates, shared by all members. A member uses one with
+# `name = { workspace = true }`. Keep this list short (P9 in docs/Design.md).
+[workspace.dependencies]
+nibkeep-base = { path = "crates/nibkeep-base" }
+nibkeep-crypto = { path = "crates/nibkeep-crypto" }
+nibkeep-drives = { path = "crates/nibkeep-drives" }
+nibkeep-git = { path = "crates/nibkeep-git" }
+nibkeep-governance = { path = "crates/nibkeep-governance" }
+nibkeep-import = { path = "crates/nibkeep-import" }
+nibkeep-keys = { path = "crates/nibkeep-keys" }
+nibkeep-log = { path = "crates/nibkeep-log" }
+nibkeep-model = { path = "crates/nibkeep-model" }
+nibkeep-bonjour = { path = "crates/nibkeep-bonjour" }
+nibkeep-net = { path = "crates/nibkeep-net" }
+nibkeep-node = { path = "crates/nibkeep-node" }
+nibkeep-passwords = { path = "crates/nibkeep-passwords" }
+nibkeep-sqlite-vfs = { path = "crates/nibkeep-sqlite-vfs" }
+nibkeep-std = { path = "crates/nibkeep-std" }
+nibkeep-store = { path = "crates/nibkeep-store" }
+nibkeep-sync = { path = "crates/nibkeep-sync" }
+nibkeep-testkit = { path = "crates/nibkeep-testkit" }
+nibkeep-thumbnails = { path = "crates/nibkeep-thumbnails" }
+nibkeep-time = { path = "crates/nibkeep-time" }
+
+aes-gcm = { version = "0.11", default-features = false, features = ["aes", "zeroize"] }
+apple-native-keyring-store = { version = "1.0", features = ["keychain"] }
+# The clipboard on computers, for copying secrets: without images, with Wayland's own
+# protocol for clipboard managers.
+arboard = { version = "3.7", default-features = false, features = ["wayland-data-control"] }
+argon2 = { version = "0.6", default-features = false, features = ["alloc", "zeroize"] }
+base64ct = { version = "1.8", features = ["alloc"] }
+blake3 = "1.8"
+clap = { version = "4.6", features = ["derive", "env"] }
+# Clearing a copied secret when nib is interrupted, which on Windows and macOS would leave
+# it on the clipboard.
+ctrlc = { version = "3.5", features = ["termination"] }
+chacha20poly1305 = { version = "0.11", default-features = false, features = ["alloc", "zeroize"] }
+# Diffs of trees' files, line by line, and their three-way merges with Git's conflict markers
+# (technical design: trees); no dependencies of its own by default.
+diffy = { version = "0.5.2", default-features = false }
+directories = "6.0"
+# How much space a disk has free, so that receiving blobs never fills it.
+fs4 = { version = "1.1", default-features = false, features = ["sync"] }
+ed25519-dalek = "3.0"
+gethostname = "1.1"
+# The account's name and the person's full name, which name the user of a new library.
+whoami = { version = "2.1", default-features = false, features = ["std"] }
+jiff = "0.2.38"
+getrandom = { version = "0.4", features = ["sys_rng"] }
+# One-time codes (RFC 6238), whose sites still mostly use HMAC-SHA-1.
+hmac = "0.13"
+hpke = { version = "0.14.1", default-features = false, features = ["alloc", "chacha", "hkdfsha2", "mlkem", "x25519"] }
+icu_locale = "2.3"
+# Connections between replicas: QUIC with TLS, without relays, port mapping or metrics on the
+# home network (technical design: sync between devices).
+iroh = { version = "1.4.1", default-features = false, features = ["tls-ring"] }
+# The gzip of Google Takeout's tgz archives.
+flate2 = { version = "1.1", default-features = false, features = ["rust_backend"] }
+infer = { version = "0.22", default-features = false }
+# Thumbnails on computers (technical design: thumbnails): decoders in memory-safe Rust for
+# the formats every system reads alike, and a JPEG encoder; no C, and nothing else.
+image = { version = "0.25.10", default-features = false, features = ["bmp", "gif", "jpeg", "png", "tiff", "webp"] }
+# What the commits of a tree leave out: `.nibignore` files in Git's syntax for `.gitignore`,
+# with negation and nested files, read under a file name of NibKeep's own, and nothing else
+# (technical design: trees).
+ignore = "0.4.25"
+keyring-core = "1.0"
+# libc 0.2.190 keeps routing constants and in6_ifreq to macOS, while netdev 0.46, which
+# nibkeep-net uses itself, and netwatch 0.19, under iroh, use them on iOS too, which then does
+# not build. So libc is held at 0.2.189 on every platform, through nibkeep-net. No upstream
+# issue was found on 2026-10-27. The hold can go once `cargo check --target aarch64-apple-ios
+# -p netdev@0.46.3 -p netwatch`, which CI runs, builds with the newest libc. Meanwhile `cargo
+# update --verbose` shows crates kept back because they need a newer libc.
+libc = "=0.2.189"
+# DNS-SD over mDNS on chosen interfaces, which Bonjour and Avahi resolve and iroh's own
+# lookup does not offer (technical design: finding replicas).
+mdns-sd = { version = "0.21.6", default-features = false }
+# The interfaces of the home network, which replicas announce themselves on.
+netdev = { version = "0.46.3", default-features = false, features = ["gateway"] }
+negentropy = { version = "0.5.2", default-features = false }
+libsqlite3-sys = { version = "0.39", features = ["bundled"] }
+nom-exif = "3.8"
+rand_core = "0.10"
+rpassword = "7.5"
+rusqlite = { version = "0.41", features = ["bundled"] }
+serde_json = "1.0"
+# Google Takeout's archives, read without unpacking them.
+tar = { version = "0.4.46", default-features = false }
+sha1 = "0.11"
+sha2 = "0.11"
+# A pre-release: the only release on the curve, hash and random crates above. Move to 0.5
+# when it is released.
+spake2 = { version = "=0.5.0-pre.0", default-features = false }
+sys-locale = "0.3.2"
+thiserror = "2.0"
+tokio = { version = "1.54", features = ["rt-multi-thread", "time", "sync"] }
+unicode-normalization = "0.1.25"
+# What the engine asks Windows and macOS of the drive that holds a library, and of the
+# computer (technical design: copies of a replica), through safe interfaces: the ID of a folder and the serial of
+# its volume, the registry, the mounted drives, and on macOS the volume that holds a folder.
+file-id = "0.2.3"
+md-5 = { version = "0.11", default-features = false }
+rustix = { version = "1.1", default-features = false, features = ["fs", "std"] }
+sysinfo = { version = "0.40", default-features = false, features = ["disk"] }
+winreg = "0.56"
+uuid = "1.28"
+windows-native-keyring-store = { version = "1.1", default-features = false }
+xaes-256-gcm = { version = "0.1", default-features = false, features = ["zeroize"] }
+secret-service = { version = "5.2", default-features = false, features = ["rt-async-io-crypto-rust"] }
+zbus-secret-service-keyring-store = { version = "1.0", features = ["rt-async-io-crypto-rust"] }
+zeroize = "1.8"
+# Google Takeout's zip archives, read in place: deflate alone, which Takeout writes.
+zip = { version = "9.5", default-features = false, features = ["deflate-flate2"] }
+
+# Only for tests.
+ciborium = "0.2"
+proptest = "1.12"
+# The end-to-end tests of nib (technical design: end-to-end tests): what it prints, compared with what the
+# test expects, with what changes from run to run, such as IDs, redacted; SNAPSHOTS=overwrite
+# writes what it printed into the test.
+regex = "1.13"
+snapbox = { version = "1.2.2", features = ["regex"] }
+# Windows' own calls: the end-to-end tests' job that ends a command with what it started, and
+# the drives under a volume and their partition tables, which nibkeep-drives reads.
+windows-sys = { version = "0.61", features = ["Win32_Foundation", "Win32_Security", "Win32_Storage_FileSystem", "Win32_System_IO", "Win32_System_Ioctl", "Win32_System_JobObjects", "Win32_System_Threading"] }
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+missing_docs = "warn"
+unreachable_pub = "warn"
+
+[workspace.lints.clippy]
+pedantic = { level = "warn", priority = -1 }
+
+# Optimized, but with the checks of a debug build, for long runs of tests such as the
+# simulation in the long tests: `cargo test --profile checked`.
+[profile.checked]
+inherits = "release"
+debug-assertions = true
+overflow-checks = true
+
+# Every command of nib derives the library's key from its passphrase with Argon2, which takes
+# seconds in a debug build: optimized, a debug build of nib, as the end-to-end tests run it
+# (technical design: end-to-end tests), unlocks as fast as a release build.
+[profile.dev.package.argon2]
+opt-level = 3
+
+[profile.dev.package.blake2]
+opt-level = 3
+
+# Decoding a photo for its thumbnail takes seconds in a debug build: optimized, a debug build
+# of nib makes thumbnails as fast as a release build, so that tests and the end-to-end tests
+# add photos quickly.
+[profile.dev.package.nibkeep-thumbnails]
+opt-level = 3
+
+[profile.dev.package.image]
+opt-level = 3
+
+[profile.dev.package.zune-jpeg]
+opt-level = 3
+
+[profile.dev.package.zune-core]
+opt-level = 3
+
+[profile.dev.package.png]
+opt-level = 3
+
+[profile.dev.package.fdeflate]
+opt-level = 3
+
+[profile.dev.package.image-webp]
+opt-level = 3

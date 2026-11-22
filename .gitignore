@@ -1,0 +1,17 @@
+/target
+
+# Written by `mdbook-mermaid install .`
+/mermaid.min.js
+/mermaid-init.js
+
+# Python caches of the scripts
+__pycache__/
+
+# Real data for the benchmarks, fetched by scripts/fetch-real-data.py
+/real-data
+
+# The benchmarks' results, a Git repository of their own (scripts/bench-record.py)
+/bench-results
+
+# RustRover
+.idea/

@@ -1,0 +1,91 @@
+[package]
+name = "nibkeep-fuzz"
+description = "Fuzz targets for everything NibKeep reads from disks and other devices"
+version = "0.0.0"
+edition = "2024"
+license = "MIT OR Apache-2.0"
+publish = false
+
+[package.metadata]
+cargo-fuzz = true
+
+# The fuzz targets build with nightly Rust and cargo-fuzz, outside the main workspace.
+[workspace]
+
+[dependencies]
+libfuzzer-sys = "0.4"
+nibkeep-base = { path = "../crates/nibkeep-base" }
+nibkeep-crypto = { path = "../crates/nibkeep-crypto" }
+nibkeep-governance = { path = "../crates/nibkeep-governance" }
+nibkeep-keys = { path = "../crates/nibkeep-keys" }
+nibkeep-log = { path = "../crates/nibkeep-log" }
+nibkeep-model = { path = "../crates/nibkeep-model" }
+nibkeep-store = { path = "../crates/nibkeep-store" }
+nibkeep-sync = { path = "../crates/nibkeep-sync" }
+nibkeep-time = { path = "../crates/nibkeep-time" }
+
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+pedantic = { level = "warn", priority = -1 }
+
+[[bin]]
+name = "cbor"
+path = "fuzz_targets/cbor.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "log"
+path = "fuzz_targets/log.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "model"
+path = "fuzz_targets/model.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "keys"
+path = "fuzz_targets/keys.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "crypto"
+path = "fuzz_targets/crypto.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "text"
+path = "fuzz_targets/text.rs"
+test = false
+doc = false
+bench = false
+
+[[bin]]
+name = "encrypted"
+path = "fuzz_targets/encrypted.rs"
+test = false
+doc = false
+bench = false
+
+[dev-dependencies]
+nibkeep-testkit = { path = "../crates/nibkeep-testkit" }
+rusqlite = "0.41"
+
+[[bin]]
+name = "sync"
+path = "fuzz_targets/sync.rs"
+test = false
+doc = false
+bench = false

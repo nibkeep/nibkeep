@@ -1,0 +1,7 @@
+target/
+corpus/
+artifacts/
+coverage/
+# Copied from the workspace before a build, so that shared dependencies have the versions
+# the shipped crates use.
+Cargo.lock

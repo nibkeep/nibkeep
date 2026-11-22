@@ -1,0 +1,24 @@
+[package]
+name = "nibkeep-log"
+description = "The signed, encrypted log of changes of a NibKeep space, its history and ordered lists"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+nibkeep-base = { workspace = true }
+nibkeep-crypto = { workspace = true }
+nibkeep-governance = { workspace = true }
+nibkeep-model = { workspace = true }
+nibkeep-time = { workspace = true }
+thiserror = { workspace = true }
+zeroize = { workspace = true }
+
+[dev-dependencies]
+nibkeep-testkit = { workspace = true }
+proptest = { workspace = true }
+
+[lints]
+workspace = true

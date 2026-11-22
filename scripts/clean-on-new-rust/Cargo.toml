@@ -1,0 +1,16 @@
+[package]
+name = "clean-on-new-rust"
+description = "Removes a build folder when its Rust toolchain changes, for the long tests' runners"
+version = "0.0.0"
+edition = "2024"
+license = "MIT OR Apache-2.0"
+publish = false
+
+# A tool for the long tests, outside the main workspace.
+[workspace]
+
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+pedantic = { level = "warn", priority = -1 }
