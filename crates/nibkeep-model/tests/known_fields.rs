@@ -6,7 +6,7 @@ use std::path::{Path, PathBuf};
 
 use nibkeep_model::{FieldName, fields};
 
-/// The source files of the crates and the apps' cores.
+/// The source files of the crates and of `nib`.
 fn sources(folder: &Path, found: &mut Vec<PathBuf>) {
 	let Ok(entries) = std::fs::read_dir(folder) else {
 		return;

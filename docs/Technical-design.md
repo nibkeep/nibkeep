@@ -2,7 +2,7 @@
 
 This page holds the technical design that NibKeep has settled on, with the reasons in brief. Formats are specified precisely in the [specifications](spec/README.md); this page says what was chosen and why. What NibKeep is for, and its concepts, are in the [design guidelines](Design.md); what is missing or imperfect in [Known limits](Known-limits.md); and what comes next in the [development plan](Plan.md).
 
-A decision is changed here, in place, with its reasons; the history of the page keeps the older ones. A decision that needs discussion first is talked through, then written here. The formats are drafts until version 1: until then a format may change in place, every device of a person is upgraded together, and no real data is kept in NibKeep. What comes before version 1, and how versions are numbered, is in [the plan](Plan.md#version-1-of-the-formats).
+A decision is changed here, in place, with its reasons; the history of the page keeps the older ones. A decision that needs discussion first is talked through, then written here. The formats are at version 1: a format changes only by a new version, which every later version of NibKeep reads. What came before version 1, and how versions are numbered, is in [the plan](Plan.md#version-1-of-the-formats).
 
 ## 1. Code layout
 
