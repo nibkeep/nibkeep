@@ -5,7 +5,7 @@ version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
-publish.workspace = true
+publish = false
 
 # Not nibkeep-cli: the tests reach nib as a program alone (technical design: end-to-end tests).
 [dependencies]

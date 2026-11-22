@@ -8,31 +8,38 @@ version = "0.1.0"
 edition = "2024"
 rust-version = "1.98"
 license = "MIT OR Apache-2.0"
-publish = false
+repository = "https://github.com/nibkeep/nibkeep"
+readme = "README.md"
+keywords = ["local-first", "peer-to-peer", "sync", "personal-data", "encryption"]
+# Every package is published, but for the tools of this repository's own tests and
+# benchmarks, which say so themselves.
+publish = true
 
 # Versions of external crates, shared by all members. A member uses one with
 # `name = { workspace = true }`. Keep this list short (P9 in docs/Design.md).
 [workspace.dependencies]
-nibkeep-base = { path = "crates/nibkeep-base" }
-nibkeep-crypto = { path = "crates/nibkeep-crypto" }
-nibkeep-drives = { path = "crates/nibkeep-drives" }
-nibkeep-git = { path = "crates/nibkeep-git" }
-nibkeep-governance = { path = "crates/nibkeep-governance" }
-nibkeep-import = { path = "crates/nibkeep-import" }
-nibkeep-keys = { path = "crates/nibkeep-keys" }
-nibkeep-log = { path = "crates/nibkeep-log" }
-nibkeep-model = { path = "crates/nibkeep-model" }
-nibkeep-bonjour = { path = "crates/nibkeep-bonjour" }
-nibkeep-net = { path = "crates/nibkeep-net" }
-nibkeep-node = { path = "crates/nibkeep-node" }
-nibkeep-passwords = { path = "crates/nibkeep-passwords" }
-nibkeep-sqlite-vfs = { path = "crates/nibkeep-sqlite-vfs" }
-nibkeep-std = { path = "crates/nibkeep-std" }
-nibkeep-store = { path = "crates/nibkeep-store" }
-nibkeep-sync = { path = "crates/nibkeep-sync" }
+# The workspace's own crates, each by its path and by the version it is published as. The
+# tests' crate has a path alone: Cargo drops such a dependency for tests as it packs.
+nibkeep-base = { path = "crates/nibkeep-base", version = "0.1.0" }
+nibkeep-crypto = { path = "crates/nibkeep-crypto", version = "0.1.0" }
+nibkeep-drives = { path = "crates/nibkeep-drives", version = "0.1.0" }
+nibkeep-git = { path = "crates/nibkeep-git", version = "0.1.0" }
+nibkeep-governance = { path = "crates/nibkeep-governance", version = "0.1.0" }
+nibkeep-import = { path = "crates/nibkeep-import", version = "0.1.0" }
+nibkeep-keys = { path = "crates/nibkeep-keys", version = "0.1.0" }
+nibkeep-log = { path = "crates/nibkeep-log", version = "0.1.0" }
+nibkeep-model = { path = "crates/nibkeep-model", version = "0.1.0" }
+nibkeep-bonjour = { path = "crates/nibkeep-bonjour", version = "0.1.0" }
+nibkeep-net = { path = "crates/nibkeep-net", version = "0.1.0" }
+nibkeep-node = { path = "crates/nibkeep-node", version = "0.1.0" }
+nibkeep-passwords = { path = "crates/nibkeep-passwords", version = "0.1.0" }
+nibkeep-sqlite-vfs = { path = "crates/nibkeep-sqlite-vfs", version = "0.1.0" }
+nibkeep-std = { path = "crates/nibkeep-std", version = "0.1.0" }
+nibkeep-store = { path = "crates/nibkeep-store", version = "0.1.0" }
+nibkeep-sync = { path = "crates/nibkeep-sync", version = "0.1.0" }
 nibkeep-testkit = { path = "crates/nibkeep-testkit" }
-nibkeep-thumbnails = { path = "crates/nibkeep-thumbnails" }
-nibkeep-time = { path = "crates/nibkeep-time" }
+nibkeep-thumbnails = { path = "crates/nibkeep-thumbnails", version = "0.1.0" }
+nibkeep-time = { path = "crates/nibkeep-time", version = "0.1.0" }
 
 aes-gcm = { version = "0.11", default-features = false, features = ["aes", "zeroize"] }
 apple-native-keyring-store = { version = "1.0", features = ["keychain"] }
