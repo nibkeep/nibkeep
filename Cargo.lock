@@ -3010,6 +3010,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "nibkeep"
+version = "0.1.0"
+dependencies = [
+ "nibkeep-base",
+ "nibkeep-crypto",
+ "nibkeep-model",
+ "nibkeep-node",
+ "nibkeep-std",
+ "nibkeep-testkit",
+ "nibkeep-time",
+]
+
+[[package]]
 name = "nibkeep-base"
 version = "0.1.0"
 dependencies = [

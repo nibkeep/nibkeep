@@ -53,13 +53,14 @@
 | `nibkeep-thumbnails` | Storage | Thumbnails of pictures, with decoders in memory-safe Rust, which a program hands the engine ([technical design](Technical-design.md#98-thumbnails)) | No | Phase 7 |
 | `nibkeep-git` | Engine | The person's own Git, run for the repositories in trees, isolated from the variables that point it elsewhere, which `nib` uses and the engine knows nothing of ([technical design](Technical-design.md#15-trees)) | Yes | After phase 7 |
 | `nibkeep-import` | Engine | Importers on the engine's public API, such as of Google Takeout's archives, read in place ([technical design](Technical-design.md#912-importers-and-where-files-came-from)) | Yes | Phase 7 |
+| `nibkeep` | Engine | NibKeep under one name, for a program that depends on one crate: the API of `nibkeep-node` at its root, and the crates whose types that API speaks in as modules, `base`, `model`, `time`, `vocabulary` for `nibkeep-std`, and `crypto` | Yes | Version 1 |
 | `nibkeep-plugins` | Plugin host | Plugin runtime and capabilities ([open questions](Design.md#8-open-questions)) | Yes | Phase 9 |
 
 Crates without I/O are plain, synchronous Rust. They are the easiest to test and to compile for phones. Only the storage, keystore, network and engine crates touch disks, keystores, networks or the clock.
 
 ### 2.2 Dependencies
 
-Arrows point from a crate to the crates it uses. `nibkeep-testkit` is used by the tests of all of them and is left out. So are the crates that use no other crate of the workspace: `nibkeep-bonjour`, which `nibkeep-net` uses, `nibkeep-drives`, which `nibkeep-node` uses, and `nibkeep-thumbnails` and `nibkeep-passwords`, which `nib` uses. An app built on the engine also uses the crates below it for the types its API speaks in, such as IDs, values and dates.
+Arrows point from a crate to the crates it uses. `nibkeep-testkit` is used by the tests of all of them and is left out. So are the crates that use no other crate of the workspace: `nibkeep-bonjour`, which `nibkeep-net` uses, `nibkeep-drives`, which `nibkeep-node` uses, and `nibkeep-thumbnails` and `nibkeep-passwords`, which `nib` uses. An app built on the engine also uses the crates below it for the types its API speaks in, such as IDs, values and dates: the crate `nibkeep`, also left out, gives the engine and those crates one name.
 
 ```mermaid
 flowchart TB
