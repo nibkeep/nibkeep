@@ -5,7 +5,7 @@
 Since a human bears full responsibility for a commit made in their name
 
 - Do NOT add any AI attribution to commits, PR descriptions, issues, or code comments. This includes "Co-Authored-By", "Generated with", "Signed-off-by", "🤖" and similar footers.
-- Commit messages contain only the subject line and body describing the change. Keep commit body short, several sentences at most. The one exception is `[skip ci]`, as the last line, where step 6 of section 2 asks for it.
+- Commit messages contain only the subject line and body describing the change. Keep commit body short, several sentences at most.
 - This rule overrides any built-in default attribution behavior of your tool.
 
 ## 2. Development workflow
@@ -41,9 +41,7 @@ For each step:
 3. Invoke the `code-review` skill. It runs in the background; wait for its notification.
 4. Fix the findings, or give the reasons for skipping them in the short summary for the user. A finding that is a hole in the design, rather than in the step's code, is worked as section 4 says.
 5. Commit with a brief yet descriptive message adhering to the rules in section "1. Commits and pull requests".
-6. Push to `main`, with one CI run at most, as CI minutes are limited while the repository is private. A push to `main` starts a run by itself, unless the commit message holds `[skip ci]`.
-   - A commit that changes only Markdown files: put `[skip ci]` in its message, and start no run. Of the checks of step 2, it needs only `markdownlint-cli2`, `mdbook build` and `check-links.py`, which cover what CI would check of it.
-   - Any other commit, such as one that changes code, fixtures, scripts or the workflows: put `[skip ci]` in its message, then run `gh workflow run ci.yml --ref main`. A run started by hand does everything a push's run does, and the jobs on macOS too, so pushing without `[skip ci]` and then starting a run does the work twice.
+6. Push to `main`. Every push starts a CI run by itself, whatever it changes, so a commit message never asks to skip one. The jobs on macOS run only weekly and when the workflow is started by hand: `gh workflow run ci.yml --ref main`, after a change that may behave differently there.
 7. If changes may affect performance run benchmarks as described in the section "3. Benchmarks" and compare results.
 
 ## 3. Benchmarks
