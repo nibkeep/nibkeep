@@ -47,7 +47,7 @@
 | `nibkeep-sync` | Sync | Set reconciliation and blob transfer, as a state machine without I/O; from phase 7, the proofs that a replica holds a copy, while the planner and the removal of copies are in `nibkeep-node` | No | Phase 4 |
 | `nibkeep-net` | Transports | Connections through iroh, discovery on the home network that announces no names; relays and bundles on a USB drive later | Yes | Phase 4 |
 | `nibkeep-bonjour` | Transports | Apple's DNS-SD, by which replicas find each other on macOS and iOS, with `unsafe` code for its C interface | Yes | Phase 5 |
-| `nibkeep-passwords` | App | The domain of password records: the password generator, one-time codes, clipboard handling; importers and exporters later | Partly | Phase 5 |
+| `nibkeep-passwords` | Domain | The domain of password records: the password generator, one-time codes, clipboard handling; importers and exporters later | Partly | Phase 5 |
 | `nibkeep-end-to-end` | Tests | The end-to-end tests of `nib`, which reach it only as a program ([technical design](Technical-design.md#18-end-to-end-tests)) | – | Phase 6 |
 | `nibkeep-drives` | Storage | The physical drives under a volume and their partition tables, which name a disk, as Windows reads them, with `unsafe` code for its calls ([technical design](Technical-design.md#96-where-the-copies-are)) | Yes | Phase 7 |
 | `nibkeep-thumbnails` | Storage | Thumbnails of pictures, with decoders in memory-safe Rust, which a program hands the engine ([technical design](Technical-design.md#98-thumbnails)) | No | Phase 7 |
