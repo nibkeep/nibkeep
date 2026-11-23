@@ -1,6 +1,6 @@
 //! The tests' switch for the keystore, `NIBKEEP_NO_KEYSTORE`: with it, `nib` finds no keystore,
 //! where it would otherwise move a library's keys into the computer's. The end-to-end tests
-//! ([technical design](../../../docs/Technical-design.md#18-end-to-end-tests)) and the apps' tests rely
+//! ([technical design](../../../docs/Technical-design.md#18-end-to-end-tests)) and apps' tests rely
 //! on it to keep away from the person's keystore. This test runs the program built with it,
 //! never an older one, which would not know the switch. On Linux, it also takes the session
 //! bus away, so that a failing switch cannot reach the Secret Service. On Windows and macOS

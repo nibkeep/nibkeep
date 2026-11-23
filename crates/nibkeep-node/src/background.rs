@@ -1,5 +1,5 @@
 //! The sync role, held in the background ([technical design](../../../docs/Technical-design.md#105-the-sync-role)),
-//! as the apps hold it while a library is unlocked: a thread that takes the role, or waits
+//! as apps hold it while a library is unlocked: a thread that takes the role, or waits
 //! for the program that holds it to let go, and syncs the replica for every program on it
 //! until stopped. And asking the holder, whichever program it is, to sync now.
 
@@ -28,7 +28,7 @@ const LOOK: Duration = Duration::from_millis(100);
 /// keeps of its own.
 #[derive(Clone, Debug)]
 pub struct BackgroundOptions {
-	/// The program, as the records name it, such as `Passwords`.
+	/// The program, as the records name it, such as `nibkeep-sync`.
 	pub program: String,
 	/// How its endpoint starts.
 	pub network: Options,

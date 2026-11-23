@@ -312,7 +312,7 @@ impl Environment for System {
 	}
 
 	fn keystore(&mut self) -> bool {
-		// Tests keep nib from the computer's keystore, as they keep the apps: with
+		// Tests keep nib from the computer's keystore, as they keep apps: with
 		// `NIBKEEP_NO_KEYSTORE`, there is none.
 		*self
 			.keystore

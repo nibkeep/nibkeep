@@ -10,7 +10,7 @@ They are grouped by what can be done about them, and each says how it could be m
 4. [Not built yet](#4-not-built-yet): features with nothing in their way.
 5. [Tests](#5-tests): tests that fail now and then, and what no test covers.
 
-A mitigation that would change which changes count, or what the formats hold, says so: it comes before [version 1 of the formats](Plan.md#version-1-of-the-formats), or needs a new version after.
+A mitigation that would change which changes count, or what the formats hold, says so: the formats are at [version 1](Plan.md#version-1-of-the-formats), so it needs a new version.
 
 The first two groups stay, however much is built: their mitigations make them rarer or visible, not gone. Progress shows in groups 3 to 5, and in the plan's lists of [what comes before each stage of daily use](Plan.md#known-limits-before-daily-use), which give the order of work. A limit that a fix narrows is written anew, in the group where it then belongs.
 
@@ -40,7 +40,6 @@ One piece of work closes each of these sets, so it is built once, rather than a 
 ### Android
 
 - **Android gives one developer's apps one name for the phone only when one key signs them,** so two apps signed with different keys count as two disks. *Mitigation:* one signing key for every build, debug builds too.
-- **A lost fingerprint key** is told from a missing key, `UnrecoverableKeyException` or `KeyPermanentlyInvalidatedException`. Not tried on a device: removing a phone's screen lock deletes its fingerprints. *Mitigation:* try it on the emulator, which can enroll a second fingerprint (`adb emu finger touch`) and so invalidate the key.
 
 ### Windows
 

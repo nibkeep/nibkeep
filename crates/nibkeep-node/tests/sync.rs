@@ -758,7 +758,7 @@ fn a_replica_whose_first_sync_fails_after_it_joined_is_revoked_and_listed_nowher
 		"{paired:?}"
 	);
 	// The replica that it recorded is revoked, so the space has a new key, which the replica
-	// never gets; and its record is deleted, which the apps do not list.
+	// never gets; and its record is deleted, which apps do not list.
 	let (keys_after, writing) = laptop.space_key_numbers(personal).expect("a space");
 	assert_eq!(keys_after.len(), keys_before.len() + 1, "{keys_after:?}");
 	assert!(!keys_before.contains(&writing));

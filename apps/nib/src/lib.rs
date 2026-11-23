@@ -2413,7 +2413,7 @@ pub enum CliError {
 	NoStateFolder,
 	/// No `nibkeep-sync` beside `nib`.
 	#[error(
-		"nibkeep-sync, which syncs from login, is not installed beside nib; cargo install --path apps/nib installs both"
+		"nibkeep-sync, which syncs from login, is not installed beside nib; cargo install nibkeep-cli installs both, as cargo install --path apps/nib does in a checkout"
 	)]
 	NoSyncProgram,
 	/// The library's keys are in the platform's keystore, which is not there.
@@ -2893,7 +2893,7 @@ fn run_command<E: Environment>(
 	output: &mut dyn Write,
 	timings: &mut Timings,
 ) -> Result<(), CliError> {
-	// As the replicas it opens record it, beside the apps.
+	// As the replicas it opens record it, beside the other programs.
 	nibkeep_node::name_program(APP);
 	if let Command::Absent(absent) = &cli.command {
 		let (verb, instead) = absent.instead();

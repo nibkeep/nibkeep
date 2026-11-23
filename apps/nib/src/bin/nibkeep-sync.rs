@@ -28,7 +28,7 @@ fn main() -> ExitCode {
 			return ExitCode::from(2);
 		}
 	}
-	// As the replicas it opens record it, beside the apps.
+	// As the replicas it opens record it, beside the other programs.
 	nibkeep_node::name_program(SERVICE_PROGRAM);
 	let (Some(settings), Ok(program)) = (at_login::settings_folder(), std::env::current_exe())
 	else {
@@ -48,7 +48,7 @@ fn main() -> ExitCode {
 	let mut options =
 		ServiceOptions::new(program, BackgroundOptions::new(SERVICE_PROGRAM, network));
 	options.entry = LoginEntry::platform();
-	// Tests keep it from the computer's keystore, as they keep the apps.
+	// Tests keep it from the computer's keystore, as they keep apps.
 	if !at_login::app::kept_away() {
 		options.locked = keystore_locked();
 	}

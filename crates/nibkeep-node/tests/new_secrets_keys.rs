@@ -190,7 +190,7 @@ impl Devices {
 			.expect("a space")
 	}
 
-	/// Unlocks a device's secrets, and takes and gives the keys, as `nib` and the apps do.
+	/// Unlocks a device's secrets, and takes and gives the keys, as `nib` and apps do.
 	fn unlock(&mut self, device: usize) {
 		let at = self.tick();
 		let passphrase = if device == LAPTOP {

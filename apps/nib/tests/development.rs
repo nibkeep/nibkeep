@@ -87,7 +87,7 @@ fn a_build_under_development_finds_a_scratch_library_below_its_ceiling_and_none_
 			"the target folder is outside the workspace, where cargo's ceiling counts for nothing"
 		);
 	}
-	// With a ceiling below the library, as the workspace is below the project's library, the
+	// With a ceiling below the library, as a workspace inside someone's library has, the
 	// library above it is not found, and as cargo empties NIBKEEP_LIBRARY, none is opened in
 	// its place.
 	let ceiling = test.join("Books");

@@ -79,7 +79,7 @@ How to run and record them is in `CONTRIBUTING.md` (Benchmarks), including profi
 - **Keyring.** Never create entries in the real keyring of the machine you work on: no real `nib init`; tests use the mock keystore.
 - **Builds under development.** A `nib` built from this repository works only on scratch libraries, named with `--library`, in `target/` or a temporary folder. Never on a library found above the repository, or one that `NIBKEEP_LIBRARY` names: a person's own library may be one ([the plan](docs/Plan.md#guards-for-builds-under-development)).
 - **Private data.** Never read `rig/power-switch/wifi.env`, which holds a Wi-Fi password. Samples of real personal data stay out of the repository.
-- **Git.** Work on `main` with no pull requests while the repository is private. Commit only when asked; the development workflow of section 2 counts as asking. No DCO sign-off on the user's behalf.
+- **Git.** Work on `main` with no pull requests. Never force-push: a pushed commit stays as it is, and a fix goes on top. Commit only when asked; the development workflow of section 2 counts as asking. No DCO sign-off on the user's behalf.
 - **Deleting.** Look before deleting or overwriting. Don't `pkill` patterns that could match your own shell.
 - **Documentation:**
   - No personal information about the user.

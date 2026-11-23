@@ -2322,7 +2322,7 @@ fn read_key_file(directory: &Path) -> Result<(PathBuf, KeyFile), NodeError> {
 		Found::Here { folder, whole } => {
 			// Before any other file of the replica, which a later version may have changed:
 			// one without the files of this version is not taken for one whose making was
-			// cut short, which the apps offer to remove.
+			// cut short, which an app may offer to remove.
 			engines::check(&folder)?;
 			if !whole {
 				return Err(NodeError::Unfinished);

@@ -35,10 +35,10 @@ pub const ENGINE_VERSION: &str = env!("CARGO_PKG_VERSION");
 static PROGRAM: OnceLock<String> = OnceLock::new();
 
 /// Names this program, as the engines file of each replica that it opens records it, such
-/// as `Passwords`: once, before it opens a library. A later name, or an empty one, is
+/// as `nib`: once, before it opens a library. A later name, or an empty one, is
 /// ignored. A program that names itself nothing is named by its executable's file name.
 pub fn name_program(name: &str) {
-	// The apps name themselves on every request.
+	// An app may name itself on every request.
 	if !name.is_empty() && PROGRAM.get().is_none() {
 		let _ = PROGRAM.set(name.to_owned());
 	}

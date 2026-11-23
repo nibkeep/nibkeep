@@ -44,7 +44,7 @@ pub struct Pace {
 }
 
 impl Pace {
-	/// The pace the apps and `nib sync --serve` keep: they look every 5 minutes, rest four
+	/// The pace that apps and `nib sync --serve` keep: they look every 5 minutes, rest four
 	/// times as long as they read, and run for a minute at a time.
 	pub const DEFAULT: Self = Self {
 		wait: Duration::from_mins(5),

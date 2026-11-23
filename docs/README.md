@@ -3,7 +3,7 @@
 NibKeep is a local-first, peer-to-peer system for personal data. It keeps a typed, versioned graph of the things in your life, together with the files they refer to, and replicates it across your own devices and those of the people you share it with. It needs no company's server.
 
 > [!NOTE]
-> NibKeep is in early development and has no releases yet. Its formats are at version 1: from now on they change only by new versions, which every later version of NibKeep reads.
+> NibKeep is in early development. Its crates are on [crates.io](https://crates.io/crates/nibkeep) at 0.x, while their API still changes freely. Its formats are at version 1: from now on they change only by new versions, which every later version of NibKeep reads.
 
 This book holds its documentation, in the order to read it:
 

@@ -3,7 +3,7 @@
 NibKeep is a local-first, peer-to-peer system for personal data. It keeps a typed, versioned graph of the things in your life, together with the files they refer to, and replicates it across your own devices and those of the people you share it with. It needs no company's server.
 
 > [!NOTE]
-> NibKeep is in early development and has no releases yet. Its formats are at version 1: from now on they change only by new versions, which every later version of NibKeep reads. What it still does imperfectly is in the [known limits](docs/Known-limits.md).
+> NibKeep is in early development. Its crates are on [crates.io](https://crates.io/crates/nibkeep) at 0.x, while their API still changes freely. Its formats are at version 1: from now on they change only by new versions, which every later version of NibKeep reads. What it still does imperfectly is in the [known limits](docs/Known-limits.md).
 
 ## Documents
 
@@ -23,6 +23,14 @@ The generic command-line tool is called `nib`:
 ```sh
 cargo run --bin nib
 ```
+
+It also installs from crates.io, with `nibkeep-sync` beside it:
+
+```sh
+cargo install --locked nibkeep-cli
+```
+
+A program of your own takes the engine as one crate, [`nibkeep`](https://docs.rs/nibkeep).
 
 ## Contributing
 

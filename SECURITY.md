@@ -4,7 +4,7 @@ NibKeep will hold passwords and other private data, so security reports are welc
 
 ## Supported versions
 
-NibKeep is in early development and has no releases yet. Until the first release, only the latest code on the main branch is supported.
+NibKeep is in early development. Only the latest version of its crates on crates.io and the latest code on the main branch are supported.
 
 ## Reporting a vulnerability
 

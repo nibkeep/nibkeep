@@ -230,7 +230,7 @@ pub(crate) fn whereabouts(folder: &Path) -> Whereabouts {
 /// counts as on a disk of its own ([technical design: where the copies are]). Each kind of
 /// name is told apart by a prefix.
 ///
-/// Public for the tests of the apps' cores, which declare phones.
+/// Public for the tests of apps, which declare phones.
 ///
 /// [technical design: where the copies are]: ../../../docs/Technical-design.md#96-where-the-copies-are
 #[doc(hidden)]

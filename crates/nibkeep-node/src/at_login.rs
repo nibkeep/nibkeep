@@ -1247,7 +1247,7 @@ impl LoginEntry {
 		})
 	}
 
-	/// This computer's login entry: none on macOS, where the login item comes with the apps,
+	/// This computer's login entry: none on macOS, where a login item is not built yet,
 	/// nor on phones.
 	#[cfg(not(any(
 		windows,

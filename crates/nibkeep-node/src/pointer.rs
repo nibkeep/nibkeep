@@ -1,7 +1,7 @@
 //! The `.nib` file in the folder of a tree outside its library's folder, which names the
 //! library, as a worktree's `.git` file names its repository, so that commands run there find
 //! it; and none in the folder of a tree inside it, where the commands find the library
-//! without one, and a file left there would take them over. `nib` and the apps that start
+//! without one, and a file left there would take them over. `nib` and apps that start
 //! trees settle it alike ([technical design: trees]).
 //!
 //! [technical design: trees]: ../../../docs/Technical-design.md#15-trees

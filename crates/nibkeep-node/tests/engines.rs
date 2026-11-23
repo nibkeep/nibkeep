@@ -300,7 +300,7 @@ fn a_replica_of_a_later_version_is_neither_opened_nor_written() {
 		"it asks for an update"
 	);
 	// A later version that keeps its keys elsewhere leaves a replica that is not taken for
-	// one whose making was cut short, which the apps offer to remove.
+	// one whose making was cut short, which an app may offer to remove.
 	let folder = Library::replica_folder(&directory).expect("a replica");
 	fs::remove_file(folder.join("keys.cbor")).expect("removes");
 	assert!(matches!(

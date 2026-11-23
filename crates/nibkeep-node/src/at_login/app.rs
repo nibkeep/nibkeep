@@ -4,7 +4,7 @@
 //! computers.
 //!
 //! Tests keep apps from the person's list and login entry: with `NIBKEEP_NO_KEYSTORE`, as
-//! they run the apps, there is none, and once a test has named a place of its own, or none,
+//! they run apps, there is none, and once a test has named a place of its own, or none,
 //! the process keeps to it.
 
 use std::path::PathBuf;
