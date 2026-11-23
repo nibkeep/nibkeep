@@ -273,7 +273,7 @@ ANDROID_NDK_HOME=~/Android/android-ndk-r30 python3 scripts/bench-record.py --on 
 
 ## Working on the documentation
 
-The documents in `docs/` read on GitHub as they are, and also as a book, with a sidebar, search, and diagrams. To read the book while you write, install [mdBook](https://rust-lang.github.io/mdBook/) and its plugin for diagrams, then let the plugin add its scripts, once:
+The documents in `docs/` read on GitHub as they are, and also as [a book](https://nibkeep.github.io/nibkeep/), with a sidebar, search, and diagrams, which continuous integration publishes from `main` on every push. To read the book while you write, install [mdBook](https://rust-lang.github.io/mdBook/) and its plugin for diagrams, then let the plugin add its scripts, once:
 
 ```sh
 cargo install --locked mdbook@0.5.4 mdbook-mermaid@0.17.1

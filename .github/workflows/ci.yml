@@ -1,6 +1,7 @@
 # Checks every push to main and every pull request, and looks for new
 # security advisories once a week. The jobs on macOS run only in the weekly
-# run and when started by hand, not for pushes or pull requests.
+# run and when started by hand, not for pushes or pull requests. A push to main
+# also publishes the documents as a book, on GitHub Pages.
 # Third-party actions are pinned to commits; the comment names the version.
 
 name: CI
@@ -174,6 +175,34 @@ jobs:
         run: python3 scripts/check-links.py
       - name: Test the scripts
         run: python3 -m unittest discover -s scripts/tests
+      # The book as built and checked here, for the job below to publish.
+      - name: Keep the book to publish
+        if: github.event_name == 'push'
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: target/book
+
+  # Publishes the book on GitHub Pages, for every push to main, once the job above has
+  # built it and checked its links. It waits for no other job: the book is the documents
+  # alone. Only this job may write to Pages.
+  book:
+    name: Publish the book
+    if: github.event_name == 'push'
+    needs: docs
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    # One deployment at a time, and the one under way finishes.
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
 
   deny:
     name: Dependencies (${{ matrix.checks }})

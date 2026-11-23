@@ -22,7 +22,7 @@
 - **Real data at version 1.** Nothing went into daily use while the formats were drafts, which could change in place: data put in then would have had to be made again. The formats are now at [version 1](#version-1-of-the-formats), so real data can go in, one stage at a time ([Known limits before daily use](#known-limits-before-daily-use)). Until its stage comes, every collection stays where it is, with the programs that keep it now.
 - **Crates when needed.** The crate map below is the target. A crate is created when a phase needs it, not up front.
 - **Decisions in writing.** Technical decisions and their reasons live in the [technical design](Technical-design.md), changed in place when a decision changes; product decisions in the design guidelines.
-- **Documents as a book.** The documents read on GitHub as they are, and as a book built with [mdBook](https://rust-lang.github.io/mdBook/). Continuous integration builds the book and checks every link between the documents, in both forms.
+- **Documents as a book.** The documents read on GitHub as they are, and as a book built with [mdBook](https://rust-lang.github.io/mdBook/). Continuous integration builds the book and checks every link between the documents, in both forms, and publishes the book from `main` on [GitHub Pages](https://nibkeep.github.io/nibkeep/).
 
 ## 2. From layers to crates
 

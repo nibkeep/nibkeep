@@ -7,7 +7,7 @@ NibKeep is a local-first, peer-to-peer system for personal data. It keeps a type
 
 ## Documents
 
-The [documentation](docs/README.md) describes what NibKeep is for, how it is built and why, the formats it stores and sends, and how it gets built step by step. Start with the [design guidelines](docs/Design.md), then the [technical design](docs/Technical-design.md). The documents also read as a book, with a sidebar and search: see [CONTRIBUTING.md](CONTRIBUTING.md#working-on-the-documentation).
+The [documentation](docs/README.md) describes what NibKeep is for, how it is built and why, the formats it stores and sends, and how it gets built step by step. Start with the [design guidelines](docs/Design.md), then the [technical design](docs/Technical-design.md). The documents also read as [a book](https://nibkeep.github.io/nibkeep/), with a sidebar and search; [CONTRIBUTING.md](CONTRIBUTING.md#working-on-the-documentation) says how to build it yourself.
 
 ## Building
 

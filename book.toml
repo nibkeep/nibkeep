@@ -22,3 +22,7 @@ command = "mdbook-mermaid"
 [output.html]
 # Written by `mdbook-mermaid install .`, and not kept in the repository.
 additional-js = ["mermaid.min.js", "mermaid-init.js"]
+# The book is published at https://nibkeep.github.io/nibkeep/: its page for a missing
+# address needs the path, and each page links the repository.
+site-url = "/nibkeep/"
+git-repository-url = "https://github.com/nibkeep/nibkeep"
