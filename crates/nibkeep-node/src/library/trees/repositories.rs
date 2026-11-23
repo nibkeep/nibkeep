@@ -27,7 +27,7 @@ use nibkeep_std::{
 use super::commit::{clearing, deleting, moving, replacing};
 use super::git::{cloneable, is_commit, is_safe_name, recordable_address};
 use super::index::Index;
-use super::locate::{Blocked, Located, located, place_for_new};
+use super::locate::{Blocked, Listings, Located, holds_git, located, place_for_new};
 use super::walk::walk;
 use super::{Change, Committed, TREE_TYPES, TreeChange, is_safe_tree_path, tree_entities};
 use crate::NodeError;
@@ -765,10 +765,11 @@ impl Library {
 		})
 	}
 
-	/// The repositories that a tree records and this device's copy does not hold, whose
-	/// folders are not there: what writing or updating the copy would clone, each with the
-	/// remote it comes from and the device that recorded it, or why it may not be cloned.
-	/// One deleted here, which the index says the copy held, is not listed.
+	/// The repositories that a tree records and this device's copy does not hold, and that
+	/// are not at their paths: what writing or updating the copy would clone, each with the
+	/// remote it comes from and the device that recorded it, or why it may not be cloned, as
+	/// when something that holds no Git repository is at its path. One deleted here, which
+	/// the index says the copy held, is not listed, nor one whose folder holds a repository.
 	///
 	/// # Errors
 	///
@@ -794,15 +795,25 @@ impl Library {
 			if held.contains(&repository.entity) || marked.contains_key(&repository.path) {
 				continue;
 			}
-			// A folder there is left as it is; one inside another repository, or that cannot
-			// be looked at, is listed with why it may not be cloned.
-			let there = is_safe_tree_path(&repository.path)
-				&& matches!(located(&root, &repository.path, &apart), Located::Here(_));
-			if there {
+			// A repository there is left as it is. Anything else there is too, but listed with
+			// why it may not be cloned, as one inside another repository, or that cannot be
+			// looked at, is.
+			let there = match is_safe_tree_path(&repository.path)
+				.then(|| located(&root, &repository.path, &apart))
+			{
+				Some(Located::Here(folder)) => Some(holds_git(&Listings::apart(&apart), &folder)),
+				_ => None,
+			};
+			if there == Some(true) {
 				continue;
 			}
 			let nested = inside_repository(&root, &repository.path, (&recorded, &marked));
-			to_clone.push(self.to_clone(space, repository, nested));
+			let mut listed = self.to_clone(space, repository, nested);
+			if there == Some(false) && listed.refused.is_none() {
+				let why = "something that holds no Git repository is at its path";
+				listed.refused = Some(why.to_owned());
+			}
+			to_clone.push(listed);
 		}
 		Ok(to_clone)
 	}

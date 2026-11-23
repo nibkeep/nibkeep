@@ -155,9 +155,10 @@ impl Library {
 	///
 	/// A copy goes into a folder that holds files too, and never over one of them: a file at
 	/// a path of the tree that holds the tree's version counts as written; one that holds an
-	/// older version of its file, as behind, which an update brings up to date; and one that
-	/// holds anything else stays, as an edit of the tree's version. What the tree does not
-	/// have stays too, for the next commit to take in ([`Written`]).
+	/// older version of its file, whose content the store holds, as behind, which an update
+	/// brings up to date; and one that holds anything else stays, as an edit of the tree's
+	/// version. What the tree does not have stays too, for the next commit to take in
+	/// ([`Written`]).
 	///
 	/// # Errors
 	///
@@ -166,7 +167,9 @@ impl Library {
 	/// [`NodeError::TreeHereAlready`] if the tree as it is is asked
 	/// for and this device has a copy of it already, [`NodeError::TreeInTree`] or
 	/// [`NodeError::NotATreeFolder`] if the folder is in a tree's, the library's or Git's,
-	/// and an error if writing or saving fails.
+	/// [`NodeError::OtherLibraryHere`] if it holds another library,
+	/// [`NodeError::HoldsOtherCopies`] if a checkout of this device has its copy at a path of
+	/// the tree there, and an error if writing or saving fails.
 	pub fn write_tree(
 		&mut self,
 		space: SpaceId,
@@ -202,6 +205,8 @@ impl Library {
 		}
 		let root = self.checked_new_root(space, folder)?;
 		let state = self.tree_state_at(space, tree, at)?;
+		// Of an empty folder too, as a checkout whose copy was deleted is still recorded.
+		self.check_no_checkout_at(&root, &state)?;
 		let apart = self.apart();
 		let place = Place {
 			root: &root,
@@ -379,6 +384,28 @@ impl Library {
 			return Ok(Taken::Copy(Kept::Older, entry(past, found.modified)));
 		}
 		Ok(Taken::Copy(Kept::Differing, entry(version.clone(), None)))
+	}
+
+	/// Refuses a folder to write a tree into where a checkout of this device, of any space,
+	/// has its copy at a path of the tree's `state`: the checkout and the tree would both
+	/// keep that file, and an update or a sync write over what the other wrote.
+	fn check_no_checkout_at(&self, root: &Path, state: &TreeState) -> Result<(), NodeError> {
+		for &space in self.spaces.keys() {
+			for checkout in self.checkouts(space)? {
+				let at_a_path = checkout
+					.path
+					.strip_prefix(root)
+					.ok()
+					.and_then(|relative| super::paths::tree_path_of(relative).ok())
+					.is_some_and(|path| {
+						state.by_path.contains_key(&path) || state.sealed.contains_key(&path)
+					});
+				if at_a_path {
+					return Err(NodeError::HoldsOtherCopies(root.display().to_string()));
+				}
+			}
+		}
+		Ok(())
 	}
 
 	/// Refuses a folder to write a tree into that holds a library other than this one, whose

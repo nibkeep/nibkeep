@@ -284,6 +284,7 @@ Of [recovery codes](Technical-design.md#111-recovery-codes), `nib recovery` make
 - **A revision has no name,** so lists show it by its type; `nib log` and `nib show` show its message.
 - **Other versions written beside a copy pile up** under new names, `NAME.conflict-DEVICE-2` and on, as an update never writes over one, and so do the edits that restores keep, `NAME.orig-2` and on: the person deletes those they no longer need. *Mitigation:* `nib status` lists them, and offers to delete them.
 - **A folder whose `.git` is a file,** as a worktree's or a submodule's, is left out and recorded as nothing, as what it holds is elsewhere.
+- **A Git repository with other remotes where a tree records one,** as another project cloned at that path, is taken as the tree's when the tree is written into its folder: nothing is cloned or said, and the next commit records its remotes as the repository's. Something there that holds no repository is listed as not cloned. *Mitigation:* `nib clone` asking Git for the remotes of each repository there, and listing one that shares none with the record.
 - **A library's folder that moves** leaves the `.nib` files of its trees outside it naming the old folder ([technical design](Technical-design.md#15-trees)). A command in such a tree's folder says so, and `nib init FOLDER`, run in the library's new folder, writes the file again, one tree at a time. *Mitigation:* the library, opened in its new folder, writing the files of its trees on this device.
 
 ### Types and vocabulary

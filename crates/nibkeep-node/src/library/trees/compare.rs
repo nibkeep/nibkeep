@@ -379,8 +379,11 @@ impl Library {
 		Ok(())
 	}
 
-	/// The version of a file of a space that a copy holds, if it is one the file had: its
-	/// content then, with the copy's executable bit.
+	/// The version of a file of a space that a copy holds, if it is one the file had, and
+	/// one whose content the store holds: its content then, with the copy's executable bit.
+	/// A value with no content behind it, as any replica of the space may state, an AI
+	/// agent's too, makes no copy an older version, which an update would write over beyond
+	/// recall.
 	pub(super) fn past_version(
 		&self,
 		space: SpaceId,
@@ -398,7 +401,8 @@ impl Library {
 			.iter()
 			.flat_map(|field| &field.values)
 			.any(|past| past.value == Value::Blob(*content));
-		Ok(had.then(|| copy.clone()))
+		let held = had && self.space(space)?.stored.holds_blob(content);
+		Ok(held.then(|| copy.clone()))
 	}
 }
 

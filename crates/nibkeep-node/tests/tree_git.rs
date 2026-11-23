@@ -474,6 +474,48 @@ fn another_device_lists_the_repositories_to_clone_and_where_they_come_from() {
 }
 
 #[test]
+fn a_repository_whose_place_something_else_holds_is_listed_as_not_cloned() {
+	let name = "tree git place taken";
+	let mut one = One::new(name, &[ORIGIN]);
+	let desk_directory = new_folder(&format!("{name}, desk"));
+	let code = PairingCode::generate(&mut one.rng);
+	let (paired, joined) = common::pair_with(
+		&mut one.library,
+		&desk_directory,
+		&code,
+		&code,
+		&mut one.rng,
+	);
+	paired.expect("the laptop paired");
+	let mut desk = joined.expect("the desk joined").library;
+	// The repository's files, unpacked rather than cloned: no Git repository.
+	let on_desk = folder(&format!("{name}, on desk"));
+	write(&on_desk, "proj/code.rs", b"fn main() {}\n");
+	let personal = desk.personal_space();
+	let tree = one.tree;
+	desk.write_tree(
+		personal,
+		tree,
+		&on_desk,
+		TreePoint::Now,
+		now() + 70_000,
+		&mut one.rng,
+	)
+	.expect("writes the tree beside what is there");
+	let to_clone = desk.repositories_to_clone(personal, tree).expect("lists");
+	assert_eq!(to_clone.len(), 1);
+	assert_eq!(to_clone[0].path, "proj");
+	assert_eq!(
+		to_clone[0].refused.as_deref(),
+		Some("something that holds no Git repository is at its path")
+	);
+	assert_eq!(
+		fs::read_to_string(on_desk.join("proj/code.rs")).expect("reads"),
+		"fn main() {}\n"
+	);
+}
+
+#[test]
 fn addresses_that_could_make_git_run_anything_but_a_clone_are_refused() {
 	for (number, address) in [
 		"http://example.com/me/proj.git",

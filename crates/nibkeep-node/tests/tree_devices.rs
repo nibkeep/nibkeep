@@ -439,6 +439,101 @@ fn a_tree_is_not_written_into_the_folder_of_another_library() {
 }
 
 #[test]
+fn a_past_value_with_no_content_behind_it_makes_no_copy_an_older_version() {
+	use nibkeep_node::Edit;
+	let name = "tree written over a value with no content";
+	let (mut laptop, _, mut desk, tree, mut rng) =
+		joined(name, &[("config.yml", b"the tree's\n")], &[]);
+	let personal = desk.personal_space();
+	// Another device states a content it holds nothing of, the desk's file's, and takes it
+	// back, as any replica of the space may write, an AI agent's too.
+	let file = laptop.tree_entries(personal, tree).expect("lists")[0].entity;
+	for (content, at) in [(&b"the desk's\n"[..], 60_000), (b"the tree's\n", 61_000)] {
+		let value = nibkeep_model::Value::Blob(nibkeep_base::Hash::of(content));
+		laptop
+			.edit_entity(
+				personal,
+				file,
+				vec![Edit::Set(nibkeep_std::CONTENT, vec![value])],
+				&common::today(),
+				now() + at,
+				&mut rng,
+			)
+			.expect("edits");
+	}
+	sync_two(&mut laptop, &mut desk, now() + 62_000);
+	let on_desk = folder(&format!("{name}, on desk"));
+	write(&on_desk, "config.yml", b"the desk's\n");
+	let written = desk
+		.write_tree(
+			personal,
+			tree,
+			&on_desk,
+			TreePoint::Now,
+			now() + 70_000,
+			&mut rng,
+		)
+		.expect("writes over what is there");
+	nibkeep_testkit::assert_empty!(written.older);
+	assert_eq!(written.differing, ["config.yml"]);
+	// So no update writes over it, which nothing could bring back.
+	desk.update_tree(personal, tree, false).expect("updates");
+	assert_eq!(read(&on_desk, "config.yml"), "the desk's\n");
+}
+
+#[test]
+fn a_tree_is_not_written_where_a_checkout_has_its_copy_at_one_of_its_paths() {
+	let name = "tree written over a checkout";
+	let (_laptop, _, mut desk, tree, mut rng) = joined(name, &[("list.txt", b"Milk.\n")], &[]);
+	let personal = desk.personal_space();
+	let files = folder(&format!("{name}, files"));
+	write(&files, "list.txt", b"Milk.\n");
+	let file = desk
+		.add_file(personal, &files.join("list.txt"), now() + 60_000, &mut rng)
+		.expect("adds")
+		.file;
+	let on_desk = folder(&format!("{name}, on desk"));
+	desk.checkout(personal, file, &on_desk, now() + 61_000, &mut rng)
+		.expect("checks out");
+	let refused = desk.write_tree(
+		personal,
+		tree,
+		&on_desk,
+		TreePoint::Now,
+		now() + 70_000,
+		&mut rng,
+	);
+	assert!(
+		matches!(refused, Err(NodeError::HoldsOtherCopies(_))),
+		"{refused:?}"
+	);
+	assert!(desk.tree_at(personal, &on_desk).expect("looks").is_none());
+	// A checkout elsewhere in the folder is left out of commits, and no hindrance.
+	let other = folder(&format!("{name}, other"));
+	fs::create_dir(other.join("kept")).expect("makes a folder");
+	desk.checkout(
+		personal,
+		file,
+		&other.join("kept"),
+		now() + 71_000,
+		&mut rng,
+	)
+	.expect("checks out");
+	let written = desk
+		.write_tree(
+			personal,
+			tree,
+			&other,
+			TreePoint::Now,
+			now() + 72_000,
+			&mut rng,
+		)
+		.expect("writes beside the checkout");
+	assert_eq!(written.written, ["list.txt"]);
+	nibkeep_testkit::assert_empty!(written.others);
+}
+
+#[test]
 fn update_brings_what_another_device_committed() {
 	let mut two = Two::new(
 		"tree update",
