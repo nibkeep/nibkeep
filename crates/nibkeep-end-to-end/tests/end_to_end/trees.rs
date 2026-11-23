@@ -244,6 +244,58 @@ Nothing changed in the tree's copy here
 "#]]);
 }
 
+#[test]
+#[ignore = "end-to-end: cargo end-to-end"]
+fn a_tree_written_into_a_folder_that_holds_files_keeps_them() {
+	let test = EndToEnd::new("tree written over files");
+	let (laptop, desktop) = paired(&test);
+	let notes = laptop.library().join("notes");
+	write(&notes, "notes.md", b"# Notes\n");
+	write(&notes, "plan.md", b"Plan\n");
+	write(&notes, "todo.md", b"Todo\n");
+	laptop
+		.nib(&["init", "notes", "--yes", "--message", "Start"])
+		.ok()
+		.stdout_eq(str![[r#"
+Started the tree notes in [ROOT]/laptop/library/notes: 3 files, committed as revision [SHORT_ID]
+
+"#]]);
+	synced(&laptop, &desktop).ok();
+
+	// The desktop has a folder of its own there already: one file as the tree has it, one
+	// that differs, and one the tree does not have.
+	let on_desktop = desktop.library().join("notes");
+	write(&on_desktop, "notes.md", b"# Notes\n");
+	write(&on_desktop, "plan.md", b"My plan\n");
+	write(&on_desktop, "mine.md", b"Mine\n");
+	desktop
+		.nib(&["clone", "notes", "notes"])
+		.ok()
+		.stdout_eq(str![[r#"
+Wrote 1 file into [ROOT]/desktop/library/notes, which is this device's copy of it
+1 file there held the tree's version already
+differs   plan.md: kept as an edit; nib diff shows it, nib restore writes the tree's version
+1 file there is not the tree's: the next commit adds it, unless .nibignore leaves it out
+
+"#]]);
+	in_tree(&desktop, &on_desktop, &["status"])
+		.ok()
+		.stdout_eq(str![[r#"
+new       mine.md
+edited    plan.md
+
+"#]]);
+	in_tree(&desktop, &on_desktop, &["restore", "plan.md"]).ok();
+	assert_eq!(
+		fs::read_to_string(on_desktop.join("plan.md")).expect("reads"),
+		"Plan\n"
+	);
+	assert_eq!(
+		fs::read_to_string(on_desktop.join("plan.md.orig")).expect("reads"),
+		"My plan\n"
+	);
+}
+
 /// Both computers edit apart, and commit: other lines of one file, one line of another, and
 /// a photo; the laptop adds a file, and edits one that the desktop deletes.
 fn commit_apart(laptop: &Device, notes: &Path, desktop: &Device, on_desktop: &Path) {

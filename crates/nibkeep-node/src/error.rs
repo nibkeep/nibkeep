@@ -347,8 +347,12 @@ pub enum NodeError {
 		"{0} holds copies that NibKeep wrote for other reasons, such as checkouts; end them or move them out first"
 	)]
 	HoldsOtherCopies(String),
-	/// A folder to write a tree into that holds something already.
-	#[error("{} is not empty, and a tree is written only into an empty folder or a new one", .0.display())]
+	/// A folder to write a tree into that holds another library, whose `.nib` folder would
+	/// take the commands there over.
+	#[error("{} holds another library, which commands there would use instead of this one", .0.display())]
+	OtherLibraryHere(PathBuf),
+	/// A folder to write a picture of a tree's past into that holds something already.
+	#[error("{} is not empty, and a picture of the past is written only into an empty folder or a new one", .0.display())]
 	FolderNotEmpty(PathBuf),
 	/// A tree to write as it is on a device that has a copy of it already.
 	#[error("this device has the tree in {} already", .0.display())]

@@ -302,6 +302,55 @@ fn a_pinned_repository_keeps_the_commit_that_git_says() {
 	));
 }
 
+/// A desk that joined the library of `One`, with no copy of the tree yet.
+fn desk_of(one: &mut One, name: &str) -> Library {
+	let desk_directory = new_folder(&format!("{name}, desk"));
+	let code = PairingCode::generate(&mut one.rng);
+	let (paired, joined) = common::pair_with(
+		&mut one.library,
+		&desk_directory,
+		&code,
+		&code,
+		&mut one.rng,
+	);
+	paired.expect("the laptop paired");
+	joined.expect("the desk joined").library
+}
+
+#[test]
+fn a_repository_in_the_folder_a_tree_is_written_into_is_left_as_it_is() {
+	let name = "tree written over its repository";
+	let mut one = One::new(name, &[("origin", "https://example.com/proj.git")]);
+	let mut desk = desk_of(&mut one, name);
+	let on_desk = folder(&format!("{name}, on desk"));
+	repository_at(&on_desk, "proj");
+	write(&on_desk, "proj/mine.rs", b"// mine\n");
+	let personal = desk.personal_space();
+	let written = desk
+		.write_tree(
+			personal,
+			one.tree,
+			&on_desk,
+			TreePoint::Now,
+			now() + 70_000,
+			&mut one.rng,
+		)
+		.expect("writes beside the repository");
+	assert_eq!(written.written, ["notes.md"]);
+	// The repository is the tree's, and what is inside it is Git's.
+	nibkeep_testkit::assert_empty!(written.others);
+	nibkeep_testkit::assert_empty!(
+		desk.repositories_to_clone(personal, one.tree)
+			.expect("lists")
+	);
+	assert_eq!(
+		fs::read_to_string(on_desk.join("proj/mine.rs")).expect("reads"),
+		"// mine\n"
+	);
+	let status = desk.tree_status(personal, one.tree).expect("status");
+	nibkeep_testkit::assert_empty!(status.changes);
+}
+
 /// The laptop's library of `One`, and a desk that joined it and wrote the tree.
 struct Two {
 	one: One,
@@ -312,17 +361,7 @@ struct Two {
 impl Two {
 	fn new(name: &str, remotes: &[(&str, &str)]) -> Self {
 		let mut one = One::new(name, remotes);
-		let desk_directory = new_folder(&format!("{name}, desk"));
-		let code = PairingCode::generate(&mut one.rng);
-		let (paired, joined) = common::pair_with(
-			&mut one.library,
-			&desk_directory,
-			&code,
-			&code,
-			&mut one.rng,
-		);
-		paired.expect("the laptop paired");
-		let mut desk = joined.expect("the desk joined").library;
+		let mut desk = desk_of(&mut one, name);
 		let on_desk = new_folder(&format!("{name}, on desk"));
 		let personal = desk.personal_space();
 		desk.write_tree(

@@ -224,10 +224,17 @@ pub enum TreeCommand {
 	},
 	/// Writes a tree into a folder, as it is or as it was.
 	///
-	/// The folder is empty or new, by default one named after the tree in the current
-	/// folder: as it is, which becomes this device's copy of it, as on a device that joined
-	/// the library, with its Git repositories cloned once you agree; or with --at or
-	/// --as-of, a picture of the past, which is no copy to commit from.
+	/// By default into a folder named after the tree in the current folder: as it is, which
+	/// becomes this device's copy of it, as on a device that joined the library, with its Git
+	/// repositories cloned once you agree; or with --at or --as-of, into an empty or new
+	/// folder, a picture of the past, which is no copy to commit from.
+	///
+	/// A copy goes into a folder that holds files too, and replaces none of them: a file that
+	/// holds the tree's version counts as written, one that holds an older version is brought
+	/// up to date by nib update, and one that holds anything else stays, as an edit, which
+	/// nib commit records and nib restore replaces with the tree's version. The Git
+	/// repositories there stay as they are, and what the tree does not have, the next commit
+	/// takes in, unless a `.nibignore` file leaves it out.
 	Clone {
 		/// The tree, by its name or ID.
 		tree: String,
@@ -1243,6 +1250,10 @@ fn clone_command<E: Environment>(
 					.map(|(path, why)| json!({ "path": path, "why": why }))
 					.collect::<Vec<_>>(),
 				"sealed": written.sealed,
+				"found": written.found,
+				"older": written.older,
+				"differing": written.differing,
+				"others": written.others,
 				"repositories": clones_json(&clones),
 				"pointer": pointer,
 				"pointer_taken_away": taken_away,
@@ -1264,9 +1275,48 @@ fn clone_command<E: Environment>(
 	for (path, why) in &written.skipped {
 		writeln!(output, "skipped   {path}: {why}")?;
 	}
+	held_text(&written, output)?;
 	sealed_text(&written.sealed, output)?;
 	clones_text(&clones, output)?;
 	pointer_text(&settled, output)
+}
+
+/// What a folder held before a tree was written into it, and what came of it.
+fn held_text(written: &Written, output: &mut dyn Write) -> Result<(), CliError> {
+	match written.found.len() {
+		0 => {}
+		1 => writeln!(output, "1 file there held the tree's version already")?,
+		found => writeln!(
+			output,
+			"{found} files there held the tree's version already"
+		)?,
+	}
+	for path in &written.older {
+		writeln!(
+			output,
+			"older     {}: an older version, which nib update brings up to date",
+			shown(path)
+		)?;
+	}
+	for path in &written.differing {
+		writeln!(
+			output,
+			"differs   {}: kept as an edit; nib diff shows it, nib restore writes the tree's version",
+			shown(path)
+		)?;
+	}
+	match written.others.len() {
+		0 => {}
+		1 => writeln!(
+			output,
+			"1 file there is not the tree's: the next commit adds it, unless .nibignore leaves it out"
+		)?,
+		others => writeln!(
+			output,
+			"{others} files there are not the tree's: the next commit adds them, unless .nibignore leaves them out"
+		)?,
+	}
+	Ok(())
 }
 
 /// The name of the folder that `nib clone` writes a tree into when none is given: the

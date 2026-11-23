@@ -22,7 +22,8 @@ use super::history::{READ_LIMIT, TreePoint};
 use super::index::{Entry, Version};
 use super::locate::{Blocked, Located, located, place_for_new};
 use super::paths::{fits_this_system, is_reserved};
-use super::walk::{Found, FoundKind, hash_found, look, nanos, open_found};
+use super::secrecy::Rules;
+use super::walk::{Found, FoundKind, hash_found, look, nanos, open_found, walk};
 use super::{TREE_TYPES, TreeState, version_of};
 use crate::NodeError;
 use crate::library::Library;
@@ -47,6 +48,18 @@ pub struct Written {
 	/// wrote there, each path with where its edits are now, as Mercurial's revert keeps them:
 	/// `NAME.orig`, or the first free of `NAME.orig-2` and on.
 	pub aside: Vec<(String, String)>,
+	/// Of a tree written as it is into a folder that held files: the paths where a copy held
+	/// the tree's version already, which counts as written.
+	pub found: Vec<String>,
+	/// The paths where a copy held an older version of the tree's file, which counts as
+	/// behind: an update writes the tree's version.
+	pub older: Vec<String>,
+	/// The paths where a copy held something else, which stays, as an edit of the tree's
+	/// version: a commit records it, and a restore writes the tree's version.
+	pub differing: Vec<String>,
+	/// What the folder holds that the tree does not, left out what `.nibignore` files name:
+	/// it stays, and the next commit takes it in.
+	pub others: Vec<String>,
 }
 
 /// What removing files from a tree's copy did, as Git's rm does: the copies deleted, for the
@@ -112,15 +125,45 @@ pub(super) struct Place<'a> {
 	pub(super) apart: &'a [PathBuf],
 }
 
+/// How a copy that a folder held before a tree was written into it is taken in.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum Kept {
+	/// It holds the tree's version.
+	Same,
+	/// It holds an older version of the tree's file.
+	Older,
+	/// It holds something else.
+	Differing,
+}
+
+/// What writing a tree into a folder that held files does at one of the tree's paths.
+enum Taken {
+	/// Nothing is there that a copy could be, and the tree's file is written if it can be.
+	Nothing,
+	/// A copy is taken in as it is, with its entry in the index.
+	Copy(Kept, Entry),
+	/// What is there stays, left out of commits, with why, until the person renames or
+	/// deletes it: one that cannot be read, and so cannot be told from the tree's file, or one
+	/// that would be secret by the tree's rules where the tree's file is not.
+	Marked(String),
+}
+
 impl Library {
-	/// Writes a tree into `folder`, empty or new, at a point of its history: as it is, which
-	/// becomes this device's copy of it, with its root recorded; or at a revision, or as of a
-	/// moment, which is a picture of the past and no copy, never over one.
+	/// Writes a tree into `folder` at a point of its history: as it is, which becomes this
+	/// device's copy of it, with its root recorded; or at a revision, or as of a moment, into
+	/// an empty or new folder, which is a picture of the past and no copy, never over one.
+	///
+	/// A copy goes into a folder that holds files too, and never over one of them: a file at
+	/// a path of the tree that holds the tree's version counts as written; one that holds an
+	/// older version of its file, as behind, which an update brings up to date; and one that
+	/// holds anything else stays, as an edit of the tree's version. What the tree does not
+	/// have stays too, for the next commit to take in ([`Written`]).
 	///
 	/// # Errors
 	///
 	/// Returns [`NodeError::NotATree`] if `tree` is none, [`NodeError::FolderNotEmpty`] if
-	/// the folder holds anything, [`NodeError::TreeHereAlready`] if the tree as it is is asked
+	/// a picture of the past is asked for in a folder that holds anything,
+	/// [`NodeError::TreeHereAlready`] if the tree as it is is asked
 	/// for and this device has a copy of it already, [`NodeError::TreeInTree`] or
 	/// [`NodeError::NotATreeFolder`] if the folder is in a tree's, the library's or Git's,
 	/// and an error if writing or saving fails.
@@ -148,16 +191,14 @@ impl Library {
 		};
 		// The place is checked before anything is made there.
 		self.check_new_place(folder)?;
-		match fs::read_dir(folder) {
-			Ok(mut entries) => {
-				if entries.next().is_some() {
-					return Err(NodeError::FolderNotEmpty(folder.to_path_buf()));
-				}
-			}
-			Err(error) if error.kind() == io::ErrorKind::NotFound => {
-				fs::create_dir_all(folder).map_err(NodeError::file(folder))?;
-			}
-			Err(error) => return Err(NodeError::file(folder)(error)),
+		let held = holds_anything(folder)?;
+		// A picture of the past goes only where nothing is, as it is no copy that could take
+		// in what was there.
+		if held && locked.is_none() {
+			return Err(NodeError::FolderNotEmpty(folder.to_path_buf()));
+		}
+		if held {
+			self.check_no_other_library(folder)?;
 		}
 		let root = self.checked_new_root(space, folder)?;
 		let state = self.tree_state_at(space, tree, at)?;
@@ -166,18 +207,100 @@ impl Library {
 			root: &root,
 			apart: &apart,
 		};
+		let (mut written, entries, marked) = self.write_files(space, place, &state, held)?;
+		if locked.is_some() {
+			self.install_standard(space, &TREE_TYPES, wall_millis, rng)?;
+			let (root_entity, operations) = self.new_entity(
+				space,
+				&[TREE_ROOT],
+				vec![
+					NewValue::new(ROOT_OF, Value::Reference(tree)),
+					NewValue::new(ON_DEVICE, Value::Reference(self.info.device)),
+					NewValue::new(PATH, Value::Text(root.to_string_lossy().into_owned())),
+				],
+				rng,
+			)?;
+			self.commit(space, operations, wall_millis, rng)?;
+			let mut index = self.index()?;
+			index.change(tree, &[], &entries)?;
+			for (path, why) in &marked {
+				index.mark(tree, path, why)?;
+			}
+			self.note_secrets(space, (tree, &index), &state, &entries)?;
+			index.set_root(tree, root_entity, &root)?;
+			index.know(tree)?;
+			// The copy holds the parts of commits not yet whole, which updates then keep.
+			let cut: Vec<EntityId> = self
+				.cut_short(space, tree)?
+				.into_iter()
+				.map(|cut| cut.revision)
+				.collect();
+			index.take_parts(tree, &cut)?;
+			if held {
+				written.others = self.others_in(space, tree, &root, &state)?;
+			}
+		}
+		Ok(written)
+	}
+
+	/// Writes the files of a tree's `state` into its folder, as [`Library::write_tree`] says,
+	/// taking in what the folder held, if it `held` anything: what was written, the index's
+	/// entries of the copies, and the paths to mark, with why.
+	#[expect(
+		clippy::type_complexity,
+		reason = "three results that only write_tree takes"
+	)]
+	fn write_files(
+		&self,
+		space: SpaceId,
+		place: Place<'_>,
+		state: &TreeState,
+		held: bool,
+	) -> Result<(Written, Vec<(String, Entry)>, Vec<(String, String)>), NodeError> {
 		let read_at = nanos(SystemTime::now()).unwrap_or(0);
 		let mut written = Written {
 			sealed: state.sealed.keys().cloned().collect(),
 			..Written::default()
 		};
 		let mut entries = Vec::new();
+		let mut marked = Vec::new();
+		// What makes a file secret in the folder as it was: the built-in names, and its own
+		// `.nibsecret` files.
+		let rules = if held {
+			Rules::of_copy(&walk(place.root, &BTreeSet::new(), place.apart).found)
+		} else {
+			Rules::built_in()
+		};
 		for (path, current) in &state.by_path {
 			let Some(version) = &current.version else {
 				let why = "its content was purged".to_owned();
 				written.skipped.push((path.clone(), why));
 				continue;
 			};
+			let taken = if held {
+				let secret = state.is_secret(current.entity);
+				self.take_found(space, place, (path, current.entity, version), read_at)?
+					.unless_secret(!secret && rules.is_secret(path))
+			} else {
+				Taken::Nothing
+			};
+			match taken {
+				Taken::Nothing => {}
+				Taken::Copy(kept, entry) => {
+					match kept {
+						Kept::Same => written.found.push(path.clone()),
+						Kept::Older => written.older.push(path.clone()),
+						Kept::Differing => written.differing.push(path.clone()),
+					}
+					entries.push((path.clone(), entry));
+					continue;
+				}
+				Taken::Marked(why) => {
+					written.skipped.push((path.clone(), why.clone()));
+					marked.push((path.clone(), why));
+					continue;
+				}
+			}
 			let content = Content::of(version, state.is_secret(current.entity));
 			match self.write_new(space, place, path, &content) {
 				Ok(found) => {
@@ -196,33 +319,114 @@ impl Library {
 				Err(why) => written.skipped.push((path.clone(), why)),
 			}
 		}
-		if locked.is_some() {
-			self.install_standard(space, &TREE_TYPES, wall_millis, rng)?;
-			let (root_entity, operations) = self.new_entity(
-				space,
-				&[TREE_ROOT],
-				vec![
-					NewValue::new(ROOT_OF, Value::Reference(tree)),
-					NewValue::new(ON_DEVICE, Value::Reference(self.info.device)),
-					NewValue::new(PATH, Value::Text(root.to_string_lossy().into_owned())),
-				],
-				rng,
-			)?;
-			self.commit(space, operations, wall_millis, rng)?;
-			let mut index = self.index()?;
-			index.change(tree, &[], &entries)?;
-			self.note_secrets(space, (tree, &index), &state, &entries)?;
-			index.set_root(tree, root_entity, &root)?;
-			index.know(tree)?;
-			// The copy holds the parts of commits not yet whole, which updates then keep.
-			let cut: Vec<EntityId> = self
-				.cut_short(space, tree)?
-				.into_iter()
-				.map(|cut| cut.revision)
-				.collect();
-			index.take_parts(tree, &cut)?;
+		Ok((written, entries, marked))
+	}
+
+	/// What a folder that held files before a tree was written into it holds at the tree's
+	/// `path`, which the copy takes in as it is, with its entry in the index: the tree's
+	/// version, as written; an older version of its file, as behind; or anything else, as an
+	/// edit of the tree's version, whose entry never says the copy is unchanged, so that it
+	/// is always read. A file that cannot be read is marked, and stays out of commits.
+	/// [`Taken::Nothing`] where nothing is there, or nothing that a write would take for a
+	/// copy, such as a folder, which writing then names as in the way.
+	fn take_found(
+		&self,
+		space: SpaceId,
+		place: Place<'_>,
+		(path, entity, version): (&str, EntityId, &Version),
+		read_at: i64,
+	) -> Result<Taken, NodeError> {
+		let Located::Here(on_disk) = located(place.root, path, place.apart) else {
+			return Ok(Taken::Nothing);
+		};
+		let Ok(found) = look(&on_disk) else {
+			return Ok(Taken::Nothing);
+		};
+		let copy = match &found.kind {
+			FoundKind::File => {
+				let Ok(content) = hash_found(&found) else {
+					return Ok(Taken::Marked(UNREADABLE.to_owned()));
+				};
+				let executable = found.executable.unwrap_or(matches!(
+					version,
+					Version::File {
+						executable: true,
+						..
+					}
+				));
+				Version::File {
+					content,
+					executable,
+				}
+			}
+			FoundKind::Link(target) => Version::Link {
+				target: target.clone(),
+			},
+		};
+		let entry = |version: Version, modified: Option<i64>| Entry {
+			entity,
+			version,
+			size: found.size,
+			modified,
+			read_at,
+		};
+		if &copy == version {
+			return Ok(Taken::Copy(Kept::Same, entry(copy, found.modified)));
 		}
-		Ok(written)
+		if !same_content(&copy, version)
+			&& let Some(past) = self.past_version(space, entity, &copy)?
+		{
+			return Ok(Taken::Copy(Kept::Older, entry(past, found.modified)));
+		}
+		Ok(Taken::Copy(Kept::Differing, entry(version.clone(), None)))
+	}
+
+	/// Refuses a folder to write a tree into that holds a library other than this one, whose
+	/// `.nib` folder would take over the commands there.
+	fn check_no_other_library(&self, folder: &Path) -> Result<(), NodeError> {
+		let data = folder.join(crate::pointer::LIBRARY_DATA);
+		if !fs::symlink_metadata(&data).is_ok_and(|metadata| metadata.is_dir()) {
+			return Ok(());
+		}
+		let own = fs::canonicalize(&data)
+			.map(crate::library::files::plain)
+			.is_ok_and(|data| self.apart().contains(&data));
+		if own {
+			return Ok(());
+		}
+		Err(NodeError::OtherLibraryHere(folder.to_path_buf()))
+	}
+
+	/// What a tree's folder holds that the tree does not, as a commit would find it: the
+	/// files and links of no path of the tree, and the Git repositories it does not record.
+	fn others_in(
+		&self,
+		space: SpaceId,
+		tree: EntityId,
+		root: &Path,
+		state: &TreeState,
+	) -> Result<Vec<String>, NodeError> {
+		let index = self.index()?;
+		let left_out = self.left_out(space, tree, root, &index)?;
+		let walked = walk(root, &left_out, &self.apart());
+		let recorded: BTreeSet<String> = self
+			.recorded_repositories(space, tree)?
+			.into_iter()
+			.map(|repository| repository.path)
+			.collect();
+		let mut others: Vec<String> = walked
+			.found
+			.into_keys()
+			.filter(|path| !state.by_path.contains_key(path) && !state.sealed.contains_key(path))
+			.chain(
+				walked
+					.repositories
+					.into_iter()
+					.filter(|path| !recorded.contains(path)),
+			)
+			.collect();
+		others.sort();
+		Ok(others)
 	}
 
 	/// Writes into the copy of a tree on this device the file or link at `path`, or what is
@@ -1313,6 +1517,40 @@ pub(super) fn same_version(found: &Found, holds: &Version, recorded: &Version) -
 		holds == recorded
 	} else {
 		same_content(holds, recorded)
+	}
+}
+
+/// Why a file that a folder held at a tree's path stays out of commits: it cannot be read.
+const UNREADABLE: &str =
+	"it was there and could not be read; it stays out of commits until you rename or delete it";
+
+/// Why a file that a folder held at a tree's path stays out of commits: the tree's rules
+/// would make it secret, where the tree's file is not.
+const WOULD_BE_SECRET: &str = "it was there, and would be a secret file where the tree's is not; it stays out of commits until you rename or delete it";
+
+impl Taken {
+	/// What is taken, but a copy that holds neither the tree's version nor an older one,
+	/// where the tree's rules would make it secret, `would_be_secret`: it is marked instead,
+	/// so that no commit records it as a version of the tree's ordinary file.
+	fn unless_secret(self, would_be_secret: bool) -> Self {
+		match self {
+			Taken::Copy(Kept::Differing, _) if would_be_secret => {
+				Taken::Marked(WOULD_BE_SECRET.to_owned())
+			}
+			taken => taken,
+		}
+	}
+}
+
+/// Whether a folder to write a tree into holds anything; one that is not there is made.
+fn holds_anything(folder: &Path) -> Result<bool, NodeError> {
+	match fs::read_dir(folder) {
+		Ok(mut entries) => Ok(entries.next().is_some()),
+		Err(error) if error.kind() == io::ErrorKind::NotFound => {
+			fs::create_dir_all(folder).map_err(NodeError::file(folder))?;
+			Ok(false)
+		}
+		Err(error) => Err(NodeError::file(folder)(error)),
 	}
 }
 

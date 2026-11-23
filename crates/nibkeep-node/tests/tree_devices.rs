@@ -12,7 +12,9 @@ use std::time::{Duration, SystemTime};
 
 use common::{library, now, sync_in_memory};
 use nibkeep_base::EntityId;
-use nibkeep_node::{Commit, Library, PairingCode, TreePoint, resolved_path};
+use nibkeep_node::{
+	Change, Commit, Library, NodeError, PairingCode, TreePoint, Written, resolved_path,
+};
 use nibkeep_testkit::TestRng;
 
 /// A folder of its own, as the file system resolves it.
@@ -141,6 +143,299 @@ impl Two {
 		first.expect("the laptop synced");
 		second.expect("the desk synced");
 	}
+}
+
+/// The laptop, with a tree of `files` whose `later` versions it committed next, its copy, and
+/// a desk that joined the library and has no copy of the tree yet.
+fn joined(
+	name: &str,
+	files: &[(&str, &[u8])],
+	later: &[(&str, &[u8])],
+) -> (Library, PathBuf, Library, EntityId, TestRng) {
+	let mut rng = TestRng::new(name);
+	let (_, mut laptop) = library(&format!("{name}, laptop"), &mut rng);
+	let on_laptop = folder(&format!("{name}, on laptop"));
+	for (path, content) in files {
+		write(&on_laptop, path, content);
+	}
+	let personal = laptop.personal_space();
+	let tree = laptop
+		.start_tree(personal, &on_laptop, Some("Start"), now() + 1_000, &mut rng)
+		.expect("starts")
+		.tree;
+	if !later.is_empty() {
+		for (path, content) in later {
+			write(&on_laptop, path, content);
+		}
+		commit(&mut laptop, tree, now() + 2_000, &mut rng);
+	}
+	let desk_directory = new_folder(&format!("{name}, desk"));
+	let code = PairingCode::generate(&mut rng);
+	let (paired, joined) = common::pair_with(&mut laptop, &desk_directory, &code, &code, &mut rng);
+	paired.expect("the laptop paired");
+	let desk = joined.expect("the desk joined").library;
+	(laptop, on_laptop, desk, tree, rng)
+}
+
+#[test]
+fn a_tree_written_into_a_folder_that_holds_files_keeps_every_one_of_them() {
+	let name = "tree written over files";
+	let (_laptop, _, mut desk, tree, mut rng) = joined(
+		name,
+		&[
+			(".nibignore", b"local.md\n"),
+			("new.txt", b"new\n"),
+			("notes.md", b"notes\n"),
+			("old.txt", b"old, first\n"),
+			("same.txt", b"same\n"),
+		],
+		&[("old.txt", b"old, the second version\n")],
+	);
+	let on_desk = folder(&format!("{name}, on desk"));
+	write(&on_desk, "same.txt", b"same\n");
+	write(&on_desk, "old.txt", b"old, first\n");
+	write(&on_desk, "notes.md", b"my own notes\n");
+	write(&on_desk, "mine.txt", b"mine\n");
+	write(&on_desk, "local.md", b"left out\n");
+	let personal = desk.personal_space();
+	let written = desk
+		.write_tree(
+			personal,
+			tree,
+			&on_desk,
+			TreePoint::Now,
+			now() + 70_000,
+			&mut rng,
+		)
+		.expect("writes over what is there");
+	assert_eq!(written.written, [".nibignore", "new.txt"]);
+	assert_eq!(written.found, ["same.txt"]);
+	assert_eq!(written.older, ["old.txt"]);
+	assert_eq!(written.differing, ["notes.md"]);
+	// What .nibignore leaves out is not the tree's, nor one of its new files.
+	assert_eq!(written.others, ["mine.txt"]);
+	nibkeep_testkit::assert_empty!(written.skipped);
+	// Nothing that was there changed.
+	assert_eq!(read(&on_desk, "notes.md"), "my own notes\n");
+	assert_eq!(read(&on_desk, "old.txt"), "old, first\n");
+	assert_eq!(read(&on_desk, "mine.txt"), "mine\n");
+	assert_eq!(read(&on_desk, "local.md"), "left out\n");
+	// A file that differed is an edit of the tree's version, and one the tree does not have
+	// is new; the older version is behind, and an update writes the tree's.
+	let status = desk.tree_status(personal, tree).expect("status");
+	let changes: Vec<(&str, &Change)> = status
+		.changes
+		.iter()
+		.map(|change| (change.path.as_str(), &change.change))
+		.collect();
+	assert_eq!(
+		changes,
+		[("mine.txt", &Change::New), ("notes.md", &Change::Edited)]
+	);
+	assert_eq!(status.behind, ["old.txt"]);
+	nibkeep_testkit::assert_empty!(status.competing);
+	let updated = desk.update_tree(personal, tree, false).expect("updates");
+	assert_eq!(updated.written, ["old.txt"]);
+	assert_eq!(read(&on_desk, "old.txt"), "old, the second version\n");
+	assert_eq!(read(&on_desk, "notes.md"), "my own notes\n");
+}
+
+#[test]
+fn a_file_that_differed_where_the_tree_was_written_is_committed_as_its_next_version() {
+	let name = "tree written over a file, committed";
+	let (mut laptop, on_laptop, mut desk, tree, mut rng) =
+		joined(name, &[("notes.md", b"notes\n")], &[]);
+	let on_desk = folder(&format!("{name}, on desk"));
+	write(&on_desk, "notes.md", b"my own notes\n");
+	let personal = desk.personal_space();
+	desk.write_tree(
+		personal,
+		tree,
+		&on_desk,
+		TreePoint::Now,
+		now() + 70_000,
+		&mut rng,
+	)
+	.expect("writes over what is there");
+	commit(&mut desk, tree, now() + 80_000, &mut rng);
+	sync_two(&mut laptop, &mut desk, now() + 90_000);
+	let updated = laptop
+		.update_tree(personal, tree, false)
+		.expect("the laptop updates");
+	assert_eq!(updated.written, ["notes.md"]);
+	assert_eq!(read(&on_laptop, "notes.md"), "my own notes\n");
+	// One file, with a new version: nothing competes, on either device.
+	for library in [&laptop, &desk] {
+		let status = library.tree_status(personal, tree).expect("status");
+		nibkeep_testkit::assert_empty!(status.competing);
+		nibkeep_testkit::assert_empty!(status.changes);
+	}
+}
+
+#[test]
+fn a_restore_of_a_file_that_differed_where_the_tree_was_written_keeps_it_beside() {
+	let name = "tree written over a file, restored";
+	let (_laptop, _, mut desk, tree, mut rng) = joined(name, &[("notes.md", b"notes\n")], &[]);
+	let on_desk = folder(&format!("{name}, on desk"));
+	write(&on_desk, "notes.md", b"my own notes\n");
+	let personal = desk.personal_space();
+	desk.write_tree(
+		personal,
+		tree,
+		&on_desk,
+		TreePoint::Now,
+		now() + 70_000,
+		&mut rng,
+	)
+	.expect("writes over what is there");
+	let restored = desk
+		.restore_in_tree(personal, tree, "notes.md", TreePoint::Now)
+		.expect("restores");
+	assert_eq!(
+		restored.aside,
+		[("notes.md".to_owned(), "notes.md.orig".to_owned())]
+	);
+	assert_eq!(read(&on_desk, "notes.md"), "notes\n");
+	assert_eq!(read(&on_desk, "notes.md.orig"), "my own notes\n");
+}
+
+/// The desk's copy of a tree of `files`, written into a folder that `prepare` filled first,
+/// with what writing it did.
+fn written_over(
+	name: &str,
+	files: &[(&str, &[u8])],
+	prepare: impl FnOnce(&Path),
+) -> (
+	Library,
+	PathBuf,
+	Library,
+	PathBuf,
+	EntityId,
+	Result<Written, NodeError>,
+) {
+	let (laptop, on_laptop, mut desk, tree, mut rng) = joined(name, files, &[]);
+	let on_desk = folder(&format!("{name}, on desk"));
+	prepare(&on_desk);
+	let personal = desk.personal_space();
+	let written = desk.write_tree(
+		personal,
+		tree,
+		&on_desk,
+		TreePoint::Now,
+		now() + 70_000,
+		&mut rng,
+	);
+	(laptop, on_laptop, desk, on_desk, tree, written)
+}
+
+#[test]
+fn a_file_that_would_be_secret_where_the_tree_s_is_not_stays_out_of_commits() {
+	let name = "tree written over a file secret here";
+	let (mut laptop, on_laptop, mut desk, on_desk, tree, written) =
+		written_over(name, &[("notes.md", b"notes\n")], |on_desk| {
+			write(on_desk, ".nibsecret", b"notes.md\n");
+			write(on_desk, "notes.md", b"my secret notes\n");
+		});
+	let written = written.expect("writes over what is there");
+	nibkeep_testkit::assert_empty!(written.differing);
+	assert_eq!(written.skipped.len(), 1, "{written:?}");
+	assert_eq!(written.skipped[0].0, "notes.md");
+	assert_eq!(read(&on_desk, "notes.md"), "my secret notes\n");
+	let personal = desk.personal_space();
+	let mut rng = TestRng::new(name);
+	commit(&mut desk, tree, now() + 80_000, &mut rng);
+	sync_two(&mut laptop, &mut desk, now() + 90_000);
+	laptop
+		.update_tree(personal, tree, false)
+		.expect("the laptop updates");
+	// The notes stayed here: the laptop has the tree's, and nothing competes with them.
+	assert_eq!(read(&on_laptop, "notes.md"), "notes\n");
+	let status = laptop.tree_status(personal, tree).expect("status");
+	nibkeep_testkit::assert_empty!(status.competing);
+}
+
+#[cfg(unix)]
+#[test]
+fn a_file_that_cannot_be_read_where_the_tree_was_written_stays_out_of_commits() {
+	use std::os::unix::fs::PermissionsExt as _;
+	let name = "tree written over an unreadable file";
+	let (_laptop, _, mut desk, on_desk, tree, written) =
+		written_over(name, &[("notes.md", b"notes\n")], |on_desk| {
+			write(on_desk, "notes.md", b"mine\n");
+			let locked = fs::Permissions::from_mode(0o000);
+			fs::set_permissions(on_desk.join("notes.md"), locked).expect("locks");
+		});
+	let unlocked = fs::Permissions::from_mode(0o644);
+	fs::set_permissions(on_desk.join("notes.md"), unlocked).expect("unlocks");
+	let written = written.expect("writes over what is there");
+	if written.differing == ["notes.md"] {
+		// Read all the same, as by a user whom no permission stops.
+		return;
+	}
+	assert_eq!(written.skipped.len(), 1, "{written:?}");
+	assert_eq!(written.skipped[0].0, "notes.md");
+	// Readable now, it is still no new file of its own, which a commit would add.
+	let personal = desk.personal_space();
+	let status = desk.tree_status(personal, tree).expect("status");
+	nibkeep_testkit::assert_empty!(status.changes);
+	nibkeep_testkit::assert_empty!(status.competing);
+	let mut rng = TestRng::new(name);
+	commit(&mut desk, tree, now() + 80_000, &mut rng);
+	assert_eq!(read(&on_desk, "notes.md"), "mine\n");
+}
+
+#[cfg(unix)]
+#[test]
+fn an_executable_bit_or_a_link_where_the_tree_was_written_is_an_edit() {
+	use std::os::unix::fs::PermissionsExt as _;
+	let name = "tree written over a bit and a link";
+	let (_laptop, _, desk, on_desk, tree, written) = written_over(
+		name,
+		&[("run.sh", b"echo run\n"), ("notes.md", b"notes\n")],
+		|on_desk| {
+			write(on_desk, "run.sh", b"echo run\n");
+			let executable = fs::Permissions::from_mode(0o755);
+			fs::set_permissions(on_desk.join("run.sh"), executable).expect("sets the bit");
+			write(on_desk, "elsewhere.md", b"elsewhere\n");
+			std::os::unix::fs::symlink("elsewhere.md", on_desk.join("notes.md")).expect("links");
+		},
+	);
+	let written = written.expect("writes over what is there");
+	assert_eq!(written.differing, ["notes.md", "run.sh"]);
+	nibkeep_testkit::assert_empty!(written.older);
+	let personal = desk.personal_space();
+	let status = desk.tree_status(personal, tree).expect("status");
+	let changes: Vec<(&str, &Change)> = status
+		.changes
+		.iter()
+		.map(|change| (change.path.as_str(), &change.change))
+		.collect();
+	assert_eq!(
+		changes,
+		[
+			("elsewhere.md", &Change::New),
+			("notes.md", &Change::Edited),
+			("run.sh", &Change::Executable(true)),
+		]
+	);
+	// An update leaves both as they are.
+	desk.update_tree(personal, tree, false).expect("updates");
+	assert!(on_desk.join("notes.md").is_symlink());
+	assert_eq!(read(&on_desk, "elsewhere.md"), "elsewhere\n");
+}
+
+#[test]
+fn a_tree_is_not_written_into_the_folder_of_another_library() {
+	let name = "tree written over another library";
+	let (_laptop, _, _desk, on_desk, _tree, written) =
+		written_over(name, &[("notes.md", b"notes\n")], |on_desk| {
+			fs::create_dir_all(on_desk.join(".nib").join("replicas")).expect("makes one");
+		});
+	assert!(
+		matches!(written, Err(NodeError::OtherLibraryHere(_))),
+		"{written:?}"
+	);
+	assert!(!on_desk.join("notes.md").exists());
 }
 
 #[test]

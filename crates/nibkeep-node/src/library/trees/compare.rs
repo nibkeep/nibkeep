@@ -381,7 +381,7 @@ impl Library {
 
 	/// The version of a file of a space that a copy holds, if it is one the file had: its
 	/// content then, with the copy's executable bit.
-	fn past_version(
+	pub(super) fn past_version(
 		&self,
 		space: SpaceId,
 		entity: EntityId,
