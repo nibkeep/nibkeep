@@ -1,7 +1,7 @@
 //! Purging any value: the changes that asserted it lose their keys and payloads, and the
 //! purge states again everything else they held ([technical design: purging]).
 //!
-//! [technical design: purging]: ../../../docs/Technical-design.md#64-purging
+//! [technical design: purging]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#64-purging
 
 mod common;
 

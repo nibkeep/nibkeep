@@ -3,7 +3,7 @@
 //! `.gitignore`, read from this device's copies ([technical design: secrets in trees]). What
 //! a file is stays as its first commit decided.
 //!
-//! [technical design: secrets in trees]: ../../../../../docs/Technical-design.md#151-secrets-in-trees
+//! [technical design: secrets in trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#151-secrets-in-trees
 
 use std::collections::BTreeMap;
 use std::io::Read;

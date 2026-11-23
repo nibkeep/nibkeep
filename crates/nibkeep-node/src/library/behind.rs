@@ -3,7 +3,7 @@
 //! another device holds it; a mark asks the old space's admins for the rest, and an admin's
 //! replica lists those requests where the new entity counts with the same values.
 //!
-//! [technical design: spaces and moves]: ../../../../docs/Technical-design.md#131-spaces-and-moves
+//! [technical design: spaces and moves]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#131-spaces-and-moves
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::PathBuf;
@@ -231,7 +231,7 @@ impl Library {
 	/// planner: each with its old space and entity, the new space, and those contents, with
 	/// whether each is secret ([technical design: the planner]).
 	///
-	/// [technical design: the planner]: ../../../../docs/Technical-design.md#99-the-planner
+	/// [technical design: the planner]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#99-the-planner
 	pub(crate) fn moves_waiting_for_copies(&self) -> Result<Vec<WaitingMove>, NodeError> {
 		if self.is_ai_agent()? {
 			return Ok(Vec::new());

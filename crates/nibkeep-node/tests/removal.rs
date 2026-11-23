@@ -3,7 +3,7 @@
 //! hold theirs; a device that proved a copy holds it for 10 minutes, and two devices that
 //! remove one file at once each hold it for the other ([technical design: the planner]).
 //!
-//! [technical design: the planner]: ../../../docs/Technical-design.md#99-the-planner
+//! [technical design: the planner]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#99-the-planner
 
 mod common;
 

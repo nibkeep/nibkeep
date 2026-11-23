@@ -3,7 +3,7 @@
 //! devices; and the disks that hold each file's copies and the space's changes
 //! ([technical design: where the copies are]).
 //!
-//! [technical design: where the copies are]: ../../../../docs/Technical-design.md#96-where-the-copies-are
+//! [technical design: where the copies are]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#96-where-the-copies-are
 
 use std::collections::{BTreeMap, BTreeSet, BinaryHeap};
 
@@ -79,7 +79,7 @@ pub struct Disk {
 
 /// A backup on a disk ([technical design: backups]).
 ///
-/// [technical design: backups]: ../../../../docs/Technical-design.md#910-backups
+/// [technical design: backups]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#910-backups
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct DiskBackup {
 	/// Its record's ID.
@@ -133,7 +133,7 @@ pub struct FileCopy {
 	/// Whether the copy counts: it was checked in the last 8 weeks
 	/// ([technical design: checking and repair]).
 	///
-	/// [technical design: checking and repair]: ../../../../docs/Technical-design.md#97-checking-and-repair
+	/// [technical design: checking and repair]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#97-checking-and-repair
 	pub counts: bool,
 }
 
@@ -354,7 +354,7 @@ impl Library {
 	/// keeps as an everyday device, or the default. Its replicas tell the others so at
 	/// their next syncs ([technical design: where the copies are]).
 	///
-	/// [technical design: where the copies are]: ../../../../docs/Technical-design.md#96-where-the-copies-are
+	/// [technical design: where the copies are]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#96-where-the-copies-are
 	///
 	/// # Errors
 	///

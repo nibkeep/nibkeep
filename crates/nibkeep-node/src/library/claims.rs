@@ -5,7 +5,7 @@
 //! admin can only undo. Once the claim is settled, the claimant's replica states the role on
 //! its own record.
 //!
-//! [technical design: claims]: ../../../../docs/Technical-design.md#139-claims-to-the-admin-role
+//! [technical design: claims]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#139-claims-to-the-admin-role
 
 use std::collections::BTreeSet;
 

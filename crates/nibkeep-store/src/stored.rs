@@ -38,7 +38,7 @@ const STATE_CONTEXT: &str = "nibkeep 2026-10 state file";
 /// the state file]). A change made on its own commits the state file at once, as before, and so does
 /// each change while another program has the space open, which would wait meanwhile.
 ///
-/// [technical design: the state file]: ../../../docs/Technical-design.md#75-the-state-file
+/// [technical design: the state file]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#75-the-state-file
 const BURST_GAP: Duration = Duration::from_millis(100);
 const PENDING_CHANGES: usize = 1_000;
 const PENDING_FOR: Duration = Duration::from_secs(1);
@@ -48,7 +48,7 @@ const PENDING_FOR: Duration = Duration::from_secs(1);
 /// ([technical design: several programs on one replica]): they see it at their next change, and close the space, which
 /// opens again once the state file is made anew.
 ///
-/// [technical design: several programs on one replica]: ../../../docs/Technical-design.md#78-several-programs-on-one-replica
+/// [technical design: several programs on one replica]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#78-several-programs-on-one-replica
 const REMAKE: &str = "remake";
 
 /// How long a purge waits for the other programs that have the space open to close it.
@@ -168,7 +168,7 @@ pub struct StoredLog {
 /// How a stored log keeps apart what purges destroy, on a replica that waits before purging
 /// ([technical design: copies that wait]).
 ///
-/// [technical design: copies that wait]: ../../../docs/Technical-design.md#911-copies-that-wait
+/// [technical design: copies that wait]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#911-copies-that-wait
 #[derive(Clone, Copy, Debug, Default)]
 struct Waiting {
 	/// Whether the replica waits, so keeps it apart.
@@ -225,7 +225,7 @@ impl Drop for StoredLog {
 /// A batch of changes that is open ([technical design: saving in batches]): one transaction of each file
 /// spans it, and each change in it has a savepoint of its own.
 ///
-/// [technical design: saving in batches]: ../../../docs/Technical-design.md#77-saving-in-batches
+/// [technical design: saving in batches]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#77-saving-in-batches
 struct Batch {
 	/// The keys to build the log again with, if the files fail.
 	keys: SpaceKeys,
@@ -286,8 +286,8 @@ impl StoredLog {
 	/// that were being written; and deletes the files of purged blobs that no other space of
 	/// the replica keeps a key for ([technical design: blobs]).
 	///
-	/// [technical design: several programs on one replica]: ../../../docs/Technical-design.md#78-several-programs-on-one-replica
-	/// [technical design: blobs]: ../../../docs/Technical-design.md#79-blobs
+	/// [technical design: several programs on one replica]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#78-several-programs-on-one-replica
+	/// [technical design: blobs]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#79-blobs
 	///
 	/// # Errors
 	///
@@ -572,7 +572,7 @@ impl StoredLog {
 	/// writes, such as a purge, a change that governs, or receiving a blob or its key, is
 	/// done while a batch is open.
 	///
-	/// [technical design: saving in batches]: ../../../docs/Technical-design.md#77-saving-in-batches
+	/// [technical design: saving in batches]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#77-saving-in-batches
 	///
 	/// # Errors
 	///
@@ -1183,7 +1183,7 @@ impl StoredLog {
 	/// replica's folder ([technical design: copies that wait]). What is kept apart is purged
 	/// as far as everything else goes: never sent, proved, nor counted as a copy.
 	///
-	/// [technical design: copies that wait]: ../../../docs/Technical-design.md#911-copies-that-wait
+	/// [technical design: copies that wait]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#911-copies-that-wait
 	pub fn keep_destroyed(&mut self, keeping: bool) {
 		self.waiting.keeping = keeping;
 		self.log.keep_destroyed(keeping);
@@ -1601,7 +1601,7 @@ impl StoredLog {
 	/// [`StoredLog::share_blob`] takes up is the space's copy too, and the content is not
 	/// sealed anew ([technical design: blobs]).
 	///
-	/// [technical design: blobs]: ../../../docs/Technical-design.md#79-blobs
+	/// [technical design: blobs]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#79-blobs
 	///
 	/// # Errors
 	///
@@ -1640,7 +1640,7 @@ impl StoredLog {
 	/// one that does not hold the content: the content is then to be sealed anew
 	/// ([technical design: blobs]).
 	///
-	/// [technical design: blobs]: ../../../docs/Technical-design.md#79-blobs
+	/// [technical design: blobs]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#79-blobs
 	///
 	/// # Errors
 	///
@@ -1862,7 +1862,7 @@ impl StoredLog {
 	/// keeps: the latest of each page of each replica ([technical design: where the copies
 	/// are]).
 	///
-	/// [technical design: where the copies are]: ../../../docs/Technical-design.md#96-where-the-copies-are
+	/// [technical design: where the copies are]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#96-where-the-copies-are
 	///
 	/// # Errors
 	///
@@ -1883,7 +1883,7 @@ impl StoredLog {
 
 	/// The pages of the accounts of backups that the log file keeps: the latest of each page
 	/// of each backup that each replica issued
-	/// ([technical design](../../../docs/Technical-design.md#910-backups)).
+	/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#910-backups)).
 	///
 	/// # Errors
 	///
@@ -2055,7 +2055,7 @@ impl StoredLog {
 	/// it ([technical design: checking and repair]). Returns whether it did: not if the
 	/// replica no longer holds it.
 	///
-	/// [technical design: checking and repair]: ../../../docs/Technical-design.md#97-checking-and-repair
+	/// [technical design: checking and repair]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#97-checking-and-repair
 	///
 	/// # Errors
 	///
@@ -2069,7 +2069,7 @@ impl StoredLog {
 	/// copies ([technical design: the planner]). A blob that another space of the replica
 	/// keeps a key for stays. Returns those removed.
 	///
-	/// [technical design: the planner]: ../../../docs/Technical-design.md#99-the-planner
+	/// [technical design: the planner]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#99-the-planner
 	///
 	/// # Errors
 	///
@@ -2088,7 +2088,7 @@ impl StoredLog {
 	/// for, under the blob lock: as the space leaves the replica, when its device drops it
 	/// ([technical design: devices that choose their spaces]).
 	///
-	/// [technical design: devices that choose their spaces]: ../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces
+	/// [technical design: devices that choose their spaces]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces
 	///
 	/// # Errors
 	///
@@ -2658,7 +2658,7 @@ impl StoredLog {
 	/// other. A program that waits to make the state file anew, after a purge, is told so:
 	/// the space is to be closed.
 	///
-	/// [technical design: several programs on one replica]: ../../../docs/Technical-design.md#78-several-programs-on-one-replica
+	/// [technical design: several programs on one replica]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#78-several-programs-on-one-replica
 	fn begin_writing(&mut self, keys: &SpaceKeys) -> Result<(), StoreError> {
 		for _ in 0..CATCH_UP_TRIES {
 			let began = self.postings().in_transaction() && self.file_mut().begin_now()?;

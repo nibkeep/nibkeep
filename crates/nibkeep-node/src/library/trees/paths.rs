@@ -4,7 +4,7 @@
 //! ([technical design: trees]). Git's own checks came to the same after folder names were used
 //! against it.
 //!
-//! [technical design: trees]: ../../../../../docs/Technical-design.md#15-trees
+//! [technical design: trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#15-trees
 
 use std::path::{Component, Path};
 

@@ -3,7 +3,7 @@
 //! a mark asks the old space's admins for the rest; a move that keeps what it leaves behind
 //! purges nothing.
 //!
-//! [technical design: spaces and moves]: ../../../docs/Technical-design.md#131-spaces-and-moves
+//! [technical design: spaces and moves]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#131-spaces-and-moves
 
 mod common;
 

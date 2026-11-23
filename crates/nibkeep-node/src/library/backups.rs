@@ -2,7 +2,7 @@
 //! changes, keys and blobs of the spaces they choose, and take in from, without keys and
 //! without a database ([technical design: backups]).
 //!
-//! [technical design: backups]: ../../../../docs/Technical-design.md#910-backups
+//! [technical design: backups]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#910-backups
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
@@ -201,7 +201,7 @@ pub struct BackupUpdate {
 	/// The spaces of the backup that this device does not hold, which the update neither
 	/// took in nor wrote, each with the devices of the person's that hold it: one that none
 	/// holds gets no update any more
-	/// ([technical design](../../../../docs/Technical-design.md#910-backups)).
+	/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#910-backups)).
 	pub elsewhere: Vec<HeldElsewhere>,
 }
 
@@ -223,7 +223,7 @@ pub struct BackupState {
 /// the update that first brought each purge ran, and the backup's waits; a purge whose wait
 /// is over, or that its owner ended, applies ([technical design: copies that wait]).
 ///
-/// [technical design: copies that wait]: ../../../../docs/Technical-design.md#911-copies-that-wait
+/// [technical design: copies that wait]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#911-copies-that-wait
 pub(crate) struct Waits<'a> {
 	record: &'a mut Record,
 	now: u64,
@@ -742,7 +742,7 @@ impl Library {
 	/// Makes a backup in `folder`, which must be new or empty, and records it in the personal
 	/// space ([technical design: backups]).
 	///
-	/// [technical design: backups]: ../../../../docs/Technical-design.md#910-backups
+	/// [technical design: backups]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#910-backups
 	///
 	/// # Errors
 	///
@@ -1106,7 +1106,7 @@ impl Library {
 	/// lacks, applies its purges, writes what the backup lacks, and checks the backup's
 	/// copies, until `stop` says to stop. `None` while another program updates it.
 	///
-	/// [technical design: backups]: ../../../../docs/Technical-design.md#910-backups
+	/// [technical design: backups]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#910-backups
 	///
 	/// # Errors
 	///

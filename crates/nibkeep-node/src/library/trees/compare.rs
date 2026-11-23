@@ -2,7 +2,7 @@
 //! commit would record, what changed in the tree since the copy was written, and which
 //! copies are a version the tree knows ([technical design: trees]).
 //!
-//! [technical design: trees]: ../../../../../docs/Technical-design.md#15-trees
+//! [technical design: trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#15-trees
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;

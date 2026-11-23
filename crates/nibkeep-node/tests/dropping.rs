@@ -12,7 +12,7 @@
 //! The people: Ada, with a NAS that is an archive node, a desk and a laptop, each on a disk
 //! of its own, where the laptop made Project; and, for a space that she leaves, Bea.
 //!
-//! [technical design: devices that choose their spaces]: ../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces
+//! [technical design: devices that choose their spaces]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces
 
 mod common;
 

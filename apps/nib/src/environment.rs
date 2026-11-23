@@ -142,7 +142,7 @@ pub trait Environment {
 	}
 
 	/// This computer's folder of NibKeep's state, where the list of libraries synced from
-	/// login is ([technical design](../../../docs/Technical-design.md#106-syncing-from-login)): `None`
+	/// login is ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#106-syncing-from-login)): `None`
 	/// where there is none.
 	fn state_folder(&self) -> Option<PathBuf> {
 		None
@@ -167,7 +167,7 @@ pub trait Environment {
 	}
 
 	/// The person's own Git, with their settings and credentials, as a command to give
-	/// arguments to ([technical design](../../../docs/Technical-design.md#15-trees)).
+	/// arguments to ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#15-trees)).
 	fn git(&self) -> std::process::Command {
 		let mut git = std::process::Command::new("git");
 		clear_git_variables(&mut git);

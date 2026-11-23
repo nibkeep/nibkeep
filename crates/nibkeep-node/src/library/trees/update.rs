@@ -5,7 +5,7 @@
 //! `NAME.conflict-DEVICE`. An edited copy never loses its edits, nor are changes made here
 //! and not committed undone ([technical design: trees]).
 //!
-//! [technical design: trees]: ../../../../../docs/Technical-design.md#15-trees
+//! [technical design: trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#15-trees
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
@@ -63,7 +63,7 @@ pub struct Updated {
 	/// publishes it, and `.nibsecret` files that lose lines, by path, which could make new
 	/// files ordinary ([technical design: secrets in trees]).
 	///
-	/// [technical design: secrets in trees]: ../../../docs/Technical-design.md#151-secrets-in-trees
+	/// [technical design: secrets in trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#151-secrets-in-trees
 	pub held: Vec<String>,
 	/// The secret files not written, as this replica cannot read them: its secrets are
 	/// locked, or not on this device.

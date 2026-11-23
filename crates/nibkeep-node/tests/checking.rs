@@ -2,7 +2,7 @@
 //! blob comes again from another replica, and a damaged original is reported, never written
 //! over ([technical design: checking and repair]).
 //!
-//! [technical design: checking and repair]: ../../../docs/Technical-design.md#97-checking-and-repair
+//! [technical design: checking and repair]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#97-checking-and-repair
 
 mod common;
 

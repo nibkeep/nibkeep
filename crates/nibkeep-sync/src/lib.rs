@@ -29,7 +29,7 @@ pub use session::{BlobBytes, Counts, Holder, SpaceSynced, Synced, initiate, resp
 pub use transport::{MAX_MESSAGE_LEN, Transport, TransportError};
 
 /// How many listings by a recovery code an initiator's hello carries at most: one for each
-/// space or group that lists it by a code ([Sync](../../../docs/spec/sync.md#3-syncing)).
+/// space or group that lists it by a code ([Sync](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/sync.md#3-syncing)).
 pub const MOST_INTRODUCTIONS: usize = 1024;
 
 /// What the fuzz targets reach: reading the messages that other devices send.

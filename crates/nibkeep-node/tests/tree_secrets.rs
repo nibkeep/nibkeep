@@ -2,7 +2,7 @@
 //! every replica, and read or written only where the space's secrets are
 //! ([technical design: secrets in trees]).
 //!
-//! [technical design: secrets in trees]: ../../../docs/Technical-design.md#151-secrets-in-trees
+//! [technical design: secrets in trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#151-secrets-in-trees
 
 mod common;
 

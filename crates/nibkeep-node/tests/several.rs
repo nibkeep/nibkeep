@@ -1,4 +1,4 @@
-//! Several programs on one replica at once ([technical design](../../../docs/Technical-design.md#78-several-programs-on-one-replica)):
+//! Several programs on one replica at once ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#78-several-programs-on-one-replica)):
 //! two libraries of the replica open in one program, as two syncs have it, and another
 //! program that writes while this one does, or is killed meanwhile. Each writes on what the
 //! others wrote, a field that one makes secret is sealed by all, and the replica stays

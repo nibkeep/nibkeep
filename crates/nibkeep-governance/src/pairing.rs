@@ -1,6 +1,6 @@
 //! Pairing a new replica, the joiner, with one that holds the library, the sponsor: the code
 //! that the person types, the key that SPAKE2 agrees on from it, the joiner's request and
-//! the sponsor's grant ([Sync](../../../docs/spec/sync.md#2-pairing)).
+//! the sponsor's grant ([Sync](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/sync.md#2-pairing)).
 
 use std::collections::BTreeMap;
 use std::fmt;
@@ -336,7 +336,7 @@ pub struct Grant {
 	pub chosen: Vec<(SpaceId, EntityId)>,
 	/// For a replica of the user's, whether it asks before it takes a space given to it
 	/// later, as the person chose by pairing it as a phone: it states so itself, after its
-	/// first sync ([technical design](../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
+	/// first sync ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
 	/// `false` for an AI agent's.
 	pub asks_first: bool,
 }

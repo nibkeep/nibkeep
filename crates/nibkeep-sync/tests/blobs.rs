@@ -1,6 +1,6 @@
 //! Sealed blobs go only to a replica that asks for them: they are not in the set that a sync
 //! reconciles, every replica receives every blob key, and each side asks for the blobs it
-//! keeps and lacks ([Sync](../../../docs/spec/sync.md#3-syncing)).
+//! keeps and lacks ([Sync](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/sync.md#3-syncing)).
 
 mod common;
 

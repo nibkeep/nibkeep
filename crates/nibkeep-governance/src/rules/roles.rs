@@ -8,7 +8,7 @@
 //! nobody acts on a role they did not know they had, and what someone did without knowing
 //! that they had lost one is set aside.
 //!
-//! [technical design: sharing]: ../../../../docs/Technical-design.md#13-sharing
+//! [technical design: sharing]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing
 
 use std::cell::RefCell;
 use std::collections::{BTreeMap, BTreeSet};
@@ -2045,7 +2045,7 @@ impl View {
 	/// Whether the device whose key is `key` holds the space now: whether, of its choices
 	/// that counting changes state, the one with the highest number, a drop winning a tie,
 	/// holds it, or none states one
-	/// ([technical design](../../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
+	/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
 	#[must_use]
 	pub fn holds_now(&self, key: &KeyBytes) -> bool {
 		self.standing_choice(key).is_none_or(|(_, holds)| holds)

@@ -10,7 +10,7 @@
 //! being first seen by the earliest such change of all. In those 30 days the new admin can
 //! only undo.
 //!
-//! [technical design: claims]: ../../../../docs/Technical-design.md#139-claims-to-the-admin-role
+//! [technical design: claims]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#139-claims-to-the-admin-role
 
 use std::collections::BTreeSet;
 

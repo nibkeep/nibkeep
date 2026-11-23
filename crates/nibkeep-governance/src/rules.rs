@@ -1,7 +1,7 @@
 //! Which changes count, in a space whose first change governs it: those of the keys that its
 //! governing changes list, and of a revoked key only those that every change which revokes
 //! it builds on; of an AI agent's key, only ordinary changes that purge and seal nothing
-//! and write what an AI agent may ([Log](../../../docs/spec/log.md#8-which-changes-count)).
+//! and write what an AI agent may ([Log](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/log.md#8-which-changes-count)).
 //! The others are set aside: kept and passed on, but neither applied nor acted on.
 
 use std::collections::{BTreeMap, BTreeSet};
@@ -127,7 +127,7 @@ pub struct Fact {
 }
 
 /// A change's listing of its own author by a recovery code
-/// ([Identity](../../../docs/spec/identity.md#11-recovery-codes)): the record and the owner
+/// ([Identity](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/identity.md#11-recovery-codes)): the record and the owner
 /// that it names, and the code's record for that owner, which a counting change that it
 /// builds on must name.
 #[derive(Clone, Copy, Debug)]

@@ -376,7 +376,7 @@ impl Library {
 			.map(|mut library| {
 				// A phone asks before it takes a space given to it later, as the person may
 				// change there; if saying so fails, it takes them, as a computer does
-				// ([technical design](../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
+				// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
 				if cfg!(any(target_os = "android", target_os = "ios")) {
 					let _ = library.set_takes_new_spaces(false, wall_millis, rng);
 					library.end_bursts();
@@ -671,7 +671,7 @@ impl Library {
 	/// The fields whose values are secret in a space: those that the types of NibKeep, of
 	/// apps or of the space mark as secret, those that statements governing the space make
 	/// secret for good, and those that the standard vocabulary makes secret, in every space
-	/// ([Data model](../../../docs/spec/model.md#9-secret-fields)). Whether a field is
+	/// ([Data model](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/model.md#9-secret-fields)). Whether a field is
 	/// secret is decided here, not by a type's own definition of it.
 	#[must_use]
 	pub fn secret_fields(&self, space: SpaceId) -> Option<&BTreeSet<FieldName>> {
@@ -1026,7 +1026,7 @@ impl Library {
 	/// Seals content as a blob of a space, unless the device holds it already, and returns
 	/// its content hash. Content that another space of the replica holds is not sealed
 	/// again: the space takes up that copy, once it has read it whole, unless it purged it
-	/// ([technical design](../../../docs/Technical-design.md#79-blobs)).
+	/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#79-blobs)).
 	///
 	/// # Errors
 	///
@@ -1049,7 +1049,7 @@ impl Library {
 	/// ([technical design: blobs]). A space that purged a copy seals the content anew. An AI
 	/// agent's replica wraps no keys of other spaces, as it seals nothing.
 	///
-	/// [technical design: blobs]: ../../../docs/Technical-design.md#79-blobs
+	/// [technical design: blobs]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#79-blobs
 	pub(crate) fn seal_blob(
 		&mut self,
 		space: SpaceId,
@@ -1129,7 +1129,7 @@ impl Library {
 	/// Each batch holds up the space's other writers until it ends, so it is kept short,
 	/// such as a thousand changes.
 	///
-	/// [technical design: saving in batches]: ../../../docs/Technical-design.md#77-saving-in-batches
+	/// [technical design: saving in batches]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#77-saving-in-batches
 	///
 	/// # Errors
 	///
@@ -1200,7 +1200,7 @@ impl Library {
 	}
 
 	/// Whether this replica is an AI agent's: whether the change that listed its key in the
-	/// personal space marks it so ([technical design](../../../docs/Technical-design.md#14-ai-agents)).
+	/// personal space marks it so ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#14-ai-agents)).
 	///
 	/// # Errors
 	///
@@ -1342,7 +1342,7 @@ impl Library {
 	/// wrote to. A change catches up by itself before it is made; a program that keeps the
 	/// library open catches up before it reads what it keeps. Returns whether another wrote.
 	///
-	/// [technical design: several programs on one replica]: ../../../docs/Technical-design.md#78-several-programs-on-one-replica
+	/// [technical design: several programs on one replica]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#78-several-programs-on-one-replica
 	///
 	/// # Errors
 	///
@@ -1384,7 +1384,7 @@ impl Library {
 	/// with too, what the library keeps of the space is read again after it.
 	///
 	/// Its ordinary operations are saved as a change for each entity they are about, as every
-	/// change is ([technical design](../../../docs/Technical-design.md#62-one-entity-per-change)), so
+	/// change is ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#62-one-entity-per-change)), so
 	/// that a purge of one entity states again no value of another.
 	fn commit(
 		&mut self,
@@ -1447,7 +1447,7 @@ impl Library {
 	/// library's own records or a Git repository's record otherwise: that take their
 	/// statements away, or delete, restore or merge them, as a clone trusts what remains of a
 	/// repository's record that a person made, and statements of fields of NibKeep's own on any
-	/// entity ([technical design](../../../docs/Technical-design.md#14-ai-agents)).
+	/// entity ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#14-ai-agents)).
 	fn check_ai_agents_operations(
 		&self,
 		space: SpaceId,
@@ -1788,7 +1788,7 @@ impl Space {
 
 	/// The ordinary operations of what a writer asked for, as changes about one entity each,
 	/// as every change is ([the technical design's section on
-	/// one entity per change](../../../docs/Technical-design.md#62-one-entity-per-change)), as [`Space::by_entity`] groups
+	/// one entity per change](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#62-one-entity-per-change)), as [`Space::by_entity`] groups
 	/// them.
 	fn one_entity_each(
 		&self,
@@ -1803,7 +1803,7 @@ impl Space {
 
 	/// What a writer asked for, as operations that each change only the entity they name,
 	/// as the log supersedes no statement of another entity ([Data
-	/// model](../../../docs/spec/model.md#5-operations)): what an assertion replaces of
+	/// model](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/model.md#5-operations)): what an assertion replaces of
 	/// another entity, such as one merged into its own, is retracted from that entity apart,
 	/// right after it, and a retraction is split by the entities of the statements it names,
 	/// as the space and the operations before it hold them. A statement that neither holds
@@ -1990,7 +1990,7 @@ impl Space {
 	/// The fields that are secret for good: those that counting statements governing the
 	/// space make so, and the standard vocabulary's secret fields, which are secret in every
 	/// space, whether it defines their types or not, and are marked in a space that lacks
-	/// the marks at its next sync ([Data model](../../../docs/spec/model.md#9-secret-fields)).
+	/// the marks at its next sync ([Data model](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/model.md#9-secret-fields)).
 	fn secret_for_good(&self) -> Result<BTreeSet<FieldName>, NodeError> {
 		let mut secret = self.marked_secret()?;
 		secret.extend(nibkeep_std::secret_fields().iter().cloned());
@@ -1998,7 +1998,7 @@ impl Space {
 	}
 
 	/// The fields that counting statements governing the space make secret for good
-	/// ([Data model](../../../docs/spec/model.md#9-secret-fields)).
+	/// ([Data model](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/model.md#9-secret-fields)).
 	fn marked_secret(&self) -> Result<BTreeSet<FieldName>, NodeError> {
 		Ok(self
 			.stored

@@ -1,7 +1,7 @@
 //! Secrets: the secrets keys of the library's spaces, which seal the values of secret
 //! fields, in the key file's secrets compartment (`docs/Design.md`, section 6.9); and
 //! giving them to the replicas that the person chooses, which ask for them with a key of
-//! their secrets compartment ([technical design](../../../../docs/Technical-design.md#12-secrets)).
+//! their secrets compartment ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#12-secrets)).
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::fs::File;
@@ -286,7 +286,7 @@ impl Library {
 	/// another's making is taken. This replica then holds them, in its secrets compartment,
 	/// protected as `protection` says, and the records say so, as when it takes a copy's
 	/// secrets; they are unlocked afterwards. Without `protection`, as the person chose, it
-	/// takes none ([technical design](../../../../docs/Technical-design.md#111-recovery-codes)).
+	/// takes none ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes)).
 	/// [`Recovering::finish`] checks first that `protection` is not the library's passphrase.
 	///
 	/// # Errors

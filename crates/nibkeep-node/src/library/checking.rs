@@ -3,7 +3,7 @@
 //! so that a sync brings it again, and an original found damaged is reported, never written
 //! over ([technical design: checking and repair]).
 //!
-//! [technical design: checking and repair]: ../../../../docs/Technical-design.md#97-checking-and-repair
+//! [technical design: checking and repair]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#97-checking-and-repair
 
 use std::collections::{BTreeMap, BTreeSet, VecDeque};
 use std::fs;
@@ -369,7 +369,7 @@ impl Library {
 	/// stands, and what the run found, are saved as it ends, after a failure too
 	/// ([technical design: checking and repair]).
 	///
-	/// [technical design: checking and repair]: ../../../../docs/Technical-design.md#97-checking-and-repair
+	/// [technical design: checking and repair]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#97-checking-and-repair
 	///
 	/// # Errors
 	///

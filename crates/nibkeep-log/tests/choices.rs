@@ -7,7 +7,7 @@
 //! The family of these tests: the founder, an admin, with a desktop (device 0) and a laptop
 //! (device 1), and their partner, an editor, with one device (device 2).
 //!
-//! [technical design: devices that choose their spaces]: ../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces
+//! [technical design: devices that choose their spaces]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces
 
 mod common;
 

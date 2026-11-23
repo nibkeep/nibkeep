@@ -38,7 +38,7 @@ impl Library {
 	/// The items of an ordered list of a space, in their order: the memberships that put
 	/// them in it, not deleted, by position key ([technical design: ordered lists]).
 	///
-	/// [technical design: ordered lists]: ../../../../docs/Technical-design.md#66-ordered-lists-and-long-text
+	/// [technical design: ordered lists]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#66-ordered-lists-and-long-text
 	///
 	/// # Errors
 	///

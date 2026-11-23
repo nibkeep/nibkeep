@@ -3,8 +3,8 @@
 //! chosen, and listing and search cover every space ([technical design: sharing]); and a replica
 //! keeps one sealed copy of content that several of its spaces hold ([technical design: spaces and moves]).
 //!
-//! [technical design: sharing]: ../../../docs/Technical-design.md#13-sharing
-//! [technical design: spaces and moves]: ../../../docs/Technical-design.md#131-spaces-and-moves
+//! [technical design: sharing]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing
+//! [technical design: spaces and moves]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#131-spaces-and-moves
 
 mod common;
 

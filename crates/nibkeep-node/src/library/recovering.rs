@@ -9,7 +9,7 @@
 //! written to; one in the folder where the new replica goes is set aside there, as the
 //! recovery's last step.
 //!
-//! [technical design: recovery codes]: ../../../../docs/Technical-design.md#111-recovery-codes
+//! [technical design: recovery codes]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
@@ -72,7 +72,7 @@ pub struct Recovered {
 	/// The spaces of the person's that the devices it revoked held and that did not come
 	/// back, each with the devices it kept that hold it, which revoke them there after their
 	/// next sync with this one: one that none holds stays with the revoked devices
-	/// ([technical design](../../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
+	/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
 	pub out_of_reach: Vec<HeldElsewhere>,
 	/// What became of the secrets.
 	pub secrets: RecoveredSecrets,

@@ -2,7 +2,7 @@
 //! write the same statements and entities, and its note on each value it writes
 //! ([technical design: migrations]).
 //!
-//! [technical design: migrations]: ../../../docs/Technical-design.md#57-migrations
+//! [technical design: migrations]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#57-migrations
 
 mod common;
 

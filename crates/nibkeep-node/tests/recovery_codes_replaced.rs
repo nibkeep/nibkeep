@@ -3,7 +3,7 @@
 //! backup not updated since opens with the old code alone. Revoking a device names the codes
 //! that its replicas made ([technical design: recovery codes]).
 //!
-//! [technical design: recovery codes]: ../../../docs/Technical-design.md#111-recovery-codes
+//! [technical design: recovery codes]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes
 
 mod common;
 

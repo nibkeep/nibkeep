@@ -3,7 +3,7 @@
 //! `nib` never writes another program's configuration. A client that none of them is still
 //! works from the line that `nib mcp enable --print` prints.
 //!
-//! [technical design: AI agents]: ../../../docs/Technical-design.md#14-ai-agents
+//! [technical design: AI agents]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#14-ai-agents
 
 use std::path::Path;
 

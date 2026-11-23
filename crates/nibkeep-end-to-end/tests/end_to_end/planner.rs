@@ -2,7 +2,7 @@
 //! change and key but no file it does not keep, and checking a file out fetches it from the
 //! laptop, which serves, over the home network ([technical design: the planner]).
 //!
-//! [technical design: the planner]: ../../../../docs/Technical-design.md#99-the-planner
+//! [technical design: the planner]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#99-the-planner
 
 use std::fs;
 

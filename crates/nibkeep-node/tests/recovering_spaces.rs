@@ -8,7 +8,7 @@
 //! The people: Leo, whose library comes back, and Mona, who shares a space or a group with
 //! him.
 //!
-//! [technical design: recovery codes]: ../../../docs/Technical-design.md#111-recovery-codes
+//! [technical design: recovery codes]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes
 
 mod common;
 

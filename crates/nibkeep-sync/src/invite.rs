@@ -1,5 +1,5 @@
 //! Inviting a user to a space, between a replica of an admin of the space and the joiner's,
-//! over a transport ([Sync](../../../docs/spec/sync.md#7-invitations)).
+//! over a transport ([Sync](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/sync.md#7-invitations)).
 
 use nibkeep_base::cbor::{ToCbor, Value};
 use nibkeep_crypto::rand_core::CryptoRng;

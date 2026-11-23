@@ -1,8 +1,8 @@
 //! The members of a shared space and their roles, as its counting governing changes say,
 //! and the two sides of an invitation to it: the admin's, which confirms who asks and adds
 //! the member, and the joiner's, which signs its listing and takes the space
-//! ([Identity](../../../../docs/spec/identity.md#9-members-and-invitations),
-//! [technical design](../../../../docs/Technical-design.md#13-sharing)).
+//! ([Identity](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/identity.md#9-members-and-invitations),
+//! [technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing)).
 
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -44,7 +44,7 @@ pub struct SpaceMember {
 /// A member's link to a person in a shared space: it holds when an admin's statement and the
 /// member's own name the same person; an admin's own statement counts for both while they are an
 /// admin
-/// ([users and people](../../../../docs/Design.md#610-users-people-and-devices)).
+/// ([users and people](https://github.com/nibkeep/nibkeep/blob/main/docs/Design.md#610-users-people-and-devices)).
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub struct PersonLink {
 	/// The person the member is linked to, if the two agree, and the person is not deleted.
@@ -77,7 +77,7 @@ pub struct MemberReplica {
 	/// Whether the space revoked it.
 	pub revoked: bool,
 	/// Whether it dropped the space: its choice that stands there does not hold it
-	/// ([technical design](../../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
+	/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
 	pub dropped: bool,
 	/// Whether it is an AI agent's, which every member sees.
 	pub ai_agent: bool,
@@ -561,7 +561,7 @@ impl Library {
 	}
 
 	/// Whether a space allows AI agents now: the personal space does, and a shared space where
-	/// its admins said so last ([technical design](../../../../docs/Technical-design.md#13-sharing)).
+	/// its admins said so last ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing)).
 	///
 	/// # Errors
 	///

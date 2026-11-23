@@ -4,7 +4,7 @@
 pub const MAX_MESSAGE_LEN: usize = 16 * 1024 * 1024;
 
 /// A connection between two replicas, which carries whole messages in order, and is
-/// encrypted and bound to the two endpoints' keys ([Sync](../../../docs/spec/sync.md#1-connections)).
+/// encrypted and bound to the two endpoints' keys ([Sync](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/sync.md#1-connections)).
 pub trait Transport {
 	/// Sends a message.
 	///

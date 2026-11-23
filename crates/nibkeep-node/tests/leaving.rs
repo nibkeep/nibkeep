@@ -7,7 +7,7 @@
 //! stays readable to those who join later; and an admin reviews what was set aside, and
 //! accepts only what the member's role allowed.
 //!
-//! [technical design: sharing]: ../../../docs/Technical-design.md#13-sharing
+//! [technical design: sharing]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing
 
 mod common;
 

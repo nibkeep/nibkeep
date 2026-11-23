@@ -61,7 +61,7 @@ pub struct PastValue {
 /// What a move noted of a value that it carried from another space, as its mover's account
 /// of it, not as proof ([technical design: spaces and moves]).
 ///
-/// [technical design: spaces and moves]: ../../../../docs/Technical-design.md#131-spaces-and-moves
+/// [technical design: spaces and moves]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#131-spaces-and-moves
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Carried {
 	/// The space it came from, if the note names it.

@@ -1,7 +1,7 @@
 //! Inviting a user to a space, over a connection between the admin's replica and the
 //! joiner's: what the joiner asks with, what the admin offers once the person confirms who
 //! asks, and what it grants once the joiner signed its listing
-//! ([Sync](../../../docs/spec/sync.md#7-invitations), [technical design](../../../docs/Technical-design.md#13-sharing)).
+//! ([Sync](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/sync.md#7-invitations), [technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing)).
 
 use nibkeep_base::cbor::{self, FromCbor, ToCbor, Value};
 use nibkeep_base::{EntityId, SpaceId};

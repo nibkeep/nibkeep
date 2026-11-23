@@ -8,7 +8,7 @@
 //! son, an editor in the household; Gran, a viewer of the family; and Fred, an admin of the
 //! family and an editor in the household.
 //!
-//! [technical design: groups]: ../../../docs/Technical-design.md#138-groups
+//! [technical design: groups]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#138-groups
 
 mod common;
 

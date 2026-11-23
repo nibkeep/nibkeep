@@ -2,8 +2,8 @@
 //! entities in any of them, and how a space reaches every replica of the user but AI
 //! agents': the personal space gives each its first key, each asks to be listed with a
 //! listing its own key signed, and a replica listed there lists it
-//! ([Identity](../../../../docs/spec/identity.md#8-spaces-of-ones-own),
-//! [technical design](../../../../docs/Technical-design.md#13-sharing)).
+//! ([Identity](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/identity.md#8-spaces-of-ones-own),
+//! [technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing)).
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
@@ -180,7 +180,7 @@ impl Library {
 	/// the user as its member and first admin, states that it holds it, and lists it in the
 	/// personal space with its first key sealed to each of the user's devices that take new
 	/// spaces, as computers do, so that they hold it too, and returns its ID
-	/// ([technical design](../../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
+	/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
 	///
 	/// # Errors
 	///
@@ -198,7 +198,7 @@ impl Library {
 	/// Makes a space as [`Library::create_space`] does, and gives it too to the devices of
 	/// the user's that the person chose, `also`, by their records in the personal space,
 	/// besides those that take new spaces
-	/// ([technical design](../../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
+	/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
 	///
 	/// # Errors
 	///
@@ -215,7 +215,7 @@ impl Library {
 
 	/// Makes a group, named `name`: a space with members and no data of its own, which can be
 	/// a member of spaces, as an editor or a viewer, so that whoever joins the group joins
-	/// each of them ([technical design](../../../../docs/Technical-design.md#138-groups)).
+	/// each of them ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#138-groups)).
 	/// This replica founds it, with the user as its first admin, as [`Library::create_space`]
 	/// founds a space, and returns its ID.
 	///
@@ -822,7 +822,7 @@ impl Library {
 	/// the codes that stand in the personal space and that the space lacks, and revokes
 	/// there, with a new key, those that the personal space revokes. Only a member's own
 	/// replicas name or revoke their codes, so each user's replicas carry their own
-	/// ([technical design](../../../../docs/Technical-design.md#111-recovery-codes)).
+	/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes)).
 	pub(crate) fn carry_codes(
 		&mut self,
 		wall_millis: u64,
@@ -1409,7 +1409,7 @@ impl Library {
 	/// devices read it, and, where this replica holds the space, by its choices too, and is
 	/// listed there, on its record there, where a choice not to hold it ends this replica,
 	/// as a removal does
-	/// ([technical design](../../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
+	/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
 	///
 	/// # Errors
 	///

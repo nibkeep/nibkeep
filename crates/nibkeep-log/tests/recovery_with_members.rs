@@ -7,7 +7,7 @@
 //! The family of these tests: the founder is the space's admin, their partner an editor and
 //! the partner's sister a viewer; device 3 is a new one.
 //!
-//! [technical design: recovery codes]: ../../../docs/Technical-design.md#111-recovery-codes
+//! [technical design: recovery codes]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes
 
 mod common;
 

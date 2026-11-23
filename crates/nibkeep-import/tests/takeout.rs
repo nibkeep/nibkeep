@@ -3,7 +3,7 @@
 //! source Google Photos, and an import cut short going on where it stopped ([technical
 //! design: importers]).
 //!
-//! [technical design: importers]: ../../../docs/Technical-design.md#912-importers-and-where-files-came-from
+//! [technical design: importers]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#912-importers-and-where-files-came-from
 
 use std::collections::BTreeMap;
 use std::fs::{self, File};

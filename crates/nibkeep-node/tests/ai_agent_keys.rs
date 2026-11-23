@@ -3,7 +3,7 @@
 //! listed on the user's own device, named in history as the client, unable to do what an AI
 //! agent may not, reading only the personal space, and revoked on its own.
 //!
-//! [technical design: AI agents]: ../../../docs/Technical-design.md#14-ai-agents
+//! [technical design: AI agents]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#14-ai-agents
 
 mod common;
 

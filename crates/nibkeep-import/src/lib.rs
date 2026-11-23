@@ -3,7 +3,7 @@
 //! Google Photos, read in place, each photo with what its JSON file says of it, and its
 //! albums as folders.
 //!
-//! [technical design: importers]: ../../../docs/Technical-design.md#912-importers-and-where-files-came-from
+//! [technical design: importers]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#912-importers-and-where-files-came-from
 
 mod archive;
 mod takeout;
@@ -131,7 +131,7 @@ fn is_systems(name: &str) -> bool {
 /// files: the second, [`Takeout::import`], reads the photos and videos
 /// ([technical design: importers]).
 ///
-/// [technical design: importers]: ../../../docs/Technical-design.md#912-importers-and-where-files-came-from
+/// [technical design: importers]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#912-importers-and-where-files-came-from
 #[derive(Debug)]
 pub struct Takeout {
 	parts: Vec<Part>,

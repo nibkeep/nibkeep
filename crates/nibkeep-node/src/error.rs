@@ -44,7 +44,7 @@ pub enum NodeError {
 	SeveralHere(Vec<std::path::PathBuf>),
 	/// The library's replica, or one of its files, is of a later version than this program's
 	/// engine reads, which a newer program that shares it wrote: nothing was opened or
-	/// written ([storage](../../../docs/spec/storage.md#16-engines-of-different-versions)).
+	/// written ([storage](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/storage.md#16-engines-of-different-versions)).
 	#[error("a newer version of NibKeep changed this library; update this program to open it")]
 	NewerFormats,
 	/// A drive whose file system keeps no journal, as FAT and exFAT, where a removal without
@@ -125,7 +125,7 @@ pub enum NodeError {
 	#[error("the personal space keeps its name")]
 	PersonalSpace,
 	/// A choice of the personal space, which every device of the user holds
-	/// ([technical design](../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
+	/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
 	#[error("every device holds the personal space")]
 	PersonalSpaceHeld,
 	/// A device that dropped a space and has not asked for it again, as listing it there
@@ -133,11 +133,11 @@ pub enum NodeError {
 	#[error("that device has not asked for the space again")]
 	NoNewerChoice,
 	/// A device that asks for no such space here, as approving a request needs
-	/// ([technical design](../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
+	/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
 	#[error("that device asks for no such space here")]
 	NoRequest,
 	/// A drop of a space that this device may not make now, with each reason
-	/// ([technical design](../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
+	/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
 	#[error("the space cannot be dropped now: {0}")]
 	DropRefused(crate::DropRefusals),
 	/// No entity has this ID, this prefix of an ID, or this name.
@@ -225,7 +225,7 @@ pub enum NodeError {
 	#[error("{0} is not a file")]
 	NotAFile(String),
 	/// A file to pin to a device of the person's that does not hold the file's space
-	/// ([technical design](../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
+	/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
 	#[error("that device does not hold the file's space; take the space there first")]
 	DeviceLacksSpace,
 	/// A file to check out that has no content, or is no file.
@@ -312,7 +312,7 @@ pub enum NodeError {
 	UnknownVersion(Vec<String>),
 	/// Paths of a tree whose changes are of secret files, or take in new ones, which a commit
 	/// seals only with the space's secrets unlocked
-	/// ([technical design: secrets in trees](../../../docs/Technical-design.md#151-secrets-in-trees)).
+	/// ([technical design: secrets in trees](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#151-secrets-in-trees)).
 	#[error(
 		"{} are secret files, which a commit records only with the secrets unlocked; unlock them, or leave these changes for a later commit",
 		.0.join(", ")
@@ -571,11 +571,11 @@ pub enum NodeError {
 	)]
 	NotListed,
 	/// This replica is an AI agent's, which may not do what was asked: every replica would
-	/// set the change aside ([technical design](../../../docs/Technical-design.md#14-ai-agents)).
+	/// set the change aside ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#14-ai-agents)).
 	#[error("an AI agent may not {0}; the user can, on a device of theirs")]
 	AiAgentMayNot(&'static str),
 	/// An AI client asked to work on the user's replica, where the person did not allow AI
-	/// agents ([technical design](../../../docs/Technical-design.md#14-ai-agents)).
+	/// agents ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#14-ai-agents)).
 	#[error(
 		"AI agents are not allowed on this library here; the user allows them with nib mcp enable"
 	)]
@@ -591,12 +591,12 @@ pub enum NodeError {
 	#[error("{0}")]
 	WhichBackup(String),
 	/// A name or ID names no recovery code of the user's that stands, or several
-	/// ([technical design](../../../docs/Technical-design.md#111-recovery-codes)).
+	/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes)).
 	#[error("{0}")]
 	WhichRecoveryCode(String),
 	/// A folder to recover a library from that holds neither a backup nor a library of a
 	/// person with a recovery code
-	/// ([technical design](../../../docs/Technical-design.md#111-recovery-codes)).
+	/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes)).
 	#[error(
 		"{} holds no backup or library with a recovery code: a library holds its code's file once the code is made, and a backup once it was updated after that",
 		.0.display()
@@ -610,7 +610,7 @@ pub enum NodeError {
 	CodeOpensNothing,
 	/// A recovery file whose entry for the code the code did not sign, as a device that
 	/// turned against its person could write while it updated the backup: what it names is
-	/// not taken ([technical design](../../../docs/Technical-design.md#111-recovery-codes)).
+	/// not taken ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes)).
 	#[error(
 		"the recovery file here was changed: its entry for this code is not what the code signed as it was made, as a device that turned against you could write; bring the library back from another backup"
 	)]
@@ -621,7 +621,7 @@ pub enum NodeError {
 	/// The secrets asked for a recovery code that another device made, which alone gives it
 	/// them: a device that recovers with the code could not tell what another gave it from a
 	/// key of someone's own making
-	/// ([technical design](../../../docs/Technical-design.md#111-recovery-codes)).
+	/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes)).
 	#[error(
 		"this recovery code was made on another device, which alone can give it the secrets; make a new code here to have one that holds them"
 	)]
@@ -636,7 +636,7 @@ pub enum NodeError {
 	)]
 	RecoveryCutShort,
 	/// A name names no purge that waits on this device, or several
-	/// ([technical design](../../../docs/Technical-design.md#911-copies-that-wait)).
+	/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#911-copies-that-wait)).
 	#[error("{0}")]
 	WhichPurge(String),
 	/// The member's role does not allow restoring what a purge destroyed: an admin may, and
@@ -649,7 +649,7 @@ pub enum NodeError {
 	#[error("{0}")]
 	BackupFolder(String),
 	/// A folder found as a backup that is not that backup, or is damaged
-	/// ([technical design](../../../docs/Technical-design.md#910-backups)).
+	/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#910-backups)).
 	#[error("{} is not the backup {name}", path.display())]
 	NotTheBackup {
 		/// The folder.
@@ -662,7 +662,7 @@ pub enum NodeError {
 	BackupWrite(PathBuf),
 
 	/// Syncing from login, for a library whose keys a passphrase protects: nobody is there
-	/// to type it at login ([technical design](../../../docs/Technical-design.md#106-syncing-from-login)).
+	/// to type it at login ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#106-syncing-from-login)).
 	#[error(
 		"syncing from login needs the library's keys in the keystore, as nobody is there to type a passphrase at login"
 	)]

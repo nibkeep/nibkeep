@@ -2,7 +2,7 @@
 //! device keeps them in NibKeep's store or where they are, and the rules that choose a
 //! file's policy ([technical design: storage policies]).
 //!
-//! [technical design: storage policies]: ../../../../docs/Technical-design.md#93-storage-policies
+//! [technical design: storage policies]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#93-storage-policies
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
@@ -431,7 +431,7 @@ pub struct PolicyCount {
 	/// Those with a copy that does not count, as it was last checked more than 8 weeks ago
 	/// ([technical design: checking and repair]).
 	///
-	/// [technical design: checking and repair]: ../../../../docs/Technical-design.md#97-checking-and-repair
+	/// [technical design: checking and repair]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#97-checking-and-repair
 	pub unchecked: usize,
 	/// Those of which this device holds no copy at all: not in the store, and not where they
 	/// were found, unchanged.
@@ -444,7 +444,7 @@ pub struct PolicyCount {
 /// What a policy needs, in policy check order, and the files that do not meet it, with
 /// copies counted by disk across devices ([technical design: where the copies are]).
 ///
-/// [technical design: where the copies are]: ../../../../docs/Technical-design.md#96-where-the-copies-are
+/// [technical design: where the copies are]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#96-where-the-copies-are
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct PolicyCheck {
 	/// Each policy that a file is chosen for, by name, and the files that no rule chooses
@@ -1032,7 +1032,7 @@ impl Library {
 	/// from a camera, Replaceable for one from the downloads folder, and Standard for any
 	/// other, asking above 1 GiB.
 	///
-	/// [technical design: storage policies]: ../../../../docs/Technical-design.md#93-storage-policies
+	/// [technical design: storage policies]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#93-storage-policies
 	///
 	/// # Errors
 	///
@@ -1442,8 +1442,8 @@ impl Library {
 	/// copy counts only if it was checked in the 8 weeks before `wall_millis`
 	/// ([technical design: checking and repair]).
 	///
-	/// [technical design: where the copies are]: ../../../../docs/Technical-design.md#96-where-the-copies-are
-	/// [technical design: checking and repair]: ../../../../docs/Technical-design.md#97-checking-and-repair
+	/// [technical design: where the copies are]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#96-where-the-copies-are
+	/// [technical design: checking and repair]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#97-checking-and-repair
 	///
 	/// # Errors
 	///
@@ -1460,7 +1460,7 @@ impl Library {
 	/// whose copies this disk holds, sealed or where they are: as a drop of the space would
 	/// leave them ([technical design: devices that choose their spaces]).
 	///
-	/// [technical design: devices that choose their spaces]: ../../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces
+	/// [technical design: devices that choose their spaces]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces
 	pub(crate) fn policies_without_this_disk(
 		&self,
 		space: SpaceId,

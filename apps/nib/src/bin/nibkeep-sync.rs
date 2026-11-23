@@ -1,5 +1,5 @@
 //! `nibkeep-sync`: syncs the libraries that the person chose with their other devices, from
-//! login, with no window ([technical design](../../../../docs/Technical-design.md#106-syncing-from-login)).
+//! login, with no window ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#106-syncing-from-login)).
 //! With `--version`, it tells the engine's version, so that the newest copy runs.
 
 // No console window on Windows, where the login starts it.

@@ -2,7 +2,7 @@
 //! closure returns, keeps those that were not refused whether the closure succeeds or
 //! fails, and saves nothing if the closure panics.
 //!
-//! [technical design: saving in batches]: ../../../docs/Technical-design.md#77-saving-in-batches
+//! [technical design: saving in batches]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#77-saving-in-batches
 
 use std::fs;
 use std::panic::{AssertUnwindSafe, catch_unwind};

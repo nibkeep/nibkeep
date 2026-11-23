@@ -1,6 +1,6 @@
 //! The library's replicas, and what pairing and syncing read and change: the list of
 //! replicas in the personal space, a new replica's records, and each space's changes, keys
-//! and blobs ([Sync](../../../../docs/spec/sync.md), [Identity](../../../../docs/spec/identity.md#3-a-new-replica)).
+//! and blobs ([Sync](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/sync.md), [Identity](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/identity.md#3-a-new-replica)).
 
 use std::cell::RefCell;
 use std::collections::{BTreeMap, BTreeSet};
@@ -485,7 +485,7 @@ pub struct Syncing<'a> {
 /// A batch of what a sync receives of a space, saved together ([technical design: saving in
 /// batches]): changes and record keys, up to [`BATCH_ITEMS`] or for [`BATCH_TIME`].
 ///
-/// [technical design: saving in batches]: ../../../../docs/Technical-design.md#77-saving-in-batches
+/// [technical design: saving in batches]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#77-saving-in-batches
 struct Receiving {
 	space: SpaceId,
 	/// How many items it holds.
@@ -1435,7 +1435,7 @@ impl<'a> Sponsor<'a> {
 	/// every space of this device's, or the spaces chosen, and those given to it later; or a
 	/// phone, which takes the personal space alone, or the spaces chosen, and asks before it
 	/// takes a space given to it later
-	/// ([technical design](../../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
+	/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
 	#[must_use]
 	pub fn for_device(mut self, device: NewDevice) -> Self {
 		self.device = device;

@@ -2,7 +2,7 @@
 //! values, a new one after a replica that may hold the secrets departs, and giving them to
 //! every replica known to hold the secrets, which takes a key from any replica if the gift
 //! carries a link made with a secrets key that it holds already
-//! ([technical design](../../../../docs/Technical-design.md#13-sharing)). A replica that never
+//! ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing)). A replica that never
 //! held the secrets cannot make such a link, so it neither gives a key of its own making to
 //! seal with, nor is given one by the others.
 
@@ -29,7 +29,7 @@ pub(super) struct Given {
 	pub(super) replica: EntityId,
 	pub(super) sealed: SealedSecretsKey,
 	/// Given by the replica it takes the secrets from, in a counting change signed by that
-	/// replica's key of its own, as [technical design](../../../../docs/Technical-design.md#12-secrets)
+	/// replica's key of its own, as [technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#12-secrets)
 	/// says.
 	pub(super) asked: bool,
 	/// Whether a member's replica made the change that gives it and the key's rotation, by
@@ -241,7 +241,7 @@ impl Library {
 	/// that replica's key of its own, as a replica takes those of the replica it asked; and
 	/// those whose links a key taken checks.
 	/// A code asks nobody: the replica that made it gave it the secrets, as its person chose
-	/// then ([technical design](../../../../docs/Technical-design.md#111-recovery-codes)).
+	/// then ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes)).
 	pub(super) fn code_secrets_given(
 		&self,
 		rosters: &std::collections::BTreeMap<SpaceId, Roster>,
@@ -571,7 +571,7 @@ impl Library {
 	/// than the personal one, the codes of this user's that are known to hold the personal
 	/// space's secrets. A code asks nobody: the replica that made it gave it the secrets, as
 	/// its person chose then
-	/// ([technical design](../../../../docs/Technical-design.md#111-recovery-codes)).
+	/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes)).
 	fn code_holders(
 		&self,
 		space: SpaceId,

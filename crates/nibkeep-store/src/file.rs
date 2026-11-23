@@ -140,7 +140,7 @@ const TABLES: &str = "
 /// a checkout, read in full against the content it should hold ([technical design: checking
 /// and repair]).
 ///
-/// [technical design: checking and repair]: ../../../docs/Technical-design.md#97-checking-and-repair
+/// [technical design: checking and repair]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#97-checking-and-repair
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct PlaceCheck {
 	/// The copy's full path.
@@ -156,7 +156,7 @@ pub struct PlaceCheck {
 /// A page of a replica's account of what it holds in the space, as the log file keeps it:
 /// the latest of each page of each replica ([technical design: where the copies are]).
 ///
-/// [technical design: where the copies are]: ../../../docs/Technical-design.md#96-where-the-copies-are
+/// [technical design: where the copies are]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#96-where-the-copies-are
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct StoredPage {
 	/// The verifying key of the replica that issued it.
@@ -241,7 +241,7 @@ pub(crate) struct Writes {
 /// A part of what a purge destroyed, which a replica that waits keeps apart in its log file
 /// ([technical design: copies that wait]).
 ///
-/// [technical design: copies that wait]: ../../../docs/Technical-design.md#911-copies-that-wait
+/// [technical design: copies that wait]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#911-copies-that-wait
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct KeptRow {
 	/// The purge that destroyed it.

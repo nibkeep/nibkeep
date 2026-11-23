@@ -2,7 +2,7 @@
 //! lists, and of a revoked replica only those that every replica which revoked it had
 //! ([technical design: revocation]).
 //!
-//! [technical design: revocation]: ../../../docs/Technical-design.md#11-revocation-and-new-keys
+//! [technical design: revocation]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#11-revocation-and-new-keys
 
 mod common;
 
@@ -1671,7 +1671,7 @@ fn nibkeep_own_fields_made_secret_are_still_written_plainly() {
 }
 
 /// A space with members, as a space other than the personal one is
-/// ([technical design](../../../docs/Technical-design.md#13-sharing)): its first change gives
+/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing)): its first change gives
 /// the founder's member a role, and each replica's record is derived from the space and its
 /// key.
 struct Members {

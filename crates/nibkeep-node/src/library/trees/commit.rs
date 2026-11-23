@@ -3,8 +3,8 @@
 //! then a part for each entity it records, which names the revision ([trees] and
 //! [one entity per change] in the technical design).
 //!
-//! [trees]: ../../../../../docs/Technical-design.md#15-trees
-//! [one entity per change]: ../../../../../docs/Technical-design.md#62-one-entity-per-change
+//! [trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#15-trees
+//! [one entity per change]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#62-one-entity-per-change
 
 use std::collections::BTreeSet;
 use std::io::{self, Read};
@@ -192,7 +192,7 @@ impl Library {
 	/// here beside; then each file and link; and last what it records of Git repositories,
 	/// so that no device takes them before the commit is whole.
 	///
-	/// [technical design: one entity per change]: ../../../../../docs/Technical-design.md#62-one-entity-per-change
+	/// [technical design: one entity per change]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#62-one-entity-per-change
 	#[allow(clippy::type_complexity, reason = "what a commit records, read once")]
 	fn commit_parts(
 		&self,

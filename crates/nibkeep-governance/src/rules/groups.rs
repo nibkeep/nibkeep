@@ -20,7 +20,7 @@
 //! share the groups inside them: what the routes give is found from the records they pass,
 //! without listing them.
 //!
-//! [technical design: groups]: ../../../../docs/Technical-design.md#138-groups
+//! [technical design: groups]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#138-groups
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::convert::Infallible;

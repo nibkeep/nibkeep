@@ -1,7 +1,7 @@
 //! Encrypted databases: SQLite through the store's VFS, which encrypts every page of the
 //! file and every record of its write-ahead log ([technical design: the state file]).
 //!
-//! [technical design: the state file]: ../../../docs/Technical-design.md#75-the-state-file
+//! [technical design: the state file]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#75-the-state-file
 
 use std::collections::BTreeMap;
 use std::fs;

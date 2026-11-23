@@ -5,7 +5,7 @@
 //! the tests' own, which moves only when they move it, so that every machine sees the same
 //! bursts.
 //!
-//! [technical design: the state file]: ../../../docs/Technical-design.md#75-the-state-file
+//! [technical design: the state file]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#75-the-state-file
 
 use std::path::PathBuf;
 use std::time::Duration;

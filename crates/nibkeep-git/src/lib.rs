@@ -4,7 +4,7 @@
 //! has said a clone may take it. The engine knows nothing of Git: `nib` and apps run
 //! it through this crate, alike ([technical design: trees]).
 //!
-//! [technical design: trees]: ../../../docs/Technical-design.md#15-trees
+//! [technical design: trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#15-trees
 
 use std::ffi::OsString;
 use std::path::Path;

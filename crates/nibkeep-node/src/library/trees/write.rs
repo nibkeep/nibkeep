@@ -5,7 +5,7 @@
 //! loses a copy's edits that are not committed: a restore keeps them beside the copy, and
 //! nothing else writes over them ([technical design: trees]).
 //!
-//! [technical design: trees]: ../../../../../docs/Technical-design.md#15-trees
+//! [technical design: trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#15-trees
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::fs::{self, File};
@@ -41,7 +41,7 @@ pub struct Written {
 	pub skipped: Vec<(String, String)>,
 	/// The secret files not written, as this replica cannot read them: its secrets are
 	/// locked, or not on this device
-	/// ([technical design: secrets in trees](../../../docs/Technical-design.md#151-secrets-in-trees)).
+	/// ([technical design: secrets in trees](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#151-secrets-in-trees)).
 	pub sealed: Vec<String>,
 	/// The copies with edits not committed that a restore moved beside their paths before it
 	/// wrote there, each path with where its edits are now, as Mercurial's revert keeps them:

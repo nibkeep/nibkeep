@@ -1,7 +1,7 @@
 //! Who the replicas of a space are, as the governing changes that count say: their keys,
 //! the encryption keys that keys are sealed to, the space keys sealed to them, and the
 //! secrets keys sealed to those that hold the secrets
-//! ([Identity](../../../docs/spec/identity.md#4-revoking-replicas)). The state, which
+//! ([Identity](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/identity.md#4-revoking-replicas)). The state, which
 //! any replica's ordinary changes write to as well, does not decide any of it.
 
 use std::collections::{BTreeMap, BTreeSet};
@@ -20,7 +20,7 @@ use crate::{
 /// replica can read, whether or not its change counts. Only a key whose rotation a member's
 /// replica made, by the changes it builds on, is given out, and only one whose rotation
 /// builds on every departure is written with
-/// ([technical design](../../../docs/Technical-design.md#13-sharing)).
+/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing)).
 #[derive(Clone, Copy, Debug)]
 pub struct Rotation {
 	/// When the statement's change was made.
@@ -60,7 +60,7 @@ pub struct SecretsGift {
 }
 
 /// A recovery code of a member's, as a counting change states it on the code's record in the
-/// space ([technical design](../../../docs/Technical-design.md#111-recovery-codes)). It is
+/// space ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes)). It is
 /// no replica: no key of it is listed, and it signs no change.
 #[derive(Clone, Debug)]
 pub struct Code {
@@ -484,7 +484,7 @@ impl Roster {
 	/// from themselves, and those that the replica they take them from gave a key to, and
 	/// which that replica reaches thus from one that set them up, so that two replicas that
 	/// say they take them from each other hold nothing
-	/// ([technical design](../../../docs/Technical-design.md#13-sharing)).
+	/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing)).
 	#[must_use]
 	pub fn secrets_holders(&self) -> BTreeSet<EntityId> {
 		let given: BTreeSet<EntityId> = self

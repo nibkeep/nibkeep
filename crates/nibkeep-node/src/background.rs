@@ -1,4 +1,4 @@
-//! The sync role, held in the background ([technical design](../../../docs/Technical-design.md#105-the-sync-role)),
+//! The sync role, held in the background ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#105-the-sync-role)),
 //! as apps hold it while a library is unlocked: a thread that takes the role, or waits
 //! for the program that holds it to let go, and syncs the replica for every program on it
 //! until stopped. And asking the holder, whichever program it is, to sync now.

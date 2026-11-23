@@ -1,5 +1,5 @@
 //! Recovery codes: a long random key that a person keeps on paper, and the keys derived from
-//! it ([technical design](../../../docs/Technical-design.md#111-recovery-codes)).
+//! it ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes)).
 
 use std::fmt;
 

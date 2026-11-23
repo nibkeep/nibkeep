@@ -8,7 +8,7 @@
 //! The people: Olga, the space's first admin, who goes away; Ivan, an editor, who claims;
 //! Vera, another editor; and Nina, a viewer.
 //!
-//! [technical design: claims]: ../../../docs/Technical-design.md#139-claims-to-the-admin-role
+//! [technical design: claims]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#139-claims-to-the-admin-role
 
 mod common;
 

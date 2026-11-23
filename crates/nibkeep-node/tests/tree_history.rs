@@ -3,7 +3,7 @@
 //! tree into a folder of its own, as it is, at a revision or as of a moment
 //! ([technical design: trees]).
 //!
-//! [technical design: trees]: ../../../docs/Technical-design.md#15-trees
+//! [technical design: trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#15-trees
 
 mod common;
 

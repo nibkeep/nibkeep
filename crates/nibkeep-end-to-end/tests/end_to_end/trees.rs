@@ -2,7 +2,7 @@
 //! that one computer starts and the other writes, with its repositories cloned from where
 //! they come from; and commits made apart on both, which compete until one settles them.
 //!
-//! [technical design: trees]: ../../../../docs/Technical-design.md#15-trees
+//! [technical design: trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#15-trees
 
 use std::collections::BTreeMap;
 use std::fs;

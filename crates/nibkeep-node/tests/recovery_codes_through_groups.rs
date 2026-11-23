@@ -8,7 +8,7 @@
 //! adds the household to; Sam and Fred, editors in the household alone; and Gran, a viewer
 //! of the family alone.
 //!
-//! [technical design: recovery codes]: ../../../docs/Technical-design.md#111-recovery-codes
+//! [technical design: recovery codes]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes
 
 mod common;
 

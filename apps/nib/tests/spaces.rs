@@ -1,7 +1,7 @@
 //! `nib space` and `--space`: spaces besides the personal one, where new entities go, and
 //! where entities are found ([technical design: sharing]).
 //!
-//! [technical design: sharing]: ../../../docs/Technical-design.md#13-sharing
+//! [technical design: sharing]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing
 
 mod common;
 

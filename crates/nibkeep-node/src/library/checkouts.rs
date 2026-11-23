@@ -2,7 +2,7 @@
 //! become new versions of their files, and which a purge of their content deletes
 //! ([technical design: checkouts]).
 //!
-//! [technical design: checkouts]: ../../../../docs/Technical-design.md#92-checkouts
+//! [technical design: checkouts]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#92-checkouts
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::ffi::OsString;

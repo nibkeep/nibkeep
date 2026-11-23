@@ -6,7 +6,7 @@
 //! The logs of these tests: a space, log 0, and groups, each followed by the space. The first
 //! device, its person's, founds every log as its admin.
 //!
-//! [technical design: groups]: ../../../docs/Technical-design.md#138-groups
+//! [technical design: groups]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#138-groups
 
 mod common;
 

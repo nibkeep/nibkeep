@@ -153,7 +153,7 @@ struct Run {
 	choices: TestRng,
 	/// What the infected device says, on a replica's record, of the spaces given to it later,
 	/// drawn apart, so that the other draws come as they did before it could
-	/// ([technical design](../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
+	/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
 	marks: TestRng,
 	/// Whether the infected device sends each of its revocations of an honest device to
 	/// that device without its payload, drawn apart for the same reason.
@@ -846,7 +846,7 @@ impl Run {
 		let name = self.honest[device].name;
 		// Whatever the infected device says on its record, an honest device takes new spaces
 		// as it said itself: it said nothing, so it takes them
-		// ([technical design](../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
+		// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
 		let takes = self.honest[device]
 			.library
 			.takes_new_spaces()
@@ -999,7 +999,7 @@ impl Run {
 	/// The text of a choice of a space that the infected device may state: signed by its own
 	/// key, mostly, or by one nobody has; of the personal space or of one nobody holds; with
 	/// any number, holding or not
-	/// ([technical design](../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
+	/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
 	fn some_choice(&mut self) -> String {
 		let signing = if self.chance(75) {
 			replica_keys(

@@ -1,5 +1,5 @@
 //! Several stored logs of one space at once, as several programs, or two syncs in one, have
-//! it open ([technical design](../../../docs/Technical-design.md#78-several-programs-on-one-replica)): each catches
+//! it open ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#78-several-programs-on-one-replica)): each catches
 //! up with what the others wrote before it writes; a purge waits for the others to close
 //! the space, which makes its state file anew alone; and only a stored log that has the
 //! space alone puts it in order after a crash.

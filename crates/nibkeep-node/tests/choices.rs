@@ -7,7 +7,7 @@
 //! The people: Ada, with a desktop that made the space Project and a laptop, and Bea, an
 //! editor there.
 //!
-//! [technical design: devices that choose their spaces]: ../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces
+//! [technical design: devices that choose their spaces]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces
 
 mod common;
 

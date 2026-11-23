@@ -10,7 +10,7 @@
 //! model: the entity that comes later holds the link, and no link is defined twice, once in
 //! each direction; each has a reverse name instead, for showing it from its other end.
 //!
-//! [6.1]: ../../../docs/Design.md#61-entities-types-and-fields
+//! [6.1]: https://github.com/nibkeep/nibkeep/blob/main/docs/Design.md#61-entities-types-and-fields
 
 use std::sync::LazyLock;
 
@@ -307,7 +307,7 @@ pub const CREATED: FieldName = FieldName::from_static("std.created");
 /// original ([technical design: thumbnails]). It belongs to a content, not to a file: files
 /// that hold the same content share one. A purge of the content purges it too.
 ///
-/// [technical design: thumbnails]: ../../../docs/Technical-design.md#98-thumbnails
+/// [technical design: thumbnails]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#98-thumbnails
 pub const THUMBNAIL: TypeName = TypeName::from_static("std.thumbnail");
 
 /// The content that a thumbnail was made from, as a blob: it names the content, and holds
@@ -410,7 +410,7 @@ pub const ATTACHED_TO: FieldName = FieldName::from_static("std.attached-to");
 /// root on each device that holds a copy of it. Its files are files whose tree it is, and
 /// its links are symbolic links.
 ///
-/// [technical design: trees]: ../../../docs/Technical-design.md#15-trees
+/// [technical design: trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#15-trees
 pub const TREE: TypeName = TypeName::from_static("std.tree");
 
 /// Where a tree's folder is on a device: the tree, the device, and the folder's full path.
@@ -423,7 +423,7 @@ pub const SYMBOLIC_LINK: TypeName = TypeName::from_static("std.symbolic-link");
 /// part makes it, and each further part records one entity, which names it as the commit
 /// that recorded it ([technical design: one entity per change]).
 ///
-/// [technical design: one entity per change]: ../../../docs/Technical-design.md#62-one-entity-per-change
+/// [technical design: one entity per change]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#62-one-entity-per-change
 pub const REVISION: TypeName = TypeName::from_static("std.revision");
 
 /// The tree of a root.
@@ -463,7 +463,7 @@ pub const COMMITTED_IN: FieldName = FieldName::from_static("std.committed-in");
 /// its branch, and its commit only if the person pinned it, as a reference that writing the
 /// tree clones, never file by file ([technical design: trees]).
 ///
-/// [technical design: trees]: ../../../docs/Technical-design.md#15-trees
+/// [technical design: trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#15-trees
 pub const GIT_REPOSITORY: TypeName = TypeName::from_static("std.git-repository");
 
 /// A remote of a Git repository, one value for each, as its name, a space, and its address,
@@ -808,7 +808,7 @@ fn works() -> [TypeDef; 8] {
 }
 
 /// The types of trees, beside the fields of a tree's files that files have
-/// ([technical design](../../../docs/Technical-design.md#15-trees)).
+/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#15-trees)).
 fn tree_types() -> [TypeDef; 5] {
 	let link = |reverse: &'static str| {
 		FieldDef::new(ValueKind::Reference).with_reverse(FieldName::from_static(reverse))

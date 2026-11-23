@@ -3,7 +3,7 @@
 //! by line; and the tree as it is, as a revision's author had it, or as the library had
 //! recorded it by a moment ([technical design: trees]).
 //!
-//! [technical design: trees]: ../../../../../docs/Technical-design.md#15-trees
+//! [technical design: trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#15-trees
 
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -813,7 +813,7 @@ where
 /// commit records the entity again, and that a purge of the entity's other values states
 /// again.
 ///
-/// [technical design: one entity per change]: ../../../../../docs/Technical-design.md#62-one-entity-per-change
+/// [technical design: one entity per change]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#62-one-entity-per-change
 pub(super) fn parts_here<S: Statements>(
 	state: &State<S>,
 	revision: EntityId,
@@ -844,7 +844,7 @@ where
 /// parts are made at its moment, but its device takes in what others wrote between batches
 /// of them, and its clock moves past any later change it takes in.
 ///
-/// [technical design: one entity per change]: ../../../../../docs/Technical-design.md#62-one-entity-per-change
+/// [technical design: one entity per change]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#62-one-entity-per-change
 fn before_commits_under_way<S: Statements>(
 	stored: &nibkeep_store::StoredLog,
 	state: &State<S>,

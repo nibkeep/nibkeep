@@ -1,7 +1,7 @@
 //! `nib file add --from` and `nib import`: files imported from a source the person names,
 //! and Google Takeout's archives of Google Photos ([technical design: importers]).
 //!
-//! [technical design: importers]: ../../../docs/Technical-design.md#912-importers-and-where-files-came-from
+//! [technical design: importers]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#912-importers-and-where-files-came-from
 
 mod common;
 

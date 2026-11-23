@@ -3,7 +3,7 @@
 //! shared space, its listing counts only where the admins allow AI agents, and every member
 //! sees which AI agents read it.
 //!
-//! [technical design: sharing]: ../../../docs/Technical-design.md#13-sharing
+//! [technical design: sharing]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing
 
 mod common;
 

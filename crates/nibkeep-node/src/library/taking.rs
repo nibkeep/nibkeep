@@ -1,5 +1,5 @@
 //! Devices that choose their spaces: consent and taking
-//! ([technical design](../../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
+//! ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
 //!
 //! A space reaches a device of the user's only with the person's consent: the personal
 //! space's entry of the space, its first key sealed to the device, is given to the devices
@@ -189,7 +189,7 @@ impl Library {
 	/// Takes the spaces given to this replica as it paired, every one but those it declined,
 	/// whatever it says of the spaces given to it later: the person chose them on the device
 	/// that paired it
-	/// ([technical design](../../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
+	/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
 	pub(crate) fn take_paired_spaces(
 		&mut self,
 		wall_millis: u64,

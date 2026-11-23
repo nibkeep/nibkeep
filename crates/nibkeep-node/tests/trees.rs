@@ -2,7 +2,7 @@
 //! tracks a working tree; commits of many files in one change, each with a revision; and
 //! each replica's index of its copy ([technical design: trees]).
 //!
-//! [technical design: trees]: ../../../docs/Technical-design.md#15-trees
+//! [technical design: trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#15-trees
 
 mod common;
 

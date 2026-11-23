@@ -1,5 +1,5 @@
 //! The messages of pairing and of syncing, in canonical CBOR: arrays whose first item is the
-//! message's kind ([Sync](../../../docs/spec/sync.md)).
+//! message's kind ([Sync](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/sync.md)).
 
 use nibkeep_base::cbor::{self, Bytes, FromCbor, ToCbor, Value};
 use nibkeep_base::{Hash, SpaceId, StatementId};

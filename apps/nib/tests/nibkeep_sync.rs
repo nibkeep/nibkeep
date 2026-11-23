@@ -1,6 +1,6 @@
 //! `nibkeep-sync` as a program of its own: it tells its version, and of two copies, the one
 //! that the list names runs, and the other gives way
-//! ([technical design](../../../docs/Technical-design.md#106-syncing-from-login)).
+//! ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#106-syncing-from-login)).
 
 mod common;
 

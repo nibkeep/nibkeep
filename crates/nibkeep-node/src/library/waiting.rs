@@ -2,7 +2,7 @@
 //! while, 30 days by default, during which its owner can stop the purge, which gives back what
 //! it destroyed, or end the wait early ([technical design: copies that wait]).
 //!
-//! [technical design: copies that wait]: ../../../../docs/Technical-design.md#911-copies-that-wait
+//! [technical design: copies that wait]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#911-copies-that-wait
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::PathBuf;

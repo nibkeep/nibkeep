@@ -2,7 +2,7 @@
 //! committed in one change each, with a revision, through commands named as Git, Mercurial,
 //! Subversion, Fossil and Jujutsu name theirs ([technical design: trees]).
 //!
-//! [technical design: trees]: ../../../docs/Technical-design.md#15-trees
+//! [technical design: trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#15-trees
 
 mod common;
 

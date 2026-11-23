@@ -1,4 +1,4 @@
-//! What an app does with syncing from login ([technical design](../../../../docs/Technical-design.md#106-syncing-from-login)):
+//! What an app does with syncing from login ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#106-syncing-from-login)):
 //! the switch, which has the copy of `nibkeep-sync` that the app ships beside its program sync
 //! a library whenever the person is logged in; and what the app does as it starts. Only on
 //! computers.

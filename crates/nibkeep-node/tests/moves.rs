@@ -2,7 +2,7 @@
 //! of it, and that take folders and lists with what they hold, through every level
 //! ([technical design: spaces and moves]).
 //!
-//! [technical design: spaces and moves]: ../../../docs/Technical-design.md#131-spaces-and-moves
+//! [technical design: spaces and moves]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#131-spaces-and-moves
 
 mod common;
 

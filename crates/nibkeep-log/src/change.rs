@@ -108,7 +108,7 @@ impl FromCbor for Purges {
 /// What a change restores, after purges destroyed it: the same three lists as [`Purges`],
 /// of changes whose payloads and keys come back, secret statements whose record keys come
 /// back, and blobs whose keys come back, from replicas that kept them
-/// ([technical design](../../../docs/Technical-design.md#911-copies-that-wait)).
+/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#911-copies-that-wait)).
 pub type Restores = Purges;
 
 /// Reads an array whose items are in ascending order, without duplicates.

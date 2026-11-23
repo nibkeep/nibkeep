@@ -2,7 +2,7 @@
 //! its interface of files: the picker gives files but no paths, never replaces a file in one
 //! step, and moves a file only under its own name ([technical design: backups]).
 //!
-//! [technical design: backups]: ../../../docs/Technical-design.md#910-backups
+//! [technical design: backups]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#910-backups
 
 mod common;
 

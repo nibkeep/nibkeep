@@ -2,7 +2,7 @@
 //! log file, whatever happened to the state file, and holds no secret value ([the technical design's
 //! section on the state file]).
 //!
-//! [technical design: the state file]: ../../../docs/Technical-design.md#75-the-state-file
+//! [technical design: the state file]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#75-the-state-file
 
 use std::borrow::Cow;
 use std::cell::Cell;

@@ -2,7 +2,7 @@
 //! replica gets everything in its first sync, and a sync that is cut short keeps what came
 //! before the cut, on disk.
 //!
-//! [technical design: saving in batches]: ../../../docs/Technical-design.md#77-saving-in-batches
+//! [technical design: saving in batches]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#77-saving-in-batches
 
 mod common;
 

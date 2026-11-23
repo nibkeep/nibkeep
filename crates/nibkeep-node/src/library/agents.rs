@@ -7,7 +7,7 @@
 //! with no endpoint and no folder of its own: every replica treats its changes as a paired
 //! AI agent's, and nothing in the log's rules is new.
 //!
-//! [technical design: AI agents]: ../../../docs/Technical-design.md#14-ai-agents
+//! [technical design: AI agents]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#14-ai-agents
 
 use std::fs::{self, File};
 use std::io;

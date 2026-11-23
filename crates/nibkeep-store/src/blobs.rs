@@ -1,12 +1,12 @@
 //! The sealed blobs of a replica, each in a file of its own, in one directory that its spaces
 //! share, so that a replica keeps one sealed copy of each content
-//! ([technical design](../../../docs/Technical-design.md#79-blobs)). Each space writes
+//! ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#79-blobs)). Each space writes
 //! new blobs through a temporary directory of its own, so that opening a space finishes or
 //! deletes only what it was writing. A file goes only once no space of the replica keeps a
 //! key for it: deleting one, and a space's taking up a copy that another space holds, take
 //! the replica's blob lock, so that neither misses the other. A copy that a check found
 //! damaged is moved aside, out of the blob directory, until an intact one takes its place
-//! ([technical design](../../../docs/Technical-design.md#97-checking-and-repair)).
+//! ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#97-checking-and-repair)).
 
 use std::collections::BTreeSet;
 use std::fmt::Write as _;
@@ -33,7 +33,7 @@ const DAMAGED: &str = "damaged";
 
 /// The directory, beside the blob directory, of the sealed blobs whose keys a purge destroyed,
 /// which a replica that waits keeps apart until its wait ends
-/// ([technical design](../../../docs/Technical-design.md#911-copies-that-wait)).
+/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#911-copies-that-wait)).
 const KEPT: &str = "kept";
 
 /// How many bytes of a file a check reads at a time.

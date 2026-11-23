@@ -3,7 +3,7 @@
 //! and Jujutsu name theirs, and each works in the tree whose folder on this device holds the
 //! current folder, unless it names one; `nib init` in a library starts one.
 //!
-//! [technical design: trees]: ../../../docs/Technical-design.md#15-trees
+//! [technical design: trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#15-trees
 
 use std::fs;
 use std::io::Write;

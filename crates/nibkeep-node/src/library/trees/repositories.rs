@@ -8,7 +8,7 @@
 //! that a commit records only what changed here since: devices whose clones differ, as one
 //! that took fewer remotes, never undo each other's records.
 //!
-//! [technical design: trees]: ../../../../../docs/Technical-design.md#15-trees
+//! [technical design: trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#15-trees
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::fs;

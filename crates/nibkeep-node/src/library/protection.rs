@@ -1,6 +1,6 @@
 //! Protecting a library's keys and its secrets anew, after they were set up: with a new
 //! passphrase, or with a new key in the platform's keystore
-//! ([Key file](../../../../docs/spec/keys.md)). The library's passphrase and its secrets'
+//! ([Key file](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/keys.md)). The library's passphrase and its secrets'
 //! stay apart, so that unlocking the library never unlocks its secrets.
 
 use nibkeep_crypto::rand_core::CryptoRng;

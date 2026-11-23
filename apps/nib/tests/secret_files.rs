@@ -2,7 +2,7 @@
 //! records with `--to`, and `nib secret save` writes plain copies, which nothing records
 //! ([technical design: secret files]).
 //!
-//! [technical design: secret files]: ../../../docs/Technical-design.md#95-secret-files
+//! [technical design: secret files]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#95-secret-files
 
 mod common;
 

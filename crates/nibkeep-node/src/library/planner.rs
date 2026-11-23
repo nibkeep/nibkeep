@@ -2,7 +2,7 @@
 //! device's role, size and pins, and when its files were last opened on the device
 //! ([technical design: the planner]).
 //!
-//! [technical design: the planner]: ../../../../docs/Technical-design.md#99-the-planner
+//! [technical design: the planner]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#99-the-planner
 
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -54,7 +54,7 @@ pub(crate) enum Keeps {
 	},
 	/// No blob: on a device that drops the space, whose copies go as the copies elsewhere
 	/// are proven
-	/// ([technical design](../../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
+	/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
 	Nothing,
 }
 
@@ -101,7 +101,7 @@ impl Library {
 	/// else a tenth of the size of the disk its replica is on, on a computer, and none on a
 	/// phone, which keeps thumbnails alone ([technical design: the planner]).
 	///
-	/// [technical design: the planner]: ../../../../docs/Technical-design.md#99-the-planner
+	/// [technical design: the planner]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#99-the-planner
 	///
 	/// # Errors
 	///
@@ -268,7 +268,7 @@ impl Library {
 	/// What this replica keeps of each of its spaces' sealed blobs, as of `wall_millis`
 	/// ([technical design: the planner]).
 	///
-	/// [technical design: the planner]: ../../../../docs/Technical-design.md#99-the-planner
+	/// [technical design: the planner]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#99-the-planner
 	pub(crate) fn plan(&self, wall_millis: u64) -> Result<BTreeMap<SpaceId, Keeps>, NodeError> {
 		let marks = self.device_marks(self.info.device)?;
 		let archive = marks.role == DeviceRole::Archive;

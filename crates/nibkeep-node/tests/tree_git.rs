@@ -4,7 +4,7 @@
 //! connection, nor one that an AI agent's replica recorded; and cloned only into folders
 //! checked as a file's place is ([technical design: trees]).
 //!
-//! [technical design: trees]: ../../../docs/Technical-design.md#15-trees
+//! [technical design: trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#15-trees
 
 mod common;
 

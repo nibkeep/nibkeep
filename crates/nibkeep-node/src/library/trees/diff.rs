@@ -2,7 +2,7 @@
 //! history, file by file, with unified diffs of text and only which versions differ for the
 //! rest ([technical design: trees]).
 //!
-//! [technical design: trees]: ../../../../../docs/Technical-design.md#15-trees
+//! [technical design: trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#15-trees
 
 use std::collections::BTreeSet;
 use std::io::Read;
@@ -33,7 +33,7 @@ pub struct FileDiff {
 	pub binary: bool,
 	/// Whether it is a secret file, whose lines a diff shows only when asked for, with the
 	/// secrets unlocked
-	/// ([technical design: secrets in trees](../../../docs/Technical-design.md#151-secrets-in-trees)).
+	/// ([technical design: secrets in trees](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#151-secrets-in-trees)).
 	pub secret: bool,
 }
 

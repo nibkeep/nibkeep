@@ -1,7 +1,7 @@
 //! Proving that a replica holds a sealed blob now, before another removes its own copy: the
 //! remover sends a fresh random key and a few random ranges of the sealed bytes, and the
 //! prover answers with the BLAKE3 hash of those ranges keyed with that key, which the remover
-//! checks against its own copy ([Sync](../../../docs/spec/sync.md#3-syncing)). A plain
+//! checks against its own copy ([Sync](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/sync.md#3-syncing)). A plain
 //! challenge asks the same of the content itself, which the device that holds an original
 //! where it was found reads from that file, and the remover from its sealed copy, opened.
 

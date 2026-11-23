@@ -2,7 +2,7 @@
 //! of a passport, sealed in the store, with no record of where it was found or of its plain
 //! copies ([technical design: secret files]).
 //!
-//! [technical design: secret files]: ../../../../docs/Technical-design.md#95-secret-files
+//! [technical design: secret files]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#95-secret-files
 
 use std::fs::{File, OpenOptions};
 use std::io::{self, Read};

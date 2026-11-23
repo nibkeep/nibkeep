@@ -3,7 +3,7 @@
 //! admin gives the other another role, and later removes them, and accepts what they did
 //! meanwhile ([technical design: sharing]).
 //!
-//! [technical design: sharing]: ../../../../docs/Technical-design.md#13-sharing
+//! [technical design: sharing]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing
 
 use nibkeep_end_to_end::{Device, EndToEnd, str};
 

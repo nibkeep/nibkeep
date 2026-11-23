@@ -4,7 +4,7 @@
 //! synced, in `trees.sqlite` in its folder, a database encrypted under a key derived from
 //! its storage key. It is derived: a replica that loses it reads every file.
 //!
-//! [technical design: trees]: ../../../../../docs/Technical-design.md#15-trees
+//! [technical design: trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#15-trees
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::{Path, PathBuf};
@@ -412,7 +412,7 @@ impl Index {
 	/// path, in place of those noted before: with the secrets locked, a copy that holds one
 	/// after a crash is told from an edit by this alone ([technical design: trees]).
 	///
-	/// [technical design: trees]: ../../../../../docs/Technical-design.md#15-trees
+	/// [technical design: trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#15-trees
 	pub(crate) fn about_to_write(
 		&self,
 		tree: EntityId,

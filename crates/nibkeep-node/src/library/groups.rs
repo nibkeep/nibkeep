@@ -7,7 +7,7 @@
 //! may be in another group the same way: the spaces the outer group is in follow and anchor
 //! both, and the inner group's members get them through the outer group's entries.
 //!
-//! [technical design: groups]: ../../../../docs/Technical-design.md#138-groups
+//! [technical design: groups]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#138-groups
 
 use std::collections::{BTreeMap, BTreeSet};
 

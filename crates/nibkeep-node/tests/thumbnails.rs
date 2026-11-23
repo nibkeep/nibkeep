@@ -2,7 +2,7 @@
 //! and every replica keeps it; a purge of the content purges it, a move takes it along, and
 //! exports leave it out ([technical design: thumbnails]).
 //!
-//! [technical design: thumbnails]: ../../../docs/Technical-design.md#98-thumbnails
+//! [technical design: thumbnails]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#98-thumbnails
 
 mod common;
 

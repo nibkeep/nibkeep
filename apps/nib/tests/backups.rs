@@ -1,7 +1,7 @@
 //! `nib backup`: backups on drives and shares, which the person's computers update
 //! ([technical design: backups]).
 //!
-//! [technical design: backups]: ../../../docs/Technical-design.md#910-backups
+//! [technical design: backups]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#910-backups
 
 mod common;
 

@@ -1,6 +1,6 @@
 //! Which changes count, as the rules of [`nibkeep_governance::rules`] decide from the
 //! governing changes that the replica can read
-//! ([Log](../../../../docs/spec/log.md#8-which-changes-count)): what the log reads for them
+//! ([Log](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/log.md#8-which-changes-count)): what the log reads for them
 //! from its history, and how it takes in or sets aside the changes whose decision changed.
 
 use std::borrow::Cow;
@@ -551,7 +551,7 @@ impl<S: Statements, H: History<Error = S::Error>> Log<S, H> {
 	/// In a space with members, every counting governing change that ends replicas there:
 	/// that gives a member the role none, and, where a counting listing is an AI agent's, that
 	/// says the space allows no AI agents. A key is written with only if its making builds on
-	/// each ([technical design](../../../../docs/Technical-design.md#13-sharing)). Ordered by
+	/// each ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing)). Ordered by
 	/// ID; empty elsewhere.
 	///
 	/// # Errors
@@ -747,7 +747,7 @@ impl<S: Statements, H: History<Error = S::Error>> Log<S, H> {
 	/// counting change listed and none revoked, and in a space with members a replica of a
 	/// member whose role there was not none: as a change that counts was. A key made by such a
 	/// replica is given out, whatever later sets its making aside, so that what was written
-	/// with it stays readable ([technical design](../../../../docs/Technical-design.md#13-sharing)).
+	/// with it stays readable ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing)).
 	/// An AI agent's replica makes no key.
 	///
 	/// # Errors
@@ -1033,7 +1033,7 @@ impl<S: Statements, H: History<Error = S::Error>> Log<S, H> {
 	/// The listings of `key` by a recovery code, in the counting governing changes that list
 	/// it and that it made itself, as a device that recovered with a code lists itself: what
 	/// it shows a peer that does not know it yet
-	/// ([Sync](../../../../docs/spec/sync.md#3-syncing)).
+	/// ([Sync](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/sync.md#3-syncing)).
 	///
 	/// # Errors
 	///
@@ -1409,7 +1409,7 @@ impl<S: Statements, H: History<Error = S::Error>> Log<S, H> {
 	/// Which purge keeps each purged item purged, of the changes, secret statements and sealed
 	/// blobs that counting purges destroyed: the first that purges it and that no counting
 	/// change that restores it builds on. A copy that waits counts its wait by it
-	/// ([technical design](../../../../docs/Technical-design.md#911-copies-that-wait)).
+	/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#911-copies-that-wait)).
 	///
 	/// # Errors
 	///

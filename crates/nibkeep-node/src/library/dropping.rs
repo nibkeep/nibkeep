@@ -1,5 +1,5 @@
 //! Devices that choose their spaces: dropping a space
-//! ([technical design](../../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
+//! ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
 //!
 //! A device drops a space as the person asks there. A drop that would leave the space below
 //! its policies, or on no other device of the person's that remains, is refused, and says

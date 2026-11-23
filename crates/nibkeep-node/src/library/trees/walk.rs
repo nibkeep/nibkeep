@@ -3,7 +3,7 @@
 //! Git repository, and the copies that NibKeep wrote there for other reasons
 //! ([technical design: trees]). Links are never followed.
 //!
-//! [technical design: trees]: ../../../../../docs/Technical-design.md#15-trees
+//! [technical design: trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#15-trees
 
 use std::collections::{BTreeMap, BTreeSet, btree_map};
 use std::fs::{self, File};

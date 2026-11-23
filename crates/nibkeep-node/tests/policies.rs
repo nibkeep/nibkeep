@@ -1,7 +1,7 @@
 //! Storage policies: the defaults a space gets, how a file's policy is chosen, files kept
 //! where they are, and the question about large files ([technical design: storage policies]).
 //!
-//! [technical design: storage policies]: ../../../docs/Technical-design.md#93-storage-policies
+//! [technical design: storage policies]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#93-storage-policies
 
 mod common;
 

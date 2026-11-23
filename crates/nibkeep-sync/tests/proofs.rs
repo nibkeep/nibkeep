@@ -1,7 +1,7 @@
 //! A replica proves that it holds a sealed blob now, as another is about to remove its own
 //! copy: it answers a fresh challenge from the blob's bytes, after it has recorded that it
 //! holds the blob for a while, and proves nothing it is removing itself
-//! ([Sync](../../../docs/spec/sync.md#3-syncing)).
+//! ([Sync](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/sync.md#3-syncing)).
 
 mod common;
 

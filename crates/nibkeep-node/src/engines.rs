@@ -1,6 +1,6 @@
 //! The engines file: the version of a replica's stored files, and the programs that open the
 //! replica, each with the latest version its engine reads, so that programs whose engines
-//! are of different versions share one replica ([storage](../../../docs/spec/storage.md#16-engines-of-different-versions)).
+//! are of different versions share one replica ([storage](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/storage.md#16-engines-of-different-versions)).
 //!
 //! A program reads the file before any other of the replica but the place files, and opens
 //! nothing if the replica is of a later version than its engine reads. It records itself

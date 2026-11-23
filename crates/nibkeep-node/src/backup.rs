@@ -1,5 +1,5 @@
 //! A backup's folder: what it holds, and how each file in it is written whole, without keys
-//! and without a database ([Storage](../../../docs/spec/storage.md#6-backups)). The engine
+//! and without a database ([Storage](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/storage.md#6-backups)). The engine
 //! reaches it through an interface of files, [`BackupFolder`]: on computers, the file system
 //! stands behind it; on Android, the folder that the system's picker gives.
 
@@ -65,7 +65,7 @@ Do not change, rename or add files here. To stop using it, remove it in NibKeep 
 /// picker gives, which gives files but no paths, never replaces a file in one step, and
 /// moves a file only under its own name ([technical design: backups]).
 ///
-/// [technical design: backups]: ../../../docs/Technical-design.md#910-backups
+/// [technical design: backups]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#910-backups
 pub trait BackupFolder: Send + Sync {
 	/// A path in the folder, as messages show it.
 	fn shown(&self, path: &str) -> PathBuf;
@@ -398,7 +398,7 @@ pub(crate) struct Record {
 	/// How long the backup waits before purging, from each time on, in milliseconds, as its
 	/// updates saw its owner's mark ([technical design: copies that wait]).
 	///
-	/// [technical design: copies that wait]: ../../../docs/Technical-design.md#911-copies-that-wait
+	/// [technical design: copies that wait]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#911-copies-that-wait
 	pub(crate) waits: Vec<(u64, u64)>,
 	/// The purges whose destruction the backup keeps apart, each with when the update that
 	/// first brought it ran, and how many items and files it keeps of it.
@@ -648,7 +648,7 @@ pub(crate) fn blob_path(sealed: &Hash) -> String {
 /// What names the disk of a backup in `files`, as copies count disks: its drive's name, as
 /// a replica's would be, so that a backup and a replica on one drive count once; on a
 /// network share, whose drive no system names, or where nothing names it, the backup
-/// itself ([technical design](../../../docs/Technical-design.md#910-backups)).
+/// itself ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#910-backups)).
 pub(crate) fn disk_name(files: &dyn BackupFolder, backup: EntityId) -> Vec<u8> {
 	files
 		.drive()

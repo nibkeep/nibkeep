@@ -3,7 +3,7 @@
 //! back, read as a copy is; in its own folder, the new replica takes its place, and the old
 //! replica's folder is set aside beside it ([technical design: recovery codes]).
 //!
-//! [technical design: recovery codes]: ../../../docs/Technical-design.md#111-recovery-codes
+//! [technical design: recovery codes]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes
 
 mod common;
 

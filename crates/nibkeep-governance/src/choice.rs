@@ -1,11 +1,11 @@
 //! A device's choice of a space: whether it holds the space, signed by its own key and
 //! numbered, so that no other device takes a space from it or gives it one it declined
-//! ([technical design](../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
+//! ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
 //!
 //! A device states its choice on its own record in the personal space, where its user's
 //! other devices read it, and on its record in the space, derived from the space and its
 //! key, where any replica of its member may carry it. Of a key's choices of a space, the
-//! one with the highest number stands ([Log](../../../docs/spec/log.md#8-which-changes-count)).
+//! one with the highest number stands ([Log](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/log.md#8-which-changes-count)).
 
 use base64ct::{Base64UrlUnpadded, Encoding};
 use nibkeep_base::cbor::{self, FromCbor, ToCbor, Value as Cbor};

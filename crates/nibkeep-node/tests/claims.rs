@@ -7,7 +7,7 @@
 //! The people: Ada, the family space's admin, who goes away; Bea, an editor, who claims; and
 //! Cal, another editor.
 //!
-//! [technical design: claims]: ../../../docs/Technical-design.md#139-claims-to-the-admin-role
+//! [technical design: claims]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#139-claims-to-the-admin-role
 
 mod common;
 

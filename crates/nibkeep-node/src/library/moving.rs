@@ -1,7 +1,7 @@
 //! Moving an entity to another space of the user's: sharing means moving
-//! ([technical design](../../../../docs/Technical-design.md#13-sharing)), and giving something
+//! ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing)), and giving something
 //! to someone is moving it to their space
-//! ([technical design](../../../../docs/Technical-design.md#131-spaces-and-moves)). A move writes,
+//! ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#131-spaces-and-moves)). A move writes,
 //! in the other space, a new entity for the entity and for each folder, list, membership and
 //! member that it holds, through every level, each once: their values, and, unless the
 //! person chooses otherwise, their history, as the mover's account of it; their secret
@@ -35,7 +35,7 @@ const MOST_MOVES: usize = 16;
 
 /// Whether a move brings the history of what it moves ([technical design: spaces and moves]).
 ///
-/// [technical design: spaces and moves]: ../../../../docs/Technical-design.md#131-spaces-and-moves
+/// [technical design: spaces and moves]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#131-spaces-and-moves
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum MoveHistory {
 	/// Its past values too, each replaced as it was, with the mover's note of when the old
@@ -47,7 +47,7 @@ pub enum MoveHistory {
 
 /// Whether a move purges what it leaves behind in the old space ([technical design: spaces and moves]).
 ///
-/// [technical design: spaces and moves]: ../../../../docs/Technical-design.md#131-spaces-and-moves
+/// [technical design: spaces and moves]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#131-spaces-and-moves
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Behind {
 	/// Purges it, once the new entity counts and another device holds it: what the mover's
@@ -60,7 +60,7 @@ pub enum Behind {
 /// Whether a move takes the secret values of what it moves ([technical design: sharing]): the
 /// values of fields secret in the old space.
 ///
-/// [technical design: sharing]: ../../../../docs/Technical-design.md#13-sharing
+/// [technical design: sharing]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum MoveSecrets {
 	/// Takes them, current and past alike, sealed with the other space's secrets key, which
@@ -294,7 +294,7 @@ impl Library {
 	/// some of them, which no longer hold them in `to` ([technical design: spaces and moves]). An app shows
 	/// this before a move takes more than the entity, or takes it out of a folder or a list.
 	///
-	/// [technical design: spaces and moves]: ../../../../docs/Technical-design.md#131-spaces-and-moves
+	/// [technical design: spaces and moves]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#131-spaces-and-moves
 	///
 	/// # Errors
 	///
@@ -447,7 +447,7 @@ impl Library {
 	/// along does. Each field's count counts them all, and its entities are the first
 	/// `limit` by name.
 	///
-	/// [technical design: spaces and moves]: ../../../../docs/Technical-design.md#131-spaces-and-moves
+	/// [technical design: spaces and moves]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#131-spaces-and-moves
 	///
 	/// # Errors
 	///
@@ -1135,7 +1135,7 @@ impl Library {
 	/// or from where it was found on this device, unless a third space holds a copy of that
 	/// kind that the second takes up.
 	///
-	/// [technical design: spaces and moves]: ../../../../docs/Technical-design.md#131-spaces-and-moves
+	/// [technical design: spaces and moves]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#131-spaces-and-moves
 	fn copy_blob(
 		&mut self,
 		from: SpaceId,

@@ -1,4 +1,4 @@
-//! The sync role ([technical design](../../../docs/Technical-design.md#105-the-sync-role)): one program
+//! The sync role ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#105-the-sync-role)): one program
 //! on a replica holds it at a time; the holder answers and connects, syncs what comes, and
 //! records what it does, which other programs read and ask through; and pairing borrows its
 //! network.

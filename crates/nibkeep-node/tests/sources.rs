@@ -3,7 +3,7 @@
 //! archive; and what where it was found says of it, in place of what it says of itself
 //! ([technical design: importers]).
 //!
-//! [technical design: importers]: ../../../docs/Technical-design.md#912-importers-and-where-files-came-from
+//! [technical design: importers]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#912-importers-and-where-files-came-from
 
 mod common;
 

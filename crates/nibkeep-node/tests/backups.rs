@@ -3,7 +3,7 @@
 //! keys, each file is written whole, a purge reaches it, and its copies are checked
 //! ([technical design: backups]).
 //!
-//! [technical design: backups]: ../../../docs/Technical-design.md#910-backups
+//! [technical design: backups]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#910-backups
 
 mod common;
 

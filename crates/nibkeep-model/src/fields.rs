@@ -54,7 +54,7 @@ pub const AI_AGENT: FieldName = FieldName::from_static("org.nibkeep.ai-agent");
 /// Whether a space with members allows AI agents, `true` or `false`, in a change that governs
 /// it, which only an admin's counts: an AI agent's listing counts only where the latest such
 /// statements that its change builds on allow them
-/// ([technical design](../../../docs/Technical-design.md#13-sharing)).
+/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing)).
 pub const AI_AGENTS: FieldName = FieldName::from_static("org.nibkeep.ai-agents");
 
 /// The name of a field whose values are secret in the space for good, as text: no later
@@ -63,7 +63,7 @@ pub const SECRET_FIELD: FieldName = FieldName::from_static("org.nibkeep.secret-f
 
 /// A member's role in a space other than the personal one, on the member's record, as
 /// text: `admin`, `editor`, `viewer`, or `none` for a member who left or was removed
-/// ([technical design](../../../docs/Technical-design.md#13-sharing)).
+/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing)).
 pub const ROLE: FieldName = FieldName::from_static("org.nibkeep.role");
 
 /// The ID of the user whom a member's record in a space other than the personal one is, as
@@ -81,7 +81,7 @@ pub const SPACE_ENTRY: FieldName = FieldName::from_static("org.nibkeep.space-ent
 
 /// The group that a member's record in a space is, as text: the group and its first change,
 /// fixed when the record is made, by the statement that adds the group
-/// ([technical design](../../../docs/Technical-design.md#138-groups)).
+/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#138-groups)).
 pub const GROUP: FieldName = FieldName::from_static("org.nibkeep.group");
 
 /// An anchor, in a space that a group is in, as text: the group's changes that take effect in
@@ -148,20 +148,20 @@ pub const RECOVERY_LISTING: FieldName = FieldName::from_static("org.nibkeep.reco
 /// The personal space's entry for a recovery code, as the code signed it once, as it was
 /// named, as text, on the code's record in the personal space: what a recovery file's entry
 /// for the code says of the space, so that no device writes another for the code
-/// ([technical design](../../../docs/Technical-design.md#111-recovery-codes)).
+/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes)).
 pub const RECOVERY_ENTRY: FieldName = FieldName::from_static("org.nibkeep.recovery-entry");
 
 /// A device's choice of a space, as text, signed by its key and numbered: on its own record
 /// in the personal space, and on its record in the space, derived from the space and its key.
 /// Of a key's choices of a space, the one with the highest number stands, and one that does
 /// not hold the space ends the device there
-/// ([technical design](../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
+/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
 pub const SPACE_CHOICE: FieldName = FieldName::from_static("org.nibkeep.space-choice");
 
 /// Whether a device takes the spaces given to it later, `true`, or asks first, `false`: on
 /// its own record in the personal space, counting only where its own key states it, so that
 /// no other device can have it take what it was given; a device that states none takes them
-/// ([technical design](../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
+/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
 pub const NEW_SPACES: FieldName = FieldName::from_static("org.nibkeep.new-spaces");
 
 /// The fields that govern a space, by saying who may write to it: the keys of replicas,
@@ -400,13 +400,13 @@ pub const MERGED_INTO: FieldName = FieldName::from_static("org.nibkeep.merged-in
 
 /// The entity in another space that an entity was moved into, a reference: links to it lead
 /// there, for those who can read that space, and the old space keeps the history it had
-/// ([technical design](../../../docs/Technical-design.md#13-sharing) and
-/// [spaces and moves](../../../docs/Technical-design.md#131-spaces-and-moves)).
+/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing) and
+/// [spaces and moves](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#131-spaces-and-moves)).
 pub const MOVED_INTO: FieldName = FieldName::from_static("org.nibkeep.moved-into");
 
 /// `true` on an entity that a move left behind, whose mover asked that what stays of it be
 /// purged: the old space's admins purge what the mover could not
-/// ([technical design](../../../docs/Technical-design.md#131-spaces-and-moves)).
+/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#131-spaces-and-moves)).
 pub const PURGE_ASKED: FieldName = FieldName::from_static("org.nibkeep.purge-asked");
 
 /// Qualifier: when the value was true, as a date.
@@ -435,7 +435,7 @@ pub const ALTERNATIVE: FieldName = FieldName::from_static("org.nibkeep.alternati
 /// from: the ID of that space, as text ([technical design: spaces and moves]). The notes of a move are not
 /// proof, and do not count when values are compared ([`is_note`]).
 ///
-/// [technical design: spaces and moves]: ../../../docs/Technical-design.md#131-spaces-and-moves
+/// [technical design: spaces and moves]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#131-spaces-and-moves
 pub const CARRIED_FROM: FieldName = FieldName::from_static("org.nibkeep.carried-from");
 
 /// Qualifier of a value that a move carried, the mover's note of who recorded it in the
@@ -456,7 +456,7 @@ pub const CARRIED_REPLACED: FieldName = FieldName::from_static("org.nibkeep.carr
 /// form that [`crate::migration::note`] writes ([technical design: migrations]). Like a
 /// move's notes, it is no proof, and does not count when values are compared ([`is_note`]).
 ///
-/// [technical design: migrations]: ../../../docs/Technical-design.md#57-migrations
+/// [technical design: migrations]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#57-migrations
 pub const MIGRATED_FROM: FieldName = FieldName::from_static("org.nibkeep.migrated-from");
 
 /// The qualifiers that are notes about a value rather than part of it: those of a move, and

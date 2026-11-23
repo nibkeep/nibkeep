@@ -1,4 +1,4 @@
-//! The sync role ([technical design](../../../docs/Technical-design.md#105-the-sync-role)): one program
+//! The sync role ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#105-the-sync-role)): one program
 //! on each replica syncs it for all, the one that holds the lock on `sync.lock` in the
 //! replica's folder. The holder runs the replica's endpoint, answers the replicas that
 //! connect, and connects to them as changes come and replicas appear. The others ask it
@@ -237,7 +237,7 @@ CREATE TABLE IF NOT EXISTS backups (
 /// remove it meanwhile, and how long a mark of a blob it is removing stands at most:
 /// 10 minutes ([technical design: the planner]).
 ///
-/// [technical design: the planner]: ../../../docs/Technical-design.md#99-the-planner
+/// [technical design: the planner]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#99-the-planner
 pub(crate) const HOLD_FOR: u64 = 600_000;
 
 fn database(error: rusqlite::Error) -> NodeError {
@@ -359,7 +359,7 @@ impl Records {
 	/// Where the round of checks under way stands, if one began ([technical design: checking
 	/// and repair]).
 	///
-	/// [technical design: checking and repair]: ../../../docs/Technical-design.md#97-checking-and-repair
+	/// [technical design: checking and repair]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#97-checking-and-repair
 	///
 	/// # Errors
 	///
@@ -619,7 +619,7 @@ impl Records {
 	/// before purging removes none before its wait has passed since then
 	/// ([technical design: copies that wait]).
 	///
-	/// [technical design: copies that wait]: ../../../docs/Technical-design.md#911-copies-that-wait
+	/// [technical design: copies that wait]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#911-copies-that-wait
 	pub(crate) fn unkept_since(
 		&self,
 		sealed: &[Hash],

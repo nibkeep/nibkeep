@@ -5,7 +5,7 @@
 //! of the type `std.thumbnail` with a sealed blob of its own. A thumbnail belongs to a
 //! content, not to a file.
 //!
-//! [technical design: thumbnails]: ../../../../docs/Technical-design.md#98-thumbnails
+//! [technical design: thumbnails]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#98-thumbnails
 
 use std::cmp::Reverse;
 use std::collections::{BTreeMap, BTreeSet};
@@ -541,7 +541,7 @@ impl Library {
 	/// a member may purge what they wrote; one that never syncs again leaves its own. Returns
 	/// how many it purged.
 	///
-	/// [technical design: thumbnails]: ../../../../docs/Technical-design.md#98-thumbnails
+	/// [technical design: thumbnails]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#98-thumbnails
 	///
 	/// # Errors
 	///

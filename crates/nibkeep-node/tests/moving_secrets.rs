@@ -4,7 +4,7 @@
 //! space stays secret in the new one; secret files move with their content; and what a move
 //! leaves behind loses only the secret values that moved, once the mover's device sees them.
 //!
-//! [technical design: sharing]: ../../../docs/Technical-design.md#13-sharing
+//! [technical design: sharing]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing
 
 mod common;
 

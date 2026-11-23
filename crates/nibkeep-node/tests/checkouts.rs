@@ -2,7 +2,7 @@
 //! copies on the others, and deletes their unchanged checkouts after their next sync, while
 //! an edited one stays ([technical design: checkouts]).
 //!
-//! [technical design: checkouts]: ../../../docs/Technical-design.md#92-checkouts
+//! [technical design: checkouts]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#92-checkouts
 
 mod common;
 

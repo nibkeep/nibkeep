@@ -1,5 +1,5 @@
 //! `nib sync --at-login`: syncing a library from login, through `nibkeep-sync`
-//! ([technical design](../../../docs/Technical-design.md#106-syncing-from-login)).
+//! ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#106-syncing-from-login)).
 
 mod common;
 

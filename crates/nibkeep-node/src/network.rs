@@ -1,5 +1,5 @@
 //! Pairing and syncing with the user's other replicas over the home network
-//! ([Sync](../../../docs/spec/sync.md)): a [`Network`] runs this replica's endpoint, and
+//! ([Sync](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/sync.md)): a [`Network`] runs this replica's endpoint, and
 //! the functions here run one exchange each over it.
 
 use std::collections::BTreeSet;
@@ -40,7 +40,7 @@ const ASKING_SYNC_TIMEOUT: Duration = Duration::from_secs(30);
 /// new replica connects: the code may be spent, so it is worth a wait.
 const OPEN_WAIT: Duration = Duration::from_secs(10);
 
-/// How many tries a code takes ([Sync](../../../docs/spec/sync.md#2-pairing)): the one in
+/// How many tries a code takes ([Sync](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/sync.md#2-pairing)): the one in
 /// which it matches spends it, and so does the last of those that fail before it matches,
 /// whatever made them fail. Two pairings at once whose codes share their first two digits
 /// may each reach the other's device first, and a person may mistype a code.
@@ -261,7 +261,7 @@ pub fn pair(
 /// gets every space of this device's, or the spaces chosen, and takes those given to it
 /// later; or a phone, which gets the personal space alone, or the spaces chosen, and asks
 /// before it takes a space given to it later
-/// ([technical design](../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
+/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
 /// With `give_secrets`, it gives the new device the secrets, as [`pair_giving_secrets`]
 /// does.
 ///
@@ -296,7 +296,7 @@ pub fn pair_device(
 
 /// Pairs a new replica of an AI agent named `name`, as [`pair`] pairs one of the user's:
 /// the change that lists its key marks it as an AI agent's, for good, and it is named after
-/// the AI agent ([technical design](../../../docs/Technical-design.md#14-ai-agents)).
+/// the AI agent ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#14-ai-agents)).
 ///
 /// # Errors
 ///
@@ -321,7 +321,7 @@ pub fn pair_ai_agent(
 /// says, if it does not yet, once the AI agent's replica has joined. The AI agent's replica gets no other space; it is paired anew
 /// to change them.
 ///
-/// [technical design: sharing]: ../../../docs/Technical-design.md#13-sharing
+/// [technical design: sharing]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing
 ///
 /// # Errors
 ///
@@ -1200,7 +1200,7 @@ pub struct RemovalPass {
 /// thumbnails that it made twice ([`Library::purge_thumbnails_made_twice`]). First, it
 /// destroys what purges destroyed whose wait has ended ([`Library::destroy_due`]).
 ///
-/// [technical design: the planner]: ../../../docs/Technical-design.md#99-the-planner
+/// [technical design: the planner]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#99-the-planner
 ///
 /// # Errors
 ///

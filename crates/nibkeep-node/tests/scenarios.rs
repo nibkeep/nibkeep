@@ -5,8 +5,8 @@
 //! relays come, the device outside the home is one kept away from home, which syncs when it
 //! comes back, as the Plan says.
 //!
-//! [design: S14]: ../../../docs/Design.md#5-scenarios
-//! [technical design: storage policies]: ../../../docs/Technical-design.md#93-storage-policies
+//! [design: S14]: https://github.com/nibkeep/nibkeep/blob/main/docs/Design.md#5-scenarios
+//! [technical design: storage policies]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#93-storage-policies
 
 mod common;
 

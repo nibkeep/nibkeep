@@ -75,13 +75,13 @@ pub const REPLICA: TypeName = TypeName::from_static("org.nibkeep.replica");
 pub const SPACE: TypeName = TypeName::from_static("org.nibkeep.space");
 
 /// The type of a group's own entity, a space with members and no data of its own
-/// ([technical design](../../../docs/Technical-design.md#138-groups)).
+/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#138-groups)).
 pub const GROUP: TypeName = TypeName::from_static("org.nibkeep.group");
 
 /// The type of the record in the personal space that keeps the names of a space of the
 /// user's, derived from the personal space and the space, so that every device of the user
 /// shows the space by name, those that do not hold it too
-/// ([technical design](../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
+/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
 pub const SPACE_NAMES: TypeName = TypeName::from_static("org.nibkeep.space-names");
 
 /// The space whose names a record of the type [`SPACE_NAMES`] keeps: its ID, as text.
@@ -89,7 +89,7 @@ pub const OF_SPACE: FieldName = FieldName::from_static("org.nibkeep.of-space");
 
 /// The type of a recovery code's record: a member's printed code, which works as one more
 /// device that lives on paper
-/// ([technical design](../../../docs/Technical-design.md#111-recovery-codes)).
+/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes)).
 pub const RECOVERY_CODE: TypeName = TypeName::from_static("org.nibkeep.recovery-code");
 
 /// A recovery code of a member's, on the code's record, and its revocation there; and a
@@ -107,13 +107,13 @@ pub use nibkeep_model::fields::{ENCRYPTION_KEY, ENDPOINT, NAME, OWNER, SIGNING_K
 pub use nibkeep_model::fields::{ACCEPTED, AI_AGENT, REVOKED, SECRET_FIELD, SPACE_KEY};
 
 /// The key that a replica's secrets compartment opens what is sealed to, and the secrets
-/// keys sealed to it ([technical design](../../../docs/Technical-design.md#12-secrets)).
+/// keys sealed to it ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#12-secrets)).
 pub use nibkeep_model::fields::{SECRETS_ENCRYPTION_KEY, SECRETS_FROM, SECRETS_KEY};
 
 /// A member's role and the user a member's record is, in a space other than the personal
 /// one; a replica's listing there, signed by its own key; and the user's spaces, each with
 /// its first key sealed to a replica, in the personal space
-/// ([technical design](../../../docs/Technical-design.md#13-sharing)).
+/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing)).
 pub use nibkeep_model::fields::{LISTING, ROLE, SPACE_ENTRY, USER_ID};
 
 /// The person that a user is, in the space that says so.
@@ -129,19 +129,19 @@ pub const ON_DEVICE: FieldName = FieldName::from_static("org.nibkeep.on-device")
 
 /// A device's role, as its user marked it in the personal space: `archive` for an archive
 /// node; any other device is an everyday device
-/// ([technical design](../../../docs/Technical-design.md#96-where-the-copies-are)).
+/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#96-where-the-copies-are)).
 pub const DEVICE_ROLE: FieldName = FieldName::from_static("org.nibkeep.device-role");
 
 /// Whether a device is kept away from home, as its user marked it in the personal space.
 pub const AWAY: FieldName = FieldName::from_static("org.nibkeep.away");
 
 /// How many bytes of files an everyday device keeps, as its user set it in the personal
-/// space ([technical design](../../../docs/Technical-design.md#99-the-planner)).
+/// space ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#99-the-planner)).
 pub const KEEPS_UP_TO: FieldName = FieldName::from_static("org.nibkeep.keeps-up-to");
 
 /// How many days a device that is an archive node, or a backup, waits before it destroys what
 /// a purge destroys, as its user set it in the personal space: 0 for none; without it, 30
-/// ([technical design](../../../docs/Technical-design.md#911-copies-that-wait)).
+/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#911-copies-that-wait)).
 pub const WAITS: FieldName = FieldName::from_static("org.nibkeep.waits");
 
 /// A file, in any space of the user's, that a device keeps whatever its size, as its user
@@ -499,7 +499,7 @@ pub fn add_replica(new: &NewReplica<'_>, rng: &mut impl CryptoRng) -> AddedRepli
 /// of its own ([technical design: AI agents]): its keys, the device it is on, its name and
 /// the listing that it signed.
 ///
-/// [technical design: AI agents]: ../../../docs/Technical-design.md#14-ai-agents
+/// [technical design: AI agents]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#14-ai-agents
 #[derive(Clone, Debug)]
 pub struct NewAgentKey<'a> {
 	/// The personal space, which its record is derived from.

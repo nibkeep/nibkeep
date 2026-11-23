@@ -1,4 +1,4 @@
-//! Syncing from login ([technical design](../../../docs/Technical-design.md#106-syncing-from-login)):
+//! Syncing from login ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#106-syncing-from-login)):
 //! `nibkeep-sync`, a program without a window that starts when the person logs in, holds the
 //! sync role of the libraries they chose, as an app holds it while unlocked. Every NibKeep
 //! program reads and writes the list of those libraries alike, in the person's folder of

@@ -199,7 +199,7 @@ impl std::fmt::Debug for EncryptedDatabase {
 /// synchronization. Other connections, of this program or others, may use the database at
 /// the same time ([technical design: several programs on one replica]).
 ///
-/// [technical design: several programs on one replica]: ../../../docs/Technical-design.md#78-several-programs-on-one-replica
+/// [technical design: several programs on one replica]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#78-several-programs-on-one-replica
 fn settle(connection: &mut Connection) -> Result<(), StoreError> {
 	connection
 		.busy_timeout(BUSY_TIMEOUT)

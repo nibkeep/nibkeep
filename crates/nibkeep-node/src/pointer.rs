@@ -4,7 +4,7 @@
 //! without one, and a file left there would take them over. `nib` and apps that start
 //! trees settle it alike ([technical design: trees]).
 //!
-//! [technical design: trees]: ../../../docs/Technical-design.md#15-trees
+//! [technical design: trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#15-trees
 
 use std::fs;
 use std::io::{self, Read, Write};

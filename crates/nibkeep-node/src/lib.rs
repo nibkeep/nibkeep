@@ -114,7 +114,7 @@ pub const KEYSTORE_SERVICE: &str = "org.nibkeep";
 
 /// The service under which a phone's keystore holds keys that it releases only after the
 /// person confirms, with a fingerprint or the screen lock, each time: the secrets' keys
-/// ([technical design](../../../docs/Technical-design.md#8-keys-at-rest-and-unlocking)).
+/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#8-keys-at-rest-and-unlocking)).
 pub const CONFIRMED_KEYSTORE_SERVICE: &str = "org.nibkeep.confirmed";
 pub use nibkeep_governance::{NotACode, PairingCode};
 pub use nibkeep_keys::{CompartmentKey, KeysError, NewProtection, Protection, Unlocker};

@@ -5,7 +5,7 @@
 //! anything but a clone over an encrypted connection to a server that proves who it is
 //! ([technical design: trees]).
 //!
-//! [technical design: trees]: ../../../../../docs/Technical-design.md#15-trees
+//! [technical design: trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#15-trees
 
 /// The address of a remote as it is recorded: from an address with a scheme, the user
 /// information taken out, the whole of it from any scheme but SSH's, and from SSH's the

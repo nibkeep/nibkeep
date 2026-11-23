@@ -4,7 +4,7 @@
 //! with a key of their personal space; an editor replaces a secret value; and removing a
 //! member who held them gives the space a new secrets key, which the removed never get.
 //!
-//! [technical design: sharing]: ../../../docs/Technical-design.md#13-sharing
+//! [technical design: sharing]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing
 
 mod common;
 

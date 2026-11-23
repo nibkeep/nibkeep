@@ -1,5 +1,5 @@
 //! What a space holds, as items of negentropy's set, each with a timestamp and an ID of 32
-//! bytes ([Sync](../../../docs/spec/sync.md#3-syncing)).
+//! bytes ([Sync](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/sync.md#3-syncing)).
 
 use std::collections::BTreeMap;
 

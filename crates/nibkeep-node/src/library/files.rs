@@ -99,7 +99,7 @@ impl Library {
 	/// file that the rule choosing for it would ask about, as [`Library::question_for`]
 	/// tells, goes into the store until [`Library::answer`] answers for its folder.
 	///
-	/// [technical design: storage policies]: ../../../../docs/Technical-design.md#93-storage-policies
+	/// [technical design: storage policies]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#93-storage-policies
 	///
 	/// # Errors
 	///
@@ -125,7 +125,7 @@ impl Library {
 	/// holds already, a value that someone changed since; and the file goes into the folders
 	/// it names. The same file found again from another source gets an origin of its own.
 	///
-	/// [technical design: importers]: ../../../../docs/Technical-design.md#912-importers-and-where-files-came-from
+	/// [technical design: importers]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#912-importers-and-where-files-came-from
 	///
 	/// # Errors
 	///

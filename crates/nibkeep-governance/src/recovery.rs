@@ -1,6 +1,6 @@
 //! A recovery code in a space: the statement that names it, on a record of its member's,
 //! with the encryption keys that keys are sealed to, which the code itself signed
-//! ([technical design](../../../docs/Technical-design.md#111-recovery-codes)).
+//! ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes)).
 //!
 //! A code is no replica: it signs no change, and no key of it is listed. Its member's own
 //! replicas state it, and seal the space's keys to it as they do to each other.

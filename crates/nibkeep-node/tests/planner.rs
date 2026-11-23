@@ -2,7 +2,7 @@
 //! every file kept in the store, everyday devices pinned files and the newest that fit their
 //! size, and every replica every change, key and thumbnail ([technical design: the planner]).
 //!
-//! [technical design: the planner]: ../../../docs/Technical-design.md#99-the-planner
+//! [technical design: the planner]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#99-the-planner
 
 mod common;
 

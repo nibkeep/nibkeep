@@ -3,7 +3,7 @@
 //! revocation of the code is unknown to it; it counts as added then, and loses to a device in
 //! hand ([technical design: recovery codes]).
 //!
-//! [technical design: recovery codes]: ../../../docs/Technical-design.md#111-recovery-codes
+//! [technical design: recovery codes]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes
 
 mod common;
 

@@ -1,6 +1,6 @@
 //! Revoking replicas, the changes set aside for review, and the keys of the spaces: taking
 //! those sealed to this replica, giving those it holds to the replicas that lack them, and
-//! making new ones ([Identity](../../../../docs/spec/identity.md#4-revoking-replicas)).
+//! making new ones ([Identity](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/identity.md#4-revoking-replicas)).
 
 use std::collections::BTreeSet;
 
@@ -455,7 +455,7 @@ impl Library {
 	) -> Result<bool, NodeError> {
 		// A group holds no data to protect: every change of it is wrapped with its first key,
 		// which never changes, so that every replica of the spaces it is in reads its log
-		// ([technical design](../../../../docs/Technical-design.md#138-groups)).
+		// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#138-groups)).
 		if self.space(space)?.is_group()? {
 			let open = self
 				.spaces
@@ -735,7 +735,7 @@ impl Library {
 	/// a space's keys as a replica is, while it stands and, in a space with members, while
 	/// its member has a role there: a member of the space itself, or of a group that gives
 	/// their keys a role there
-	/// ([technical design](../../../../docs/Technical-design.md#111-recovery-codes)).
+	/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes)).
 	pub(super) fn key_recipients(
 		&self,
 		space: SpaceId,
@@ -878,7 +878,7 @@ impl Library {
 
 /// Which of a space's changes that give keys out a member's replica made, by the changes
 /// they build on, as found so far: a key, or a gift of one, counts only if one did
-/// ([technical design](../../../../docs/Technical-design.md#13-sharing)).
+/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing)).
 pub(super) struct Makers<'a> {
 	stored: &'a nibkeep_store::StoredLog,
 	keys: &'a nibkeep_log::SpaceKeys,

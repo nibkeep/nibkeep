@@ -1,8 +1,8 @@
 //! Spaces of one's own besides the personal one: founding one, the personal space's entries
 //! that give each of the user's replicas a space's first key, and listing a replica of the
 //! user in a space, with the listing that its own key signed
-//! ([Identity](../../../docs/spec/identity.md#8-spaces-of-ones-own),
-//! [technical design](../../../docs/Technical-design.md#13-sharing)).
+//! ([Identity](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/identity.md#8-spaces-of-ones-own),
+//! [technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing)).
 
 use base64ct::{Base64UrlUnpadded, Encoding};
 use nibkeep_base::cbor::{self, FromCbor, ToCbor, Value as Cbor};
@@ -138,7 +138,7 @@ pub fn give_space_entry(
 
 /// The operation that states a device's choice of a space on `record`: its own record in
 /// the personal space, or its record in the space, derived from the space and its key
-/// ([technical design](../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
+/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
 pub fn state_choice(
 	record: EntityId,
 	choice: &crate::Choice,

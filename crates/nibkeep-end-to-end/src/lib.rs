@@ -13,7 +13,7 @@
 //! again, with `commands.sh`, what it ran. `SNAPSHOTS=overwrite` writes what the commands
 //! printed into the tests, for review.
 //!
-//! [technical design: end-to-end tests]: ../../../docs/Technical-design.md#18-end-to-end-tests
+//! [technical design: end-to-end tests]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#18-end-to-end-tests
 
 mod process;
 

@@ -2,7 +2,7 @@
 //! saving its changes one at a time saves, a change refused in it leaves the others, and a
 //! batch that does not end, or whose files fail, saves none of its changes.
 //!
-//! [technical design: saving in batches]: ../../../docs/Technical-design.md#77-saving-in-batches
+//! [technical design: saving in batches]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#77-saving-in-batches
 
 use std::fs;
 use std::path::PathBuf;

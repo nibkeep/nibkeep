@@ -106,7 +106,7 @@ impl Library {
 	/// checked. What one check cannot finish is a problem in the report, and the other checks
 	/// go on.
 	///
-	/// [technical design: checking and repair]: ../../../../docs/Technical-design.md#97-checking-and-repair
+	/// [technical design: checking and repair]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#97-checking-and-repair
 	///
 	/// # Errors
 	///

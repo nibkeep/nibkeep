@@ -1,5 +1,5 @@
 //! Pairing a new replica with one that holds the library, over a transport
-//! ([Sync](../../../docs/spec/sync.md#2-pairing)).
+//! ([Sync](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/sync.md#2-pairing)).
 
 use nibkeep_base::cbor::{ToCbor, Value};
 use nibkeep_crypto::rand_core::CryptoRng;

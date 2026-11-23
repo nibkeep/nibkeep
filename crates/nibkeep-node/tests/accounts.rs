@@ -1,7 +1,7 @@
 //! Where the copies are: each replica's account of what it holds, passed on by syncs, and
 //! copies counted by disk across devices ([technical design: where the copies are]).
 //!
-//! [technical design: where the copies are]: ../../../docs/Technical-design.md#96-where-the-copies-are
+//! [technical design: where the copies are]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#96-where-the-copies-are
 
 mod common;
 

@@ -1,7 +1,7 @@
 //! Revoking replicas, the space keys that a space's statements seal to its replicas, the
 //! secrets keys sealed to the replicas that hold the secrets, and accepting a revoked
 //! replica's changes that were set aside
-//! ([Identity](../../../docs/spec/identity.md#4-revoking-replicas)).
+//! ([Identity](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/identity.md#4-revoking-replicas)).
 
 use base64ct::{Base64UrlUnpadded, Encoding};
 use nibkeep_base::cbor::{self, FromCbor, ToCbor, Value as Cbor};
@@ -136,7 +136,7 @@ const SECRETS_LINKS: &str = "nibkeep 2026-11 secrets links";
 /// replica that holds the key can make it, and only one that holds it can check it: a
 /// replica that holds the key takes the gift from any replica, as only one that held the
 /// secrets can have given it
-/// ([technical design](../../../docs/Technical-design.md#13-sharing)). In CBOR,
+/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing)). In CBOR,
 /// `[space, epoch, tag]`; the tag is BLAKE3 in keyed mode of the canonical encoding of
 /// `[space, epoch, key hash, replica, recipient]`, those of the gift.
 #[derive(Clone, Debug, PartialEq, Eq)]

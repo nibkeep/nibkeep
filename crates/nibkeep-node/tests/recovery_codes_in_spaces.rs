@@ -2,7 +2,7 @@
 //! codes into every space they are listed in, give the codes those spaces, and carry the
 //! revocations too ([technical design: recovery codes]).
 //!
-//! [technical design: recovery codes]: ../../../docs/Technical-design.md#111-recovery-codes
+//! [technical design: recovery codes]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes
 
 mod common;
 

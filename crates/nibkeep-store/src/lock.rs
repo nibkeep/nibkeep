@@ -11,7 +11,7 @@
 //! lock, so that none takes the lock alone while another has let go of its own on the way,
 //! and still has the space open.
 //!
-//! [technical design: several programs on one replica]: ../../../docs/Technical-design.md#78-several-programs-on-one-replica
+//! [technical design: several programs on one replica]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#78-several-programs-on-one-replica
 
 use std::cell::Cell;
 use std::fs::{File, OpenOptions, TryLockError};

@@ -1,4 +1,4 @@
-//! Syncing from login ([technical design](../../../docs/Technical-design.md#106-syncing-from-login)):
+//! Syncing from login ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#106-syncing-from-login)):
 //! the list of libraries that every program reads and writes alike; the newest copy of
 //! `nibkeep-sync` named in it; and the service, which holds each listed library's sync role,
 //! follows the list, waits for a locked keyring, and says what it cannot serve.

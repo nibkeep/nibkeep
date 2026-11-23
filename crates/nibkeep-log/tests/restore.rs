@@ -2,7 +2,7 @@
 //! restores it brings it back, as it was, on every replica ([technical design: copies that
 //! wait]).
 //!
-//! [technical design: copies that wait]: ../../../docs/Technical-design.md#911-copies-that-wait
+//! [technical design: copies that wait]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#911-copies-that-wait
 
 mod common;
 

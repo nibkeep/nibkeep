@@ -1,5 +1,5 @@
 //! What reads who holds a space
-//! ([technical design](../../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
+//! ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
 //!
 //! A device of the user's holds a space where its newest choice of it, in the personal space,
 //! holds it, as every device states as it takes a space. So a revocation and a recovery name

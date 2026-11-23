@@ -1,7 +1,7 @@
 //! Deleting a type that a space defines, and restoring it: its definitions are deleted, as
 //! any entity is, hidden and kept, so that the space's types leave it out, with its fields
 //! where no other type lists them, until it is restored whole
-//! ([data model](../../../../docs/spec/model.md#8-types)).
+//! ([data model](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/model.md#8-types)).
 
 use std::collections::{BTreeMap, BTreeSet};
 

@@ -1,7 +1,7 @@
 //! The state file: a space's state kept on disk, encrypted, which answers every query as
 //! the state in memory does ([technical design: the state file]).
 //!
-//! [technical design: the state file]: ../../../docs/Technical-design.md#75-the-state-file
+//! [technical design: the state file]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#75-the-state-file
 
 use std::collections::BTreeSet;
 use std::convert::Infallible;

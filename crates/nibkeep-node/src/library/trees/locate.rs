@@ -4,7 +4,7 @@
 //! compare names without regard to case, so each name is matched as its folder lists it,
 //! exactly in composed form ([technical design: trees]).
 //!
-//! [technical design: trees]: ../../../../../docs/Technical-design.md#15-trees
+//! [technical design: trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#15-trees
 
 use std::cell::RefCell;
 use std::collections::BTreeMap;

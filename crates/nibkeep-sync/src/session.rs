@@ -1,5 +1,5 @@
 //! A sync between two replicas, over a transport: who they are, which spaces they share,
-//! and for each space, what one holds and the other lacks ([Sync](../../../docs/spec/sync.md#3-syncing)).
+//! and for each space, what one holds and the other lacks ([Sync](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/sync.md#3-syncing)).
 
 use std::collections::BTreeSet;
 use std::io::{self, Read};

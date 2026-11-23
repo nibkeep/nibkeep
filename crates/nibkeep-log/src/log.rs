@@ -179,7 +179,7 @@ pub struct PurgedBy {
 /// A part of what a purge destroyed, as it was, which a replica that waits keeps apart, to
 /// give back if a change restores it ([technical design: copies that wait]).
 ///
-/// [technical design: copies that wait]: ../../../docs/Technical-design.md#911-copies-that-wait
+/// [technical design: copies that wait]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#911-copies-that-wait
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Kept {
 	/// A change, with the sealed payload and wrapped keys it had.
@@ -1126,7 +1126,7 @@ impl<S: Statements, H: History<Error = S::Error>> Log<S, H> {
 	/// Whether a change lists its own author by a recovery code that a governing change the
 	/// replica can read names, as its payload, which the keys the replica holds open, says:
 	/// a new device listed by a code introduces itself so
-	/// ([Log](../../../docs/spec/log.md#8-which-changes-count)).
+	/// ([Log](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/log.md#8-which-changes-count)).
 	fn lists_itself_by_code(&self, parcel: &Parcel, keys: &SpaceKeys) -> Result<bool, LogError> {
 		let change = &parcel.change;
 		if change.kind() != Kind::Governing {
@@ -1378,7 +1378,7 @@ impl<S: Statements, H: History<Error = S::Error>> Log<S, H> {
 	/// Whether a revoked key would stay if it revoked back the keys that revoked it, as of
 	/// two that revoke each other: a replica takes from it what it made without knowing of
 	/// its revocation, where that revocation of its own may be, and sends it nothing
-	/// ([Sync](../../../docs/spec/sync.md#4-who-syncs)).
+	/// ([Sync](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/sync.md#4-who-syncs)).
 	///
 	/// # Errors
 	///
@@ -1435,7 +1435,7 @@ impl<S: Statements, H: History<Error = S::Error>> Log<S, H> {
 	}
 
 	/// Whether a key is an AI agent's: whether the governing change that first listed it
-	/// marks its replica as one ([Log](../../../docs/spec/log.md#8-which-changes-count)). Its
+	/// marks its replica as one ([Log](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/log.md#8-which-changes-count)). Its
 	/// changes then count only if they write what an AI agent may, and purge, seal and govern
 	/// nothing.
 	///
@@ -1449,7 +1449,7 @@ impl<S: Statements, H: History<Error = S::Error>> Log<S, H> {
 	/// The choice of the device whose key is `key` that stands in a space with members, of
 	/// those that counting changes state: its number and whether it holds the space; none if
 	/// none states one, or the space has no members, where choices count for nothing
-	/// ([technical design](../../../docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
+	/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces)).
 	///
 	/// # Errors
 	///
@@ -1562,7 +1562,7 @@ impl<S: Statements, H: History<Error = S::Error>> Log<S, H> {
 	/// ([technical design: copies that wait]). The change holds nothing else, and counts
 	/// only where its author may purge what it restores.
 	///
-	/// [technical design: copies that wait]: ../../../docs/Technical-design.md#911-copies-that-wait
+	/// [technical design: copies that wait]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#911-copies-that-wait
 	///
 	/// # Errors
 	///

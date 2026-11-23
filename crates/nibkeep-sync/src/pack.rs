@@ -1,5 +1,5 @@
 //! Packs: files of a space's items, as the messages of a sync carry them, which backups hold
-//! without keys ([Storage](../../../docs/spec/storage.md#6-backups)).
+//! without keys ([Storage](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/storage.md#6-backups)).
 //!
 //! A pack is a CBOR sequence: `[1, space, update]`, then items of that space, each the
 //! message `[4, space, …]` that a sync sends of it, and a blob's bytes after its item as

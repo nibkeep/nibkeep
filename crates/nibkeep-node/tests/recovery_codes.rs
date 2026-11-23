@@ -2,7 +2,7 @@
 //! made on a device, named in the personal space, and given the space's keys as a device is,
 //! also those made later, until it is revoked ([technical design: recovery codes]).
 //!
-//! [technical design: recovery codes]: ../../../docs/Technical-design.md#111-recovery-codes
+//! [technical design: recovery codes]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes
 
 mod common;
 

@@ -8,7 +8,7 @@
 //! adds the household to; Sam and Fred, editors in the household; and Gran, a viewer of the
 //! family alone. Fred's device is infected.
 //!
-//! [technical design: groups]: ../../../docs/Technical-design.md#138-groups
+//! [technical design: groups]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#138-groups
 
 mod common;
 

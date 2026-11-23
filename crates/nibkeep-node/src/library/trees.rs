@@ -6,8 +6,8 @@
 //! ([technical design: one entity per change]); and each replica keeps the state of its copy in an index of its
 //! own, which tells what to read.
 //!
-//! [technical design: trees]: ../../../../docs/Technical-design.md#15-trees
-//! [technical design: one entity per change]: ../../../../docs/Technical-design.md#62-one-entity-per-change
+//! [technical design: trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#15-trees
+//! [technical design: one entity per change]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#62-one-entity-per-change
 
 mod commit;
 mod compare;
@@ -111,7 +111,7 @@ pub enum TreeEntryKind {
 	/// A secret file whose content this replica cannot read now: its secrets are locked, or
 	/// not on this device ([technical design: secrets in trees]).
 	///
-	/// [technical design: secrets in trees]: ../../../docs/Technical-design.md#151-secrets-in-trees
+	/// [technical design: secrets in trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#151-secrets-in-trees
 	Sealed,
 }
 
@@ -175,7 +175,7 @@ pub struct TreeStatus {
 	/// The paths among the changes that are secret files, or would go in as new ones, which
 	/// a commit seals for the space's secrets ([technical design: secrets in trees]).
 	///
-	/// [technical design: secrets in trees]: ../../../docs/Technical-design.md#151-secrets-in-trees
+	/// [technical design: secrets in trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#151-secrets-in-trees
 	pub secret: Vec<String>,
 	/// The secret files of the tree that this copy lacks, as this replica cannot read them:
 	/// its secrets are locked, or not on this device.
@@ -185,7 +185,7 @@ pub struct TreeStatus {
 /// The secret files of a tree, and its ordinary files that look secret
 /// ([technical design: secrets in trees]).
 ///
-/// [technical design: secrets in trees]: ../../../docs/Technical-design.md#151-secrets-in-trees
+/// [technical design: secrets in trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#151-secrets-in-trees
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct TreeSecrets {
 	/// The paths of its secret files, ordered.
@@ -200,7 +200,7 @@ pub struct TreeSecrets {
 /// Where a secret file of a tree is: the tree whose commit made it, which it belongs to for
 /// good, and its path there ([technical design: secrets in trees]).
 ///
-/// [technical design: secrets in trees]: ../../../docs/Technical-design.md#151-secrets-in-trees
+/// [technical design: secrets in trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#151-secrets-in-trees
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct InTree {
 	/// The tree.
@@ -374,7 +374,7 @@ pub struct Committed {
 	/// How many parts it made, a change for each: the first, with the revision, and one for
 	/// each entity it recorded ([technical design: one entity per change]).
 	///
-	/// [technical design: one entity per change]: ../../../docs/Technical-design.md#62-one-entity-per-change
+	/// [technical design: one entity per change]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#62-one-entity-per-change
 	pub parts: usize,
 	/// What it recorded, by path.
 	pub changes: Vec<TreeChange>,
@@ -765,7 +765,7 @@ impl Library {
 	/// which names the revision. Every version is sealed into the store, whatever storage
 	/// policies say. Returns nothing if nothing changed.
 	///
-	/// [technical design: one entity per change]: ../../../docs/Technical-design.md#62-one-entity-per-change
+	/// [technical design: one entity per change]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#62-one-entity-per-change
 	///
 	/// # Errors
 	///
@@ -1903,7 +1903,7 @@ impl Library {
 /// files and of secret files apart, as a purge of one kind leaves the same content in the
 /// other ([technical design: secret files]).
 ///
-/// [technical design: secret files]: ../../../../docs/Technical-design.md#95-secret-files
+/// [technical design: secret files]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#95-secret-files
 #[derive(Debug, Default)]
 struct Purged {
 	ordinary: BTreeSet<Hash>,

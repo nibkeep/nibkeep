@@ -6,11 +6,11 @@
 //!
 //! A space follows the governing changes of each group in it, which take effect there at
 //! the space's governing changes that name them, its *anchors*
-//! ([Log](../../../docs/spec/log.md#9-groups)). Each value that spaces and groups state of
+//! ([Log](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/log.md#9-groups)). Each value that spaces and groups state of
 //! each other is written in text as the canonical encoding of its items in base64url without
 //! padding, as a [`crate::Listing`] is.
 //!
-//! [technical design: groups]: ../../../docs/Technical-design.md#138-groups
+//! [technical design: groups]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#138-groups
 
 use base64ct::{Base64UrlUnpadded, Encoding};
 use nibkeep_base::cbor::{self, FromCbor, ToCbor, Value as Cbor};

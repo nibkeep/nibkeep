@@ -4,7 +4,7 @@
 //! member through a group leaves one space and stays in the group. Keeping out is said on the
 //! records in the space derived from the person's keys.
 //!
-//! [technical design: groups]: ../../../../docs/Technical-design.md#138-groups
+//! [technical design: groups]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#138-groups
 
 use std::collections::BTreeSet;
 

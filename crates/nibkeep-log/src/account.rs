@@ -1,6 +1,6 @@
 //! Accounts of copies: what each replica of a space holds, which it tells the others in
 //! pages that it signs and seals with the space key, and that they pass on
-//! ([Log](../../../docs/spec/log.md#11-accounts-of-copies)).
+//! ([Log](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/log.md#11-accounts-of-copies)).
 
 use nibkeep_base::cbor::{self, FromCbor, ToCbor, Value};
 use nibkeep_base::{ChangeId, EntityId, Hash, SpaceId};
@@ -61,7 +61,7 @@ impl PageKind {
 }
 
 /// What a device does with the files of its spaces, as its user marked it
-/// ([technical design](../../../docs/Technical-design.md#96-where-the-copies-are)).
+/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#96-where-the-copies-are)).
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum DeviceRole {
 	/// An everyday device, such as a phone or a laptop: every device that is not marked.
@@ -112,14 +112,14 @@ pub struct Head {
 	pub unrepaired: u64,
 	/// How many days its device waits before it destroys what a purge destroys, as the wait
 	/// in force when the page was issued: 0 for none
-	/// ([technical design](../../../docs/Technical-design.md#911-copies-that-wait)).
+	/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#911-copies-that-wait)).
 	pub waits: u64,
 }
 
 /// The head of the account of a backup, which a replica that updated it issues: the
 /// backup's disk, its mark, the space's changes it holds, what checks found damaged, and the
 /// number of the update that the page tells of
-/// ([technical design](../../../docs/Technical-design.md#910-backups)).
+/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#910-backups)).
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct BackupHead {
 	/// The backup's disk's ID in the space.

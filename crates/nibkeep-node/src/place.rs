@@ -232,7 +232,7 @@ pub(crate) fn whereabouts(folder: &Path) -> Whereabouts {
 ///
 /// Public for the tests of apps, which declare phones.
 ///
-/// [technical design: where the copies are]: ../../../docs/Technical-design.md#96-where-the-copies-are
+/// [technical design: where the copies are]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#96-where-the-copies-are
 #[doc(hidden)]
 #[must_use]
 pub fn disk_name(folder: &Path) -> Option<Vec<u8>> {

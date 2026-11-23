@@ -1,11 +1,11 @@
 //! A replica's listing in a space with members, which its own key signs, so that nobody
 //! lists a key they do not hold, nor puts one on a record that is not that key's
-//! ([technical design](../../../docs/Technical-design.md#13-sharing)).
+//! ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing)).
 //!
 //! A replica's record in such a space has an ID derived from the space and the key, and the
 //! listing names the record's owner and whether the replica is an AI agent's. In a space
 //! other than the personal one, a governing change lists a key only with its listing on the
-//! same record ([Log](../../../docs/spec/log.md#8-which-changes-count)).
+//! same record ([Log](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/log.md#8-which-changes-count)).
 
 use base64ct::{Base64UrlUnpadded, Encoding};
 use nibkeep_base::cbor::{self, FromCbor, ToCbor, Value as Cbor};

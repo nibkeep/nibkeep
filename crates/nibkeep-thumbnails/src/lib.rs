@@ -1,6 +1,6 @@
 //! Thumbnails of pictures, made with decoders in memory-safe Rust: the formats that every
 //! system reads alike, JPEG, PNG, GIF, WebP, BMP and TIFF, and nothing else
-//! ([technical design](../../../docs/Technical-design.md#98-thumbnails)). HEIC, AVIF, JPEG XL,
+//! ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#98-thumbnails)). HEIC, AVIF, JPEG XL,
 //! camera RAW and video are left to the phones that take them.
 //!
 //! A thumbnail is a JPEG whose longer side is 512 pixels, or the picture's own size if that

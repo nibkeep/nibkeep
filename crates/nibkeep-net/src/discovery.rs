@@ -9,7 +9,7 @@
 //! alone ([`mdns`]); on macOS and iOS, Bonjour does, on the networks it chooses ([`bonjour`]),
 //! as iOS allows nothing else without Apple's multicast entitlement.
 //!
-//! [technical design: finding replicas]: ../../../docs/Technical-design.md#102-finding-replicas
+//! [technical design: finding replicas]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#102-finding-replicas
 
 #[cfg(any(target_os = "macos", target_os = "ios"))]
 mod bonjour;

@@ -6,7 +6,7 @@
 //! The family of these tests: the founder is the space's admin, their partner an editor and
 //! the partner's sister a viewer.
 //!
-//! [technical design: sharing]: ../../../docs/Technical-design.md#13-sharing
+//! [technical design: sharing]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing
 
 mod common;
 

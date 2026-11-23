@@ -3,7 +3,7 @@
 //! of the person keeps one in its folder, and each backup holds the same file, so that a
 //! code and a backup together open the library ([technical design: recovery codes]).
 //!
-//! [technical design: recovery codes]: ../../../docs/Technical-design.md#111-recovery-codes
+//! [technical design: recovery codes]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes
 
 use std::fs;
 use std::io;

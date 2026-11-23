@@ -4,7 +4,7 @@
 //! replicas get the space through their personal space; and an invitation takes three tries,
 //! expires, and adds nobody when either side refuses.
 //!
-//! [technical design: sharing]: ../../../docs/Technical-design.md#13-sharing
+//! [technical design: sharing]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing
 
 mod common;
 

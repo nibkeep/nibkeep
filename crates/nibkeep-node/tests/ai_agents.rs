@@ -3,7 +3,7 @@
 //! as such, unable to purge, govern or change the library's own records, and revoked on
 //! their own.
 //!
-//! [technical design: AI agents]: ../../../docs/Technical-design.md#14-ai-agents
+//! [technical design: AI agents]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#14-ai-agents
 
 mod common;
 

@@ -3,8 +3,8 @@
 //! stored once, resized copies are linked to their originals, never merged, and the
 //! original names, dates and sources are kept ([design: S3], [technical design: importers]).
 //!
-//! [design: S3]: ../../../docs/Design.md#5-scenarios
-//! [technical design: importers]: ../../../docs/Technical-design.md#912-importers-and-where-files-came-from
+//! [design: S3]: https://github.com/nibkeep/nibkeep/blob/main/docs/Design.md#5-scenarios
+//! [technical design: importers]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#912-importers-and-where-files-came-from
 
 use std::fs::{self, File};
 use std::io::Write;

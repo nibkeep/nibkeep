@@ -9,7 +9,7 @@
 //! family's space; her son, an editor in the household; the grandmother, a viewer of the
 //! family; the father, the household's second admin; and a cousin, whom the father adds.
 //!
-//! [technical design: groups]: ../../../docs/Technical-design.md#138-groups
+//! [technical design: groups]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#138-groups
 
 mod common;
 

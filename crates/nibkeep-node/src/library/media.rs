@@ -1,6 +1,6 @@
 //! What photos and videos say of themselves: when and where they were taken, by which
 //! camera, and how large they are, read from their EXIF data or their tracks. Plugins take
-//! this over once there are plugins ([7.1](../../../../docs/Design.md#71-plugins)).
+//! this over once there are plugins ([7.1](https://github.com/nibkeep/nibkeep/blob/main/docs/Design.md#71-plugins)).
 
 use std::fs::File;
 use std::path::Path;

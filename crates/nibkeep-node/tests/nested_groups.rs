@@ -6,7 +6,7 @@
 //! The people: Mona, an admin of the family's space, the household's group and the kids'
 //! group; Sam, her son, an editor of the kids alone; and Gran, a viewer of the family alone.
 //!
-//! [technical design: groups]: ../../../docs/Technical-design.md#138-groups
+//! [technical design: groups]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#138-groups
 
 mod common;
 

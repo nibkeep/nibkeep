@@ -4,7 +4,7 @@
 //! the secrets gives nobody a key of its own making, and a key that a revoked device made is
 //! read but never written with ([technical design: sharing]).
 //!
-//! [technical design: sharing]: ../../../docs/Technical-design.md#13-sharing
+//! [technical design: sharing]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing
 
 mod common;
 

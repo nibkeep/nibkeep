@@ -2,7 +2,7 @@
 //! paper. It is named in the personal space, and given the keys of the space as a replica
 //! is, until it is revoked ([technical design: recovery codes]).
 //!
-//! [technical design: recovery codes]: ../../../../docs/Technical-design.md#111-recovery-codes
+//! [technical design: recovery codes]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes
 
 use std::collections::BTreeSet;
 

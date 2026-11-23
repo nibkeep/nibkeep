@@ -3976,7 +3976,7 @@ fn new_library<E: Environment>(
 }
 
 /// Runs `nib sync --at-login on` or `off`: turns syncing this library from login on or off
-/// ([technical design](../../docs/Technical-design.md#106-syncing-from-login)). On, it adds
+/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#106-syncing-from-login)). On, it adds
 /// the library to the list, names the copy of `nibkeep-sync` beside `nib` if it is newer
 /// than the one listed, and starts the copy that should run. Off, it takes the library off
 /// the list by its folder, which may hold no library any more, or by its replica, as after
@@ -6531,7 +6531,7 @@ fn file_command<E: Environment>(
 const THUMBNAIL_ROUND: usize = 64;
 
 /// What makes thumbnails in nib: decoders in memory-safe Rust for JPEG, PNG, GIF, WebP, BMP
-/// and TIFF ([technical design](../../../docs/Technical-design.md#98-thumbnails)).
+/// and TIFF ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#98-thumbnails)).
 struct RustDecoders;
 
 impl nibkeep_node::Thumbnailer for RustDecoders {
@@ -7998,7 +7998,7 @@ fn give_space_command<E: Environment>(
 /// Runs `nib secret ask`: sets up the secrets of this device, which holds none while another
 /// does, with a passphrase of their own, and asks for them from the device named; or, on a
 /// device that asked already, asks another
-/// ([technical design](../../../docs/Technical-design.md#12-secrets)).
+/// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#12-secrets)).
 fn ask_command<E: Environment>(
 	library: &mut Library,
 	from: &str,
@@ -8403,7 +8403,7 @@ fn is_secret(library: &Library, space: nibkeep_base::SpaceId, field: &FieldName)
 /// none yet, if `set_up` says so, sets them up with a passphrase of their own, asked for
 /// twice. Then takes the secrets keys that another device gave this one, and states what
 /// the records do not say yet ([technical
-/// design](../../../docs/Technical-design.md#12-secrets)).
+/// design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#12-secrets)).
 pub(crate) fn unlock_secrets<E: Environment>(
 	library: &mut Library,
 	set_up: bool,

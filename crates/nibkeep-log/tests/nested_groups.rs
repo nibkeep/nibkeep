@@ -9,7 +9,7 @@
 //! of the kids alone; the grandmother, a viewer of the family alone; and the father, a member
 //! of the household.
 //!
-//! [technical design: groups]: ../../../docs/Technical-design.md#138-groups
+//! [technical design: groups]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#138-groups
 
 mod common;
 

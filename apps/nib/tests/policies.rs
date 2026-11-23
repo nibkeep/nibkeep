@@ -1,7 +1,7 @@
 //! `nib policy`: the policies of the personal space, their rules, and what `nib file add`
 //! does with them ([technical design: storage policies]).
 //!
-//! [technical design: storage policies]: ../../../docs/Technical-design.md#93-storage-policies
+//! [technical design: storage policies]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#93-storage-policies
 
 mod common;
 

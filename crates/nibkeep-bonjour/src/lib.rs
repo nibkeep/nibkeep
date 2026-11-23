@@ -8,7 +8,7 @@
 //! is used from two threads; `Bonjour` talks to it through a channel, and it reports what
 //! it finds as [`Event`]s.
 //!
-//! [technical design: finding replicas]: ../../../docs/Technical-design.md#102-finding-replicas
+//! [technical design: finding replicas]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#102-finding-replicas
 
 #[cfg(any(target_os = "macos", target_os = "ios"))]
 mod apple;

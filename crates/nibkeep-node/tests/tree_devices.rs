@@ -2,7 +2,7 @@
 //! `update`, which brings a copy to the tree as other devices left it, with competing values
 //! written out: text merged three ways, anything else side by side ([technical design: trees]).
 //!
-//! [technical design: trees]: ../../../docs/Technical-design.md#15-trees
+//! [technical design: trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#15-trees
 
 mod common;
 

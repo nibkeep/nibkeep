@@ -3,7 +3,7 @@
 //! plans the removals and the challenges to put to replicas found on the network, the syncs
 //! with those replicas put them, and the copies whose proofs came in time go.
 //!
-//! [technical design: the planner]: ../../../../docs/Technical-design.md#99-the-planner
+//! [technical design: the planner]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#99-the-planner
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::fs::File;

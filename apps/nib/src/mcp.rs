@@ -6,7 +6,7 @@
 //! as the revision of 2025-11-25. Each tool runs the command of `nib` of the same name with
 //! `--json`, so that a tool and its command do the same.
 //!
-//! [technical design: AI agents]: ../../../docs/Technical-design.md#14-ai-agents
+//! [technical design: AI agents]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#14-ai-agents
 
 use std::io::{self, BufRead, Write};
 use std::path::{Path, PathBuf};

@@ -2,7 +2,7 @@
 //! shown, written, counted, purged with their content, and made where files lack them
 //! ([technical design: thumbnails]).
 //!
-//! [technical design: thumbnails]: ../../../docs/Technical-design.md#98-thumbnails
+//! [technical design: thumbnails]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#98-thumbnails
 
 mod common;
 
