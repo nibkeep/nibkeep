@@ -270,7 +270,6 @@ Of [recovery codes](Technical-design.md#111-recovery-codes), `nib recovery` make
 
 - **Forgetting a lost secrets' key states nothing** (`Library::forget_lost_secrets`): the other devices still count the phone as holding the secrets until it asks anew, and one that asks it meanwhile waits, and can ask another. A later version can state it, as governing statements that a version does not know are kept ([technical design](Technical-design.md#65-which-changes-count)).
 - **Two devices that set up the secrets at the same time,** or two admins a shared space's, before either hears of the other, split them: each device takes the keys of the setup of the one it asked, and cannot read what the other setup's keys sealed. Nothing settles it yet. A later engine can, without a new rule: the person gives the secrets on one device, and the other then passes its own keys back, linked with the first's.
-- **A tree in a space whose secrets are not set up** refuses secret files until a secret is stored in that space: `nib` sets up only the library's first secrets.
 
 ### Files, copies and backups
 

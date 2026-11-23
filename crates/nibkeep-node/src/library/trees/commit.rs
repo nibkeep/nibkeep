@@ -118,7 +118,8 @@ impl Library {
 		let mut pending = std::mem::take(&mut compared.pending);
 		self.add_made_secret(root, (&state, commit), &mut pending);
 		let chosen = chosen(pending, commit)?;
-		let unlocked = self.secrets_unlocked(space);
+		let unlocked =
+			self.secrets_for_commit(space, &chosen, (&state, commit), (wall_millis, rng))?;
 		let (chosen, left) = with_secrets(chosen, (&state, commit), unlocked)?;
 		// The index holds the whole copy once nothing of it was left unknown: a commit of
 		// some paths leaves the rest as it found them.
@@ -185,6 +186,39 @@ impl Library {
 			index.know(tree)?;
 		}
 		Ok(committed)
+	}
+
+	/// Whether the space's secrets are unlocked for a commit. A shared space whose secrets
+	/// this replica does not hold gets them for the commit's first secret file, as for the
+	/// first secret value written there, once the secrets compartment is open. While it is
+	/// locked or not set up, the commit asks for it. Where this replica may not set them up,
+	/// as for a member who is no admin, the commit fails as setting them up does, unless it
+	/// leaves its secret files.
+	fn secrets_for_commit(
+		&mut self,
+		space: SpaceId,
+		chosen: &[Pending],
+		(state, commit): (&TreeState, &Commit<'_>),
+		(wall_millis, rng): (u64, &mut impl CryptoRng),
+	) -> Result<bool, NodeError> {
+		if self.secrets_unlocked(space)
+			|| space == self.info.personal
+			|| self.secrets_compartment.is_none()
+			|| !chosen
+				.iter()
+				.any(|pending| chosen_secrecy(pending, state, commit))
+		{
+			return Ok(self.secrets_unlocked(space));
+		}
+		match self.set_up_space_secrets(space, wall_millis, rng) {
+			Ok(()) => Ok(self.secrets_unlocked(space)),
+			Err(
+				NodeError::AdminsOnly(_)
+				| NodeError::SpaceSecretsElsewhere
+				| NodeError::SecretsElsewhere,
+			) if commit.leave_secrets => Ok(false),
+			Err(error) => Err(error),
+		}
 	}
 
 	/// The parts of a commit, but its first, which makes the revision: each about one entity

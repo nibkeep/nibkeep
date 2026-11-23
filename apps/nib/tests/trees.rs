@@ -1259,6 +1259,36 @@ fn a_tree_keeps_its_env_as_a_secret_file_read_with_the_secrets_alone() {
 }
 
 #[test]
+fn a_tree_of_another_space_takes_its_first_secret_file_as_the_personal_space_s_would() {
+	let mut test = library("tree secrets in a space");
+	let top = test.here.clone();
+	test.nib(&["space", "new", "Rig"]).expect("makes");
+	test.nib(&["space", "new", "Work"]).expect("makes");
+	test.here = top.join("rig");
+	write(&test.here, "notes.md", "# Notes\n");
+	write(&test.here, ".nibsecret", "power-switch/wifi.env\n");
+	test.nib(&["--space", "Rig", "init", "--yes"])
+		.expect("starts");
+	// The library's first secret sets up its secrets, and the space's with them.
+	write(&test.here, "power-switch/wifi.env", "PASSWORD=s3ntinel\n");
+	test.passphrases = ["secrets passphrase", "secrets passphrase"].into();
+	let committed = test.nib(&["commit"]).expect("commits");
+	assert!(
+		committed.contains("secret    power-switch/wifi.env"),
+		"{committed}"
+	);
+	// In a space that has none yet, the passphrase of the locked secrets is enough.
+	test.here = top.join("work");
+	write(&test.here, "notes.md", "# Notes\n");
+	test.nib(&["--space", "Work", "init", "--yes"])
+		.expect("starts");
+	write(&test.here, ".env", "TOKEN=s3ntinel\n");
+	test.passphrases = ["secrets passphrase"].into();
+	let committed = test.nib(&["commit"]).expect("commits");
+	assert!(committed.contains("secret    .env"), "{committed}");
+}
+
+#[test]
 fn update_asks_before_it_moves_a_secret_file_where_another_device_moved_it() {
 	let mut test = library("tree secret moved");
 	let here = test.here.clone();

@@ -11,12 +11,12 @@ use std::path::{Path, PathBuf};
 use std::time::{Duration, SystemTime};
 
 use common::{library, now, this_day, today};
-use nibkeep_base::{EntityId, Hash};
+use nibkeep_base::{EntityId, Hash, SpaceId};
 use nibkeep_crypto::PassphraseParams;
 use nibkeep_model::{FieldName, Value};
 use nibkeep_node::{
-	Change, Commit, Committed, Edit, InTree, Joining, Library, NewProtection, NodeError, TreePoint,
-	Unlocker, resolved_path,
+	Change, Commit, Committed, Edit, InTree, Joining, Library, MemberRole, NewProtection,
+	NodeError, TreePoint, TreeStarted, Unlocker, resolved_path,
 };
 use nibkeep_std::{CONTENT, FILE, IN_TREE, SECRET_CONTENT, SECRET_FILE, TREE_PATH};
 use nibkeep_testkit::TestRng;
@@ -105,6 +105,44 @@ fn with_tree(
 		.start_tree(personal, &root, Some("Start"), now() + 1_000, rng)
 		.expect("starts");
 	(directory, library, started.tree, root)
+}
+
+/// A tree of `space`, started in a folder of its own, named `name`, that holds `files`.
+fn tree_in(
+	library: &mut Library,
+	(space, name): (SpaceId, &str),
+	files: &[(&str, &str)],
+	at: u64,
+	rng: &mut TestRng,
+) -> (TreeStarted, PathBuf) {
+	let root = folder(name);
+	for (path, content) in files {
+		write(&root, path, content);
+	}
+	let started = library
+		.start_tree(space, &root, Some("Start"), at, rng)
+		.expect("starts");
+	(started, root)
+}
+
+/// The types of the entity at a path of a tree of `space`, as the library has it now.
+fn types_at(
+	library: &Library,
+	(space, tree): (SpaceId, EntityId),
+	path: &str,
+) -> Vec<nibkeep_model::TypeName> {
+	let entity = library
+		.tree_entries(space, tree)
+		.expect("reads")
+		.into_iter()
+		.find(|entry| entry.path == path)
+		.unwrap_or_else(|| panic!("nothing at {path}"))
+		.entity;
+	library
+		.entity(space, entity, this_day())
+		.expect("reads")
+		.expect("the entity")
+		.types
 }
 
 fn commit(
@@ -262,6 +300,183 @@ fn a_commit_needs_the_secrets_for_a_secret_file_and_can_leave_it() {
 		&mut rng,
 	);
 	assert_eq!(committed.secret, [".env"]);
+}
+
+#[test]
+fn a_tree_of_another_space_sets_up_the_space_s_secrets_with_its_first_secret_file() {
+	let mut rng = TestRng::new("tree secrets in a space");
+	let (directory, mut library) = library("tree secrets in a space", &mut rng);
+	library
+		.set_up_secrets(&secrets_passphrase(), now() + 500, &mut rng)
+		.expect("sets up the secrets");
+	let rig = library
+		.create_space("Rig", now() + 600, &mut rng)
+		.expect("makes it");
+	let (started, root) = tree_in(
+		&mut library,
+		(rig, "tree secrets in a space, rig"),
+		&[
+			(".nibsecret", "power-switch/wifi.env\n"),
+			("notes.md", "# Notes\n"),
+		],
+		now() + 1_000,
+		&mut rng,
+	);
+	assert!(!library.secrets_unlocked(rig), "set up for a secret file");
+	write(&root, "power-switch/wifi.env", SENTINEL);
+	let committed = library
+		.commit_tree(
+			rig,
+			started.tree,
+			&Commit::new(None),
+			now() + 2_000,
+			&mut rng,
+		)
+		.expect("commits");
+	assert_eq!(committed.secret, ["power-switch/wifi.env"]);
+	assert!(library.secrets_unlocked(rig));
+	assert_eq!(
+		types_at(&library, (rig, started.tree), "power-switch/wifi.env"),
+		[SECRET_FILE]
+	);
+	// A tree started with one sets them up with its first commit.
+	let work = library
+		.create_space("Work", now() + 3_000, &mut rng)
+		.expect("makes it");
+	let (started, _) = tree_in(
+		&mut library,
+		(work, "tree secrets in a space, work"),
+		&[(".env", SENTINEL), ("notes.md", "# Notes\n")],
+		now() + 4_000,
+		&mut rng,
+	);
+	assert_eq!(started.committed.secret, [".env"]);
+	assert!(library.secrets_unlocked(work));
+	assert!(!nibkeep_testkit::holds_anywhere(
+		&directory,
+		SENTINEL.as_bytes()
+	));
+	assert!(!holds_hash(&directory, &Hash::of(SENTINEL.as_bytes())));
+}
+
+#[test]
+fn a_tree_of_another_space_takes_its_first_secret_file_once_the_secrets_are_set_up_or_unlocked() {
+	let mut rng = TestRng::new("tree secrets in a space, asked");
+	let (_, mut library) = library("tree secrets in a space, asked", &mut rng);
+	let rig = library
+		.create_space("Rig", now() + 600, &mut rng)
+		.expect("makes it");
+	let work = library
+		.create_space("Work", now() + 700, &mut rng)
+		.expect("makes it");
+	let notes = [("notes.md", "# Notes\n")];
+	let (in_rig, rig_root) = tree_in(
+		&mut library,
+		(rig, "tree secrets in a space, asked, rig"),
+		&notes,
+		now() + 1_000,
+		&mut rng,
+	);
+	let (in_work, work_root) = tree_in(
+		&mut library,
+		(work, "tree secrets in a space, asked, work"),
+		&notes,
+		now() + 1_100,
+		&mut rng,
+	);
+	write(&rig_root, ".env", SENTINEL);
+	write(&work_root, ".env", SENTINEL);
+	let needed = |refused: &Result<Committed, NodeError>| matches!(refused, Err(NodeError::SecretsNeeded(paths)) if paths == &[".env".to_owned()]);
+	// Without secrets, the commit asks for them, as in the personal space, and sets up the
+	// space's once they are.
+	let refused = library.commit_tree(
+		rig,
+		in_rig.tree,
+		&Commit::new(None),
+		now() + 2_000,
+		&mut rng,
+	);
+	assert!(needed(&refused), "{refused:?}");
+	assert_eq!(
+		refused.expect_err("refused").to_string(),
+		".env is a secret file, which a commit records only with the secrets unlocked; unlock \
+		 them, or leave this change for a later commit"
+	);
+	library
+		.set_up_secrets(&secrets_passphrase(), now() + 2_500, &mut rng)
+		.expect("sets up the secrets");
+	let committed = library
+		.commit_tree(
+			rig,
+			in_rig.tree,
+			&Commit::new(None),
+			now() + 3_000,
+			&mut rng,
+		)
+		.expect("commits");
+	assert_eq!(committed.secret, [".env"]);
+	// Locked, they are asked for in a space that has none yet, which gets them once they are
+	// unlocked.
+	library.lock_secrets();
+	let refused = library.commit_tree(
+		work,
+		in_work.tree,
+		&Commit::new(None),
+		now() + 4_000,
+		&mut rng,
+	);
+	assert!(needed(&refused), "{refused:?}");
+	library.unlock_secrets(&SECRETS).expect("unlocks");
+	let committed = library
+		.commit_tree(
+			work,
+			in_work.tree,
+			&Commit::new(None),
+			now() + 5_000,
+			&mut rng,
+		)
+		.expect("commits");
+	assert_eq!(committed.secret, [".env"]);
+	assert!(library.secrets_unlocked(work));
+}
+
+#[test]
+fn only_an_admin_s_tree_sets_up_a_space_s_secrets_and_another_member_leaves_its_secret_files() {
+	let mut rng = TestRng::new("tree secrets of an editor");
+	let mut laptop = common::user_library("Ada", "laptop", &mut rng);
+	let at = now() + 1_000;
+	let space = laptop
+		.create_space("Household", at, &mut rng)
+		.expect("makes it");
+	let mut bea = common::user_library("Bea", "phone", &mut rng);
+	bea.set_up_secrets(&secrets_passphrase(), at + 100, &mut rng)
+		.expect("sets up the secrets");
+	common::invite_member(
+		&mut laptop,
+		(space, MemberRole::Editor),
+		&mut bea,
+		at + 2_000,
+	);
+	let root = folder("tree secrets of an editor");
+	write(&root, "notes.md", "# Notes\n");
+	write(&root, ".env", SENTINEL);
+	let refused = bea.start_tree(space, &root, Some("Start"), at + 3_000, &mut rng);
+	assert!(
+		matches!(refused, Err(NodeError::AdminsOnly(_))),
+		"{refused:?}"
+	);
+	let started = bea
+		.start_tree_with(
+			space,
+			&root,
+			&Commit::new(Some("Start")).leaving_secrets(),
+			at + 4_000,
+			&mut rng,
+		)
+		.expect("starts");
+	assert_eq!(started.committed.left, [".env"]);
+	assert!(!bea.secrets_unlocked(space));
+	assert_eq!(types_at(&bea, (space, started.tree), "notes.md"), [FILE]);
 }
 
 #[test]

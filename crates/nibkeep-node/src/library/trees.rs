@@ -544,8 +544,8 @@ impl Library {
 	///
 	/// Returns [`NodeError::TreeInTree`] if the folder is in a tree's folder on this device,
 	/// or holds one; [`NodeError::GitRepositoryHere`] if it holds a Git repository, which
-	/// trees record as references; and another error if it is no folder, or reading it or
-	/// saving the changes fails.
+	/// trees record as references; the errors of [`Library::commit_tree`] for secret files;
+	/// and another error if it is no folder, or reading it or saving the changes fails.
 	pub fn start_tree(
 		&mut self,
 		space: SpaceId,
@@ -774,8 +774,11 @@ impl Library {
 	/// edited from a version this replica does not know, and [`NodeError::TreeEmptied`] if
 	/// every file of the tree is gone from its copy, unless the commit is forced;
 	/// [`NodeError::NoTreeHere`] if the tree has no folder on this device, and
-	/// [`NodeError::TreeFolderGone`] if its folder is gone; and an error if a file cannot be
-	/// read or the changes saved.
+	/// [`NodeError::TreeFolderGone`] if its folder is gone; [`NodeError::SecretsNeeded`] if a
+	/// change of a secret file needs the secrets, locked or not set up, and the errors of
+	/// setting up a shared space's secrets for its first secret file, such as
+	/// [`NodeError::AdminsOnly`] or [`NodeError::SpaceSecretsElsewhere`], unless the commit
+	/// leaves such changes; and an error if a file cannot be read or the changes saved.
 	pub fn commit_tree(
 		&mut self,
 		space: SpaceId,

@@ -313,10 +313,7 @@ pub enum NodeError {
 	/// Paths of a tree whose changes are of secret files, or take in new ones, which a commit
 	/// seals only with the space's secrets unlocked
 	/// ([technical design: secrets in trees](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#151-secrets-in-trees)).
-	#[error(
-		"{} are secret files, which a commit records only with the secrets unlocked; unlock them, or leave these changes for a later commit",
-		.0.join(", ")
-	)]
+	#[error("{}", secrets_needed(.0))]
 	SecretsNeeded(Vec<String>),
 	/// A secret file of a tree whose lines were asked for without asking to show secrets.
 	#[error("{0} is a secret file, whose lines are shown only when asked for")]
@@ -717,6 +714,18 @@ impl NodeError {
 		let path = path.to_owned();
 		move |error| Self::File { path, error }
 	}
+}
+
+/// What [`NodeError::SecretsNeeded`] says: of one secret file, or of several.
+fn secrets_needed(paths: &[String]) -> String {
+	let (files, change) = match paths {
+		[_] => ("is a secret file", "this change"),
+		_ => ("are secret files", "these changes"),
+	};
+	format!(
+		"{} {files}, which a commit records only with the secrets unlocked; unlock them, or leave {change} for a later commit",
+		paths.join(", ")
+	)
 }
 
 impl From<StoreError> for NodeError {
