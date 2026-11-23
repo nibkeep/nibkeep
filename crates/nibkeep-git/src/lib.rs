@@ -7,10 +7,12 @@
 //! [technical design: trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#15-trees
 
 use std::ffi::OsString;
+use std::fs;
 use std::path::Path;
 use std::process::{Command, Stdio};
 
-use nibkeep_node::{GitRepository, ToClone};
+use nibkeep_base::{EntityId, SpaceId};
+use nibkeep_node::{CloneFolder, GitRepository, Library, ToClone};
 
 /// Clears from a command of Git the variables that would make it work on another repository
 /// than the folder it is given, as a hook or an alias of Git that runs `nib` sets them.
@@ -282,6 +284,77 @@ impl Git {
 			checked(resetting)?;
 		}
 		Ok(())
+	}
+}
+
+impl Git {
+	/// Clones a repository that the tree `tree` of `space` records, and its copy here does
+	/// not hold, into the folder the engine makes for it, and records the clone, as `nib
+	/// clone` and `nib update` do. A clone that fails is removed, with the folders made for
+	/// it, as nothing in them is the person's; one whose branch no remote has takes the
+	/// remote's own branch instead.
+	///
+	/// # Errors
+	///
+	/// Returns why, if the engine gives the clone no place, Git fails or cannot read the
+	/// clone, or the clone cannot be recorded, as when the repository moved or was deleted
+	/// elsewhere meanwhile.
+	pub fn clone_recorded(
+		&self,
+		library: &Library,
+		(space, tree): (SpaceId, EntityId),
+		repository: &ToClone,
+	) -> Result<(), String> {
+		let mut place = library
+			.prepare_clone(space, tree, repository)
+			.map_err(|error| error.to_string())?;
+		let mut cloned = self.clone(repository, &place.folder);
+		if let Err(why) = &cloned
+			&& repository.branch.is_some()
+			&& why.contains("not found in upstream")
+		{
+			remove_clone(&place);
+			let without_branch = ToClone {
+				branch: None,
+				..repository.clone()
+			};
+			// What is in the place now, if the engine gives none, is not this clone's: it
+			// stays.
+			place = library
+				.prepare_clone(space, tree, repository)
+				.map_err(|error| error.to_string())?;
+			cloned = self.clone(&without_branch, &place.folder);
+		}
+		if let Err(why) = cloned {
+			remove_clone(&place);
+			return Err(why);
+		}
+		let Some(described) = self.describe_one(&place.folder, &repository.path) else {
+			remove_clone(&place);
+			return Err("Git cannot read the clone".to_owned());
+		};
+		// Moved or deleted elsewhere meanwhile: the clone goes, and an update tells.
+		if let Err(error) = library.repository_cloned(space, tree, (repository, &described)) {
+			remove_clone(&place);
+			return Err(error.to_string());
+		}
+		Ok(())
+	}
+}
+
+/// Removes a clone that failed, and the folders made for it, from the innermost, each only
+/// if nothing else came into it meanwhile: a folder in which Git made no repository is
+/// removed only if it is empty, as what is in it is not the clone's.
+fn remove_clone(place: &CloneFolder) {
+	if fs::symlink_metadata(place.folder.join(".git")).is_ok_and(|metadata| metadata.is_dir()) {
+		let _ = fs::remove_dir_all(&place.folder);
+	} else {
+		let _ = fs::remove_dir(&place.folder);
+	}
+	for folder in place.made.iter().rev() {
+		if fs::remove_dir(folder).is_err() {
+			break;
+		}
 	}
 }
 

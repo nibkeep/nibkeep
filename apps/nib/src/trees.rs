@@ -331,80 +331,15 @@ fn clone_step<E: Environment>(
 		} else if !agreed {
 			Cloning::NotAgreed
 		} else {
-			clone_one(
-				library,
-				tree,
-				&repository,
-				&Git::from_template(&environment.git()),
-			)
+			let git = Git::from_template(&environment.git());
+			match git.clone_recorded(library, (space, tree), &repository) {
+				Ok(()) => Cloning::Cloned,
+				Err(why) => Cloning::Failed(why),
+			}
 		};
 		results.push((repository, outcome));
 	}
 	Ok(results)
-}
-
-/// Clones one repository into the folder the engine makes for it. A clone that fails is
-/// removed, with the folders made for it, as nothing in them is the person's; one whose
-/// branch no remote has takes the remote's own branch instead.
-fn clone_one(library: &Library, tree: EntityId, repository: &ToClone, git: &Git) -> Cloning {
-	let space = library.default_space();
-	let mut place = match library.prepare_clone(space, tree, repository) {
-		Ok(place) => place,
-		Err(error) => return Cloning::Failed(error.to_string()),
-	};
-	let mut cloned = git.clone(repository, &place.folder);
-	if let Err(why) = &cloned
-		&& repository.branch.is_some()
-		&& why.contains("not found in upstream")
-	{
-		remove_clone(&place);
-		let without_branch = ToClone {
-			branch: None,
-			..repository.clone()
-		};
-		match library.prepare_clone(space, tree, repository) {
-			Ok(again) => {
-				place = again;
-				cloned = git.clone(&without_branch, &place.folder);
-			}
-			// What is in the place now is not this clone's: it stays.
-			Err(error) => return Cloning::Failed(error.to_string()),
-		}
-	}
-	match cloned {
-		Ok(()) => {
-			let Some(described) = git.describe_one(&place.folder, &repository.path) else {
-				remove_clone(&place);
-				return Cloning::Failed("Git cannot read the clone".to_owned());
-			};
-			// Moved or deleted elsewhere meanwhile: the clone goes, and an update tells.
-			if let Err(error) = library.repository_cloned(space, tree, (repository, &described)) {
-				remove_clone(&place);
-				return Cloning::Failed(error.to_string());
-			}
-			Cloning::Cloned
-		}
-		Err(why) => {
-			remove_clone(&place);
-			Cloning::Failed(why)
-		}
-	}
-}
-
-/// Removes a clone that failed, and the folders made for it, from the innermost, each only
-/// if nothing else came into it meanwhile: a folder in which Git made no repository is
-/// removed only if it is empty, as what is in it is not the clone's.
-fn remove_clone(place: &nibkeep_node::CloneFolder) {
-	if fs::symlink_metadata(place.folder.join(".git")).is_ok_and(|metadata| metadata.is_dir()) {
-		let _ = fs::remove_dir_all(&place.folder);
-	} else {
-		let _ = fs::remove_dir(&place.folder);
-	}
-	for folder in place.made.iter().rev() {
-		if fs::remove_dir(folder).is_err() {
-			break;
-		}
-	}
 }
 
 /// The results of cloning, for --json.

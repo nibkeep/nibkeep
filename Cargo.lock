@@ -3138,6 +3138,7 @@ dependencies = [
 name = "nibkeep-git"
 version = "0.1.0"
 dependencies = [
+ "nibkeep-base",
  "nibkeep-node",
 ]
 
