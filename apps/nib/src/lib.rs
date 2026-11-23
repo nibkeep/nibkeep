@@ -710,7 +710,7 @@ pub enum Command {
 		#[arg(long, value_name = "SECONDS", default_value_t = 10)]
 		wait: u64,
 		/// Syncs this library whenever you are logged in to this computer, with no app open,
-		/// or stops: nibkeep-sync, installed beside nib, does it for every library turned on.
+		/// or stops: nibsync, installed beside nib, does it for every library turned on.
 		/// It needs the library's keys in the keystore, as nobody is there to type a
 		/// passphrase.
 		#[arg(long, value_name = "SWITCH", conflicts_with_all = ["serve", "wait"])]
@@ -2411,9 +2411,9 @@ pub enum CliError {
 	/// No home folder to keep the list of libraries synced from login in.
 	#[error("there is no home folder here to keep the list of libraries synced from login in")]
 	NoStateFolder,
-	/// No `nibkeep-sync` beside `nib`.
+	/// No `nibsync` beside `nib`.
 	#[error(
-		"nibkeep-sync, which syncs from login, is not installed beside nib; cargo install nibkeep-cli installs both, as cargo install --path apps/nib does in a checkout"
+		"nibsync, which syncs from login, is not installed beside nib; cargo install nibkeep-cli installs both, as cargo install --path apps/nib does in a checkout"
 	)]
 	NoSyncProgram,
 	/// The library's keys are in the platform's keystore, which is not there.
@@ -3977,7 +3977,7 @@ fn new_library<E: Environment>(
 
 /// Runs `nib sync --at-login on` or `off`: turns syncing this library from login on or off
 /// ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#106-syncing-from-login)). On, it adds
-/// the library to the list, names the copy of `nibkeep-sync` beside `nib` if it is newer
+/// the library to the list, names the copy of `nibsync` beside `nib` if it is newer
 /// than the one listed, and starts the copy that should run. Off, it takes the library off
 /// the list by its folder, which may hold no library any more, or by its replica, as after
 /// its folder was moved.
@@ -4095,7 +4095,7 @@ fn turn_off_at_login<E: Environment>(directory: &Path, environment: &mut E) {
 			}
 		}
 		Err(error) => environment.note(&format!(
-			"nib: could not turn syncing from login off for this library ({error}); nibkeep-sync turns it off as it finds the passphrase"
+			"nib: could not turn syncing from login off for this library ({error}); nibsync turns it off as it finds the passphrase"
 		)),
 	}
 }
@@ -4111,7 +4111,7 @@ fn entry_not_removed(error: &str) -> String {
 const AT_LOGIN_TURNED_OFF: &str = "nib: syncing from login is off for this library now, as it needs the library's keys in the keystore";
 
 /// Whether the library in `directory`, or with `replica` here, is synced from login, and
-/// what `nibkeep-sync` does for it: `None` if it is not, or that cannot be read.
+/// what `nibsync` does for it: `None` if it is not, or that cannot be read.
 fn at_login_state<E: Environment>(
 	(directory, replica): (&Path, Option<EntityId>),
 	environment: &E,

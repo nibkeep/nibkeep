@@ -20,10 +20,8 @@ path = "src/main.rs"
 
 # Syncs the libraries that the person chose from login (technical design: syncing from login).
 [[bin]]
-name = "nibkeep-sync"
-path = "src/bin/nibkeep-sync.rs"
-# Its documentation would take the place of the crate nibkeep-sync's.
-doc = false
+name = "nibsync"
+path = "src/bin/nibsync.rs"
 
 [dependencies]
 nibkeep-base = { workspace = true }
@@ -58,7 +56,7 @@ windows-native-keyring-store = { workspace = true }
 
 [target.'cfg(all(unix, not(any(target_os = "macos", target_os = "ios", target_os = "android"))))'.dependencies]
 zbus-secret-service-keyring-store = { workspace = true }
-# Whether the keyring is locked, asked without a prompt, for nibkeep-sync.
+# Whether the keyring is locked, asked without a prompt, for nibsync.
 secret-service = { workspace = true }
 
 [dev-dependencies]

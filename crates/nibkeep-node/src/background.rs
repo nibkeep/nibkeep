@@ -28,7 +28,7 @@ const LOOK: Duration = Duration::from_millis(100);
 /// keeps of its own.
 #[derive(Clone, Debug)]
 pub struct BackgroundOptions {
-	/// The program, as the records name it, such as `nibkeep-sync`.
+	/// The program, as the records name it, such as `nibsync`.
 	pub program: String,
 	/// How its endpoint starts.
 	pub network: Options,

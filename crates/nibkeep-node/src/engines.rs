@@ -28,7 +28,7 @@ const ENGINES_LOCK: &str = "engines.lock";
 pub const REPLICA_VERSION: u64 = 1;
 
 /// The engine's version, which the engines file records of each program, and a copy of
-/// `nibkeep-sync` tells, so that the newest runs.
+/// `nibsync` tells, so that the newest runs.
 pub const ENGINE_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 /// The name that this program gave itself.

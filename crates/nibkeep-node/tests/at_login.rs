@@ -1,6 +1,6 @@
 //! Syncing from login ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#106-syncing-from-login)):
 //! the list of libraries that every program reads and writes alike; the newest copy of
-//! `nibkeep-sync` named in it; and the service, which holds each listed library's sync role,
+//! `nibsync` named in it; and the service, which holds each listed library's sync role,
 //! follows the list, waits for a locked keyring, and says what it cannot serve.
 
 mod common;
@@ -238,7 +238,7 @@ fn the_list_keeps_the_libraries_and_the_copy_that_serves_them() {
 		directory: PathBuf::from("/home/ada/Passwords/.nib"),
 	};
 	AtLogin::edit(&settings, |list| {
-		list.program = Some(PathBuf::from("/opt/nibkeep/nibkeep-sync"));
+		list.program = Some(PathBuf::from("/opt/nibkeep/nibsync"));
 		list.add(first.clone());
 		list.add(second.clone());
 	})
@@ -246,7 +246,7 @@ fn the_list_keeps_the_libraries_and_the_copy_that_serves_them() {
 	let list = AtLogin::read(&settings).expect("reads");
 	assert_eq!(
 		list.program.as_deref(),
-		Some(Path::new("/opt/nibkeep/nibkeep-sync"))
+		Some(Path::new("/opt/nibkeep/nibsync"))
 	);
 	assert_eq!(list.libraries, [first.clone(), second.clone()]);
 	// A library in the same folder replaces the one before, as one made anew there.
@@ -283,8 +283,8 @@ fn the_newest_copy_is_named_and_one_of_the_same_version_stays() {
 	assert!(newer("0.1.0", "unknown"));
 
 	let settings = directory("the newest copy");
-	let own = settings.join("passwords").join("nibkeep-sync");
-	let editors = settings.join("editor").join("nibkeep-sync");
+	let own = settings.join("passwords").join("nibsync");
+	let editors = settings.join("editor").join("nibsync");
 	for copy in [&own, &editors] {
 		std::fs::create_dir_all(copy.parent().expect("a folder")).expect("makes");
 		std::fs::write(copy, "").expect("writes");
@@ -345,7 +345,7 @@ fn turning_on_starts_the_listed_copy_or_one_just_named() {
 	};
 	drop(library);
 	let settings = directory("turning on settings");
-	let own = settings.join("nibkeep-sync");
+	let own = settings.join("nibsync");
 	std::fs::write(&own, "").expect("writes");
 	let same = |_: &Path| Some(ENGINE_VERSION.to_owned());
 	assert_eq!(
@@ -370,7 +370,7 @@ fn turning_on_starts_the_listed_copy_or_one_just_named() {
 		None
 	);
 	// A newer copy, just named, is started, to take over as the one that runs ends.
-	let newer_copy = settings.join("newer").join("nibkeep-sync");
+	let newer_copy = settings.join("newer").join("nibsync");
 	std::fs::create_dir_all(newer_copy.parent().expect("a folder")).expect("makes");
 	std::fs::write(&newer_copy, "").expect("writes");
 	let newer_one = newer_copy.clone();
@@ -396,7 +396,7 @@ fn turning_on_starts_the_listed_copy_or_one_just_named() {
 fn the_service_syncs_the_listed_libraries_and_follows_the_list() {
 	let (served, desk) = laptop_and_desk("follows the list");
 	let settings = directory("follows the list settings");
-	let program = settings.join("nibkeep-sync");
+	let program = settings.join("nibsync");
 	AtLogin::edit(&settings, |list| {
 		list.program = Some(program.clone());
 		list.add(served.clone());
@@ -487,7 +487,7 @@ fn the_service_waits_for_a_locked_keyring_and_says_what_it_cannot_serve() {
 	};
 
 	let settings = directory("cannot serve settings");
-	let program = settings.join("nibkeep-sync");
+	let program = settings.join("nibsync");
 	AtLogin::edit(&settings, |list| {
 		list.program = Some(program.clone());
 		list.libraries = vec![
@@ -591,12 +591,12 @@ fn a_copy_that_the_list_does_not_name_gives_way_to_the_one_it_names() {
 #[test]
 fn the_autostart_entry_starts_the_listed_copy_and_keeps_the_persons_off() {
 	let folder = directory("the autostart entry");
-	let file = folder.join("autostart").join("nibkeep-sync.desktop");
+	let file = folder.join("autostart").join("nibsync.desktop");
 	let entry = LoginEntry::autostart(file.clone());
 	assert_eq!(entry.state().expect("reads"), EntryState::Missing);
 
 	// A path with what the format reserves comes back as it was.
-	let program = PathBuf::from("/home/ada/My Apps/$HOME \"quoted\" 100%/back\\slash/nibkeep-sync");
+	let program = PathBuf::from("/home/ada/My Apps/$HOME \"quoted\" 100%/back\\slash/nibsync");
 	assert_eq!(
 		entry.make(&program).expect("makes"),
 		EntryState::On(program.clone())
@@ -615,7 +615,7 @@ fn the_autostart_entry_starts_the_listed_copy_and_keeps_the_persons_off() {
 		entry.state().expect("reads"),
 		EntryState::Off(program.clone())
 	);
-	let newer = PathBuf::from("/opt/nibkeep/nibkeep-sync");
+	let newer = PathBuf::from("/opt/nibkeep/nibsync");
 	assert_eq!(
 		entry.make(&newer).expect("makes"),
 		EntryState::Off(newer.clone())
@@ -655,14 +655,14 @@ fn the_autostart_entry_starts_the_listed_copy_and_keeps_the_persons_off() {
 #[test]
 fn an_autostart_entry_through_a_link_or_with_an_exec_that_does_not_read() {
 	let folder = directory("the autostart entry's file");
-	let file = folder.join("nibkeep-sync.desktop");
+	let file = folder.join("nibsync.desktop");
 	let entry = LoginEntry::autostart(file.clone());
-	let newer = PathBuf::from("/opt/nibkeep/nibkeep-sync");
+	let newer = PathBuf::from("/opt/nibkeep/nibsync");
 
 	// A link that a program that manages dotfiles made stays a link, and its file changes.
 	#[cfg(unix)]
 	{
-		let gnome_off = "[Desktop Entry]\nName=NibKeep Sync\nExec=/opt/nibkeep/nibkeep-sync\nX-GNOME-Autostart-enabled=false\n";
+		let gnome_off = "[Desktop Entry]\nName=NibKeep Sync\nExec=/opt/nibkeep/nibsync\nX-GNOME-Autostart-enabled=false\n";
 		let kept = folder.join("kept.desktop");
 		std::fs::write(&kept, gnome_off).expect("writes");
 		std::os::unix::fs::symlink(&kept, &file).expect("links");
@@ -670,7 +670,7 @@ fn an_autostart_entry_through_a_link_or_with_an_exec_that_does_not_read() {
 			entry.make(&newer).expect("makes"),
 			EntryState::Off(newer.clone())
 		);
-		let elsewhere = PathBuf::from("/usr/lib/nibkeep/nibkeep-sync");
+		let elsewhere = PathBuf::from("/usr/lib/nibkeep/nibsync");
 		assert_eq!(
 			entry.point(&elsewhere).expect("points"),
 			EntryState::Off(elsewhere.clone())
@@ -738,7 +738,7 @@ fn the_run_key_starts_the_listed_copy_and_keeps_the_persons_off() {
 	let (key, approved) = (format!(r"{tests}\Run"), format!(r"{tests}\Approved"));
 	let entry = LoginEntry::run_key(&key, &approved, "NibKeep Sync 0123456789abcdef");
 	assert_eq!(entry.state().expect("reads"), EntryState::Missing);
-	let program = PathBuf::from(r"C:\Program Files\NibKeep\nibkeep-sync.exe");
+	let program = PathBuf::from(r"C:\Program Files\NibKeep\nibsync.exe");
 	assert_eq!(
 		entry.make(&program).expect("makes"),
 		EntryState::On(program.clone())
@@ -756,7 +756,7 @@ fn the_run_key_starts_the_listed_copy_and_keeps_the_persons_off() {
 		)
 		.expect("writes");
 	assert_eq!(entry.state().expect("reads"), EntryState::Off(program));
-	let newer = PathBuf::from(r"C:\Users\Ada\AppData\Local\NibKeep\nibkeep-sync.exe");
+	let newer = PathBuf::from(r"C:\Users\Ada\AppData\Local\NibKeep\nibsync.exe");
 	assert_eq!(
 		entry.make(&newer).expect("makes"),
 		EntryState::Off(newer.clone())
@@ -801,8 +801,8 @@ fn turning_on_makes_the_login_entry_and_turning_off_the_last_removes_it() {
 		});
 	}
 	let settings = directory("the entry settings");
-	let entry = LoginEntry::autostart(settings.join("nibkeep-sync.desktop"));
-	let own = settings.join("nibkeep-sync");
+	let entry = LoginEntry::autostart(settings.join("nibsync.desktop"));
+	let own = settings.join("nibsync");
 	std::fs::write(&own, "").expect("writes");
 	let same = |_: &Path| Some(ENGINE_VERSION.to_owned());
 	for library in &served {
@@ -835,7 +835,7 @@ fn turning_on_makes_the_login_entry_and_turning_off_the_last_removes_it() {
 	assert_eq!(entry.state().expect("reads"), EntryState::Missing);
 
 	// Naming a newer copy points the entry along, and never makes one that is gone.
-	let newer = settings.join("newer").join("nibkeep-sync");
+	let newer = settings.join("newer").join("nibsync");
 	std::fs::create_dir_all(newer.parent().expect("a folder")).expect("makes");
 	std::fs::write(&newer, "").expect("writes");
 	let newest = |copy: &Path| Some(if copy == newer { "999.0.0" } else { "0.0.1" }.to_owned());
@@ -846,7 +846,7 @@ fn turning_on_makes_the_login_entry_and_turning_off_the_last_removes_it() {
 	assert_eq!(entry.state().expect("reads"), EntryState::On(newer.clone()));
 
 	// One that cannot be made leaves the library on, and says why.
-	let blocked = LoginEntry::autostart(own.join("cannot").join("nibkeep-sync.desktop"));
+	let blocked = LoginEntry::autostart(own.join("cannot").join("nibsync.desktop"));
 	let turned_on =
 		turn_on(&settings, served[0].clone(), (&own, &same), Some(&blocked)).expect("turns on");
 	assert!(
@@ -883,8 +883,8 @@ fn the_service_takes_off_a_library_that_a_passphrase_protects_now() {
 	};
 	drop(library);
 	let settings = directory("protected anew settings");
-	let program = settings.join("nibkeep-sync");
-	let entry = LoginEntry::autostart(settings.join("nibkeep-sync.desktop"));
+	let program = settings.join("nibsync");
+	let entry = LoginEntry::autostart(settings.join("nibsync.desktop"));
 	entry.make(&program).expect("makes");
 	AtLogin::edit(&settings, |list| {
 		list.program = Some(program.clone());
@@ -928,7 +928,7 @@ fn an_app_that_starts_names_its_copy_and_starts_the_one_that_should_run() {
 	};
 	drop(library);
 	let settings = directory("an app starts settings");
-	let entry = LoginEntry::autostart(settings.join("nibkeep-sync.desktop"));
+	let entry = LoginEntry::autostart(settings.join("nibsync.desktop"));
 	let (older, own) = (settings.join("older"), settings.join("own"));
 	for copy in [&older, &own] {
 		std::fs::write(copy, "").expect("writes");
@@ -965,7 +965,7 @@ fn an_app_that_starts_names_its_copy_and_starts_the_one_that_should_run() {
 	);
 
 	// The person turned the entry off, or removed it: an app starts nothing.
-	let file = settings.join("nibkeep-sync.desktop");
+	let file = settings.join("nibsync.desktop");
 	let text = std::fs::read_to_string(&file).expect("reads");
 	std::fs::write(&file, format!("{text}Hidden=true\n")).expect("writes");
 	assert_eq!(started(Some(&entry)), None);
@@ -997,7 +997,7 @@ fn an_app_that_starts_names_its_copy_and_starts_the_one_that_should_run() {
 		nibkeep_node::at_login::status(&settings, (&linked, Some(served.replica)), Some(&entry));
 	assert!(found.on);
 	assert_eq!(found.entry_word(), Some("stale"));
-	let file = settings.join("nibkeep-sync.desktop");
+	let file = settings.join("nibsync.desktop");
 	let text = std::fs::read_to_string(&file).expect("reads");
 	std::fs::write(&file, format!("{text}Hidden=true\n")).expect("writes");
 	let found =

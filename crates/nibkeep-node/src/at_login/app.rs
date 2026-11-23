@@ -1,5 +1,5 @@
 //! What an app does with syncing from login ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#106-syncing-from-login)):
-//! the switch, which has the copy of `nibkeep-sync` that the app ships beside its program sync
+//! the switch, which has the copy of `nibsync` that the app ships beside its program sync
 //! a library whenever the person is logged in; and what the app does as it starts. Only on
 //! computers.
 //!
@@ -18,7 +18,7 @@ use super::{
 use crate::NodeError;
 
 /// Where syncing from login keeps its list and login entry, and the app's own copy of
-/// `nibkeep-sync`.
+/// `nibsync`.
 #[derive(Clone)]
 struct Place {
 	settings: PathBuf,
@@ -58,7 +58,7 @@ pub fn set_test_place(folder: Option<PathBuf>, entry: Option<PathBuf>, program: 
 }
 
 /// Whether tests keep the program from the computer's keystore, as `NIBKEEP_NO_KEYSTORE`
-/// says: an app, `nib` or `nibkeep-sync`. They keep an app from the person's syncing from
+/// says: an app, `nib` or `nibsync`. They keep an app from the person's syncing from
 /// login too.
 #[must_use]
 pub fn kept_away() -> bool {
@@ -91,7 +91,7 @@ fn place() -> Option<Place> {
 	None
 }
 
-/// The app's own copy of `nibkeep-sync`, beside its program, if it ships one.
+/// The app's own copy of `nibsync`, beside its program, if it ships one.
 #[cfg(not(any(target_os = "android", target_os = "ios")))]
 fn own_copy() -> Option<PathBuf> {
 	let name = format!("{}{}", super::SERVICE_PROGRAM, std::env::consts::EXE_SUFFIX);
@@ -99,7 +99,7 @@ fn own_copy() -> Option<PathBuf> {
 	copy.is_file().then_some(copy)
 }
 
-/// Starts a copy of `nibkeep-sync`, unless the place is a test's: the copy started, or that
+/// Starts a copy of `nibsync`, unless the place is a test's: the copy started, or that
 /// would be.
 fn start(place: &Place, program: Option<PathBuf>) -> Result<Option<PathBuf>, NodeError> {
 	if let Some(program) = &program
@@ -111,14 +111,14 @@ fn start(place: &Place, program: Option<PathBuf>) -> Result<Option<PathBuf>, Nod
 }
 
 /// Whether the app can turn syncing from login on here: on a computer where it ships
-/// `nibkeep-sync`.
+/// `nibsync`.
 #[must_use]
 pub fn available() -> bool {
 	place().is_some_and(|place| place.own.is_some())
 }
 
 /// What the app does as it starts, as [`super::app_started`] says: the copy of
-/// `nibkeep-sync` that it started, if any.
+/// `nibsync` that it started, if any.
 ///
 /// # Errors
 ///
@@ -154,7 +154,7 @@ pub struct AppTurnedOn {
 	/// What became of Windows' firewall: `opened`, or `refused`; elsewhere, or where its rule
 	/// is there, `None`.
 	pub firewall: Option<&'static str>,
-	/// The copy of `nibkeep-sync` that it started, or that a test's place would.
+	/// The copy of `nibsync` that it started, or that a test's place would.
 	pub started: Option<PathBuf>,
 }
 

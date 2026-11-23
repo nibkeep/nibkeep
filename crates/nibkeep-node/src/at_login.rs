@@ -1,5 +1,5 @@
 //! Syncing from login ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#106-syncing-from-login)):
-//! `nibkeep-sync`, a program without a window that starts when the person logs in, holds the
+//! `nibsync`, a program without a window that starts when the person logs in, holds the
 //! sync role of the libraries they chose, as an app holds it while unlocked. Every NibKeep
 //! program reads and writes the list of those libraries alike, in the person's folder of
 //! settings; the service follows it, and writes beside it what it does for each.
@@ -39,13 +39,13 @@ const STATUS: &str = "sync-at-login.status";
 pub use crate::engines::ENGINE_VERSION;
 
 /// What the service names itself in a replica's records, and the name of its program.
-pub const SERVICE_PROGRAM: &str = "nibkeep-sync";
+pub const SERVICE_PROGRAM: &str = "nibsync";
 
 /// How long a look at whether the service runs may hold its lock, which the service then
 /// waits out.
 const LOOKING: Duration = Duration::from_millis(50);
 
-/// How long a copy of `nibkeep-sync` may take to tell its version.
+/// How long a copy of `nibsync` may take to tell its version.
 const VERSION_WAIT: Duration = Duration::from_secs(5);
 
 /// How often a library's thread looks at what its holder does.
@@ -107,11 +107,11 @@ pub struct Served {
 	pub directory: PathBuf,
 }
 
-/// The list of libraries to sync from login, and the copy of `nibkeep-sync` that serves
+/// The list of libraries to sync from login, and the copy of `nibsync` that serves
 /// them.
 #[derive(Clone, Debug, Default, PartialEq, Eq)]
 pub struct AtLogin {
-	/// The copy of `nibkeep-sync` that serves them, which the login entry starts.
+	/// The copy of `nibsync` that serves them, which the login entry starts.
 	pub program: Option<PathBuf>,
 	/// The libraries.
 	pub libraries: Vec<Served>,
@@ -376,7 +376,7 @@ impl ServiceStatus {
 	}
 }
 
-/// Whether a copy of `nibkeep-sync` runs for the person: whether one holds the lock on
+/// Whether a copy of `nibsync` runs for the person: whether one holds the lock on
 /// `sync-at-login.running`, which this takes for a moment to tell.
 ///
 /// # Errors
@@ -391,7 +391,7 @@ pub fn service_running(settings: &Path) -> Result<bool, NodeError> {
 	Ok(!try_alone(&file, &path)?)
 }
 
-/// The engine's version that a copy of `nibkeep-sync` tells, or `None` if it tells none
+/// The engine's version that a copy of `nibsync` tells, or `None` if it tells none
 /// within a few seconds, as one that is gone.
 #[must_use]
 pub fn service_version(program: &Path) -> Option<String> {
@@ -432,7 +432,7 @@ pub fn newer(a: &str, b: &str) -> bool {
 	numbers(a) > numbers(b)
 }
 
-/// Names `own`, this program's copy of `nibkeep-sync`, in the list, where the list names
+/// Names `own`, this program's copy of `nibsync`, in the list, where the list names
 /// none, or one that is gone, as after its app was removed, or one older than `own`, as
 /// `version_of` tells of each; and points the login entry at it, if there is one, leaving it
 /// off if the person turned it off: whether it named it. A copy of the same version stays,
@@ -481,7 +481,7 @@ fn name_in(list: &mut AtLogin, own: &Path, version_of: &VersionOf<'_>) -> (bool,
 	(replace, program)
 }
 
-/// Starts a copy of `nibkeep-sync`, apart from this program, so that it runs on when this
+/// Starts a copy of `nibsync`, apart from this program, so that it runs on when this
 /// one ends.
 ///
 /// # Errors
@@ -514,7 +514,7 @@ pub fn start_service(program: &Path) -> Result<(), NodeError> {
 	Ok(())
 }
 
-/// What tells the engine's version of a copy of `nibkeep-sync`, as [`service_version`] does.
+/// What tells the engine's version of a copy of `nibsync`, as [`service_version`] does.
 pub type VersionOf<'a> = dyn Fn(&Path) -> Option<String> + 'a;
 
 /// What became of the login entry.
@@ -556,7 +556,7 @@ impl EntryOutcome {
 /// What turning syncing from login on did.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct TurnedOn {
-	/// The copy of `nibkeep-sync` to start, if any: the one listed, unless one runs; or the
+	/// The copy of `nibsync` to start, if any: the one listed, unless one runs; or the
 	/// program's own, just named, which waits for the one that runs to read the list and end.
 	pub start: Option<PathBuf>,
 	/// What became of the login entry.
@@ -564,7 +564,7 @@ pub struct TurnedOn {
 }
 
 /// Turns syncing from login on for a library: adds it to the list; names `own`, this
-/// program's copy of `nibkeep-sync`, if it is newer than the one listed, as `version_of`
+/// program's copy of `nibsync`, if it is newer than the one listed, as `version_of`
 /// tells; and, once the list is written, makes the login entry start the listed copy,
 /// leaving it off if the person turned it off. The entry changes while the list is locked,
 /// so that turning another library off meanwhile never removes it. A login entry that
@@ -668,7 +668,7 @@ pub struct AtLoginStatus {
 	pub serving: Option<Serving>,
 	/// What the login entry says, where the platform has one, or why it cannot be read.
 	pub entry: Option<Result<EntryState, String>>,
-	/// The copy of `nibkeep-sync` that the list names, which the entry should start.
+	/// The copy of `nibsync` that the list names, which the entry should start.
 	pub listed: Option<PathBuf>,
 }
 
@@ -743,7 +743,7 @@ pub fn status(
 }
 
 /// What an app does as it starts, where the list holds libraries and the login entry is on,
-/// or the platform has none: names `own`, its copy of `nibkeep-sync`, if the listed one is
+/// or the platform has none: names `own`, its copy of `nibsync`, if the listed one is
 /// gone or older, pointing the login entry along; and returns the copy to start, if any: its
 /// own, just named, which waits for the one that runs to end, or the listed one, where none
 /// runs, as after a crash. Where the person turned the entry off, or removed it, it does
@@ -813,7 +813,7 @@ pub enum ServiceEnded {
 	Stopped,
 	/// The list holds no library.
 	Empty,
-	/// The list names another copy of `nibkeep-sync`.
+	/// The list names another copy of `nibsync`.
 	NamesAnother,
 }
 
@@ -1177,7 +1177,7 @@ fn take_alone(file: &File, path: &Path) -> Result<bool, NodeError> {
 /// The name of the login entry, as the system's startup settings show it.
 const ENTRY_NAME: &str = "NibKeep Sync";
 
-/// The login entry that starts `nibkeep-sync` when the person logs in: the platform's own,
+/// The login entry that starts `nibsync` when the person logs in: the platform's own,
 /// where the person finds the programs that start with their session. Each computer has one
 /// of its own, named as its folder of state is, so that a program that syncs dotfolders, or
 /// a roaming profile, never makes one computer's turning off remove another's.
@@ -1230,7 +1230,7 @@ impl LoginEntry {
 	}
 
 	/// This computer's login entry: on Linux and the like, the autostart entry
-	/// `~/.config/autostart/nibkeep-sync-COMPUTER.desktop`, or in `$XDG_CONFIG_HOME/autostart`.
+	/// `~/.config/autostart/nibsync-COMPUTER.desktop`, or in `$XDG_CONFIG_HOME/autostart`.
 	/// None where tests keep away from it.
 	#[cfg(all(
 		unix,

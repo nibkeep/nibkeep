@@ -2757,11 +2757,11 @@ pub(crate) fn at_login_on(
 		}
 		return print_json(&value, output);
 	}
-	let now = "Syncing from login is on, and nibkeep-sync syncs this library now";
+	let now = "Syncing from login is on, and nibsync syncs this library now";
 	match entry {
 		EntryOutcome::On(_) => writeln!(
 			output,
-			"Syncing from login is on: nibkeep-sync syncs this library with your other devices whenever you are logged in here, with no app open."
+			"Syncing from login is on: nibsync syncs this library with your other devices whenever you are logged in here, with no app open."
 		)?,
 		EntryOutcome::Off(_) => writeln!(
 			output,
@@ -2834,21 +2834,21 @@ fn at_login_json(shown: &at_login::AtLoginStatus) -> serde_json::Value {
 
 fn at_login_text(shown: &at_login::AtLoginStatus) -> String {
 	let state = match &shown.serving {
-		None => "but nibkeep-sync is not running; nib sync --at-login on starts it".to_owned(),
+		None => "but nibsync is not running; nib sync --at-login on starts it".to_owned(),
 		Some(serving) => match serving {
-			at_login::Serving::Starting => "and nibkeep-sync is opening it".to_owned(),
-			at_login::Serving::Syncing => "and nibkeep-sync syncs this device".to_owned(),
+			at_login::Serving::Starting => "and nibsync is opening it".to_owned(),
+			at_login::Serving::Syncing => "and nibsync syncs this device".to_owned(),
 			at_login::Serving::Waiting => {
-				"and nibkeep-sync takes over when that program lets go".to_owned()
+				"and nibsync takes over when that program lets go".to_owned()
 			}
 			at_login::Serving::WaitingForKeyring => {
-				"and nibkeep-sync waits for the keyring to be unlocked".to_owned()
+				"and nibsync waits for the keyring to be unlocked".to_owned()
 			}
-			at_login::Serving::NotHere => "but nibkeep-sync finds no replica of it here".to_owned(),
+			at_login::Serving::NotHere => "but nibsync finds no replica of it here".to_owned(),
 			at_login::Serving::NoKey => {
-				"but nibkeep-sync finds no key for it in the keystore".to_owned()
+				"but nibsync finds no key for it in the keystore".to_owned()
 			}
-			at_login::Serving::Failed(error) => format!("but nibkeep-sync failed: {error}"),
+			at_login::Serving::Failed(error) => format!("but nibsync failed: {error}"),
 		},
 	};
 	let entry = match &shown.entry {

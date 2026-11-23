@@ -24,7 +24,7 @@ The generic command-line tool is called `nib`:
 cargo run --bin nib
 ```
 
-It also installs from crates.io, with `nibkeep-sync` beside it:
+It also installs from crates.io, with `nibsync` beside it:
 
 ```sh
 cargo install --locked nibkeep-cli

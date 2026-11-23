@@ -148,7 +148,7 @@ pub trait Environment {
 		None
 	}
 
-	/// The copy of `nibkeep-sync` installed beside `nib`, if there is one.
+	/// The copy of `nibsync` installed beside `nib`, if there is one.
 	fn sync_program(&self) -> Option<PathBuf> {
 		None
 	}
@@ -174,7 +174,7 @@ pub trait Environment {
 		git
 	}
 
-	/// The login entry that starts `nibkeep-sync`, where the platform has one.
+	/// The login entry that starts `nibsync`, where the platform has one.
 	fn login_entry(&self) -> Option<LoginEntry> {
 		None
 	}
@@ -185,12 +185,12 @@ pub trait Environment {
 		Firewall::NotHere
 	}
 
-	/// The engine's version that a copy of `nibkeep-sync` tells, or `None` if it is gone.
+	/// The engine's version that a copy of `nibsync` tells, or `None` if it is gone.
 	fn sync_version(&self, program: &Path) -> Option<String> {
 		at_login::service_version(program)
 	}
 
-	/// Starts a copy of `nibkeep-sync`, apart from `nib`, so that it runs on when `nib`
+	/// Starts a copy of `nibsync`, apart from `nib`, so that it runs on when `nib`
 	/// ends.
 	///
 	/// # Errors
@@ -201,7 +201,7 @@ pub trait Environment {
 	}
 }
 
-/// What `nib` did about the firewall, so that the person's other devices reach `nibkeep-sync`.
+/// What `nib` did about the firewall, so that the person's other devices reach `nibsync`.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Firewall {
 	/// Nothing: `nib` changes no firewall here, as on Linux and macOS.

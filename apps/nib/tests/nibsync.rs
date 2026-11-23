@@ -1,4 +1,4 @@
-//! `nibkeep-sync` as a program of its own: it tells its version, and of two copies, the one
+//! `nibsync` as a program of its own: it tells its version, and of two copies, the one
 //! that the list names runs, and the other gives way
 //! ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#106-syncing-from-login)).
 
@@ -26,7 +26,7 @@ fn wait_until(what: &str, mut done: impl FnMut() -> bool) {
 
 /// The program that the tests built.
 fn built() -> PathBuf {
-	PathBuf::from(env!("CARGO_BIN_EXE_nibkeep-sync"))
+	PathBuf::from(env!("CARGO_BIN_EXE_nibsync"))
 }
 
 /// A copy of the program in `folder`, as an app would ship one.
@@ -71,7 +71,7 @@ impl Drop for Running {
 #[test]
 fn it_tells_its_version() {
 	assert_eq!(service_version(&built()).as_deref(), Some(ENGINE_VERSION));
-	assert_eq!(service_version(Path::new("/nowhere/nibkeep-sync")), None);
+	assert_eq!(service_version(Path::new("/nowhere/nibsync")), None);
 	let refused = Command::new(built())
 		.arg("--sync")
 		.stderr(Stdio::null())

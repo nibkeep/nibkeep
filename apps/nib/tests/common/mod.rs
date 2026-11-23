@@ -59,11 +59,11 @@ pub(crate) struct Test {
 	pub(crate) notes: Vec<String>,
 	/// This computer's folder of NibKeep's state, if it has one.
 	pub(crate) state: Option<PathBuf>,
-	/// The copy of `nibkeep-sync` beside `nib`, if there is one.
+	/// The copy of `nibsync` beside `nib`, if there is one.
 	pub(crate) sync_program: Option<PathBuf>,
-	/// The engine's versions that copies of `nibkeep-sync` tell, by their paths.
+	/// The engine's versions that copies of `nibsync` tell, by their paths.
 	pub(crate) sync_versions: Vec<(PathBuf, String)>,
-	/// The copies of `nibkeep-sync` that `nib` started.
+	/// The copies of `nibsync` that `nib` started.
 	pub(crate) started: Vec<PathBuf>,
 	/// The file of the login entry, an autostart entry, if the platform has one.
 	pub(crate) login_entry: Option<PathBuf>,

@@ -131,7 +131,7 @@ fn a_space_that_another_program_makes_is_opened_by_the_one_that_syncs_and_reache
 	let open = || Library::open(&directory, &Unlocker::Passphrase("correct horse")).expect("opens");
 	let mut laptop = open();
 
-	// Another program of the replica, as nib is while an app or nibkeep-sync keeps the library
+	// Another program of the replica, as nib is while an app or nibsync keeps the library
 	// open, makes a space and adds to it, and ends.
 	let mut other = open();
 	let household = other

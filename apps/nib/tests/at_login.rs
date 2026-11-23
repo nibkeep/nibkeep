@@ -1,4 +1,4 @@
-//! `nib sync --at-login`: syncing a library from login, through `nibkeep-sync`
+//! `nib sync --at-login`: syncing a library from login, through `nibsync`
 //! ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#106-syncing-from-login)).
 
 mod common;
@@ -11,15 +11,15 @@ use nibkeep_cli::Firewall;
 use nibkeep_node::at_login::{AtLogin, ENGINE_VERSION, EntryState, LoginEntry, Served};
 
 /// A library unlocked by the mock keystore, with a folder of state and a copy of
-/// `nibkeep-sync` beside `nib`.
+/// `nibsync` beside `nib`.
 fn synced_library(name: &str) -> Test {
 	let mut test = library(name);
 	test.state = Some(test.here.join("state"));
-	let program = test.here.join("bin").join("nibkeep-sync");
+	let program = test.here.join("bin").join("nibsync");
 	std::fs::create_dir_all(program.parent().expect("a folder")).expect("makes");
 	std::fs::write(&program, "").expect("writes");
 	test.sync_program = Some(program);
-	test.login_entry = Some(test.here.join("autostart").join("nibkeep-sync.desktop"));
+	test.login_entry = Some(test.here.join("autostart").join("nibsync.desktop"));
 	test
 }
 
@@ -45,7 +45,7 @@ fn a_library_is_synced_from_login_and_stops_being() {
 	let printed = test.nib(&["sync", "--at-login", "on"]).expect("turns on");
 	assert_eq!(
 		printed,
-		"Syncing from login is on: nibkeep-sync syncs this library with your other devices whenever you are logged in here, with no app open.\n"
+		"Syncing from login is on: nibsync syncs this library with your other devices whenever you are logged in here, with no app open.\n"
 	);
 	assert_eq!(
 		entry(&test),
@@ -73,7 +73,7 @@ fn a_library_is_synced_from_login_and_stops_being() {
 	let printed = test.nib(&["device", "list"]).expect("lists");
 	assert!(
 		printed.ends_with(
-			"Syncing from login is on, but nibkeep-sync is not running; nib sync --at-login on starts it.\n"
+			"Syncing from login is on, but nibsync is not running; nib sync --at-login on starts it.\n"
 		),
 		"{printed}"
 	);
@@ -95,7 +95,7 @@ fn a_library_is_synced_from_login_and_stops_being() {
 fn a_newer_copy_named_already_stays_and_an_older_one_gives_way() {
 	let mut test = synced_library("at login newer copy");
 	let own = test.sync_program.clone().expect("a copy");
-	let editors = test.here.join("editor").join("nibkeep-sync");
+	let editors = test.here.join("editor").join("nibsync");
 	for copy in [&own, &editors] {
 		std::fs::create_dir_all(copy.parent().expect("a folder")).expect("makes");
 		std::fs::write(copy, "").expect("writes");
@@ -157,7 +157,7 @@ fn a_library_deleted_or_moved_since_is_turned_off_by_its_old_folder_or_its_repli
 fn a_library_protected_by_a_passphrase_is_not_synced_from_login() {
 	let mut test = Test::new("at login passphrase");
 	test.state = Some(test.here.join("state"));
-	test.sync_program = Some(test.here.join("nibkeep-sync"));
+	test.sync_program = Some(test.here.join("nibsync"));
 	test.answer(&["correct horse", "correct horse"]);
 	test.nib(&["init", "--name", "Ada", "--passphrase"])
 		.expect("starts");
@@ -187,8 +187,8 @@ fn protecting_with_a_passphrase_turns_syncing_from_login_off() {
 }
 
 #[test]
-fn without_nibkeep_sync_beside_nib_it_says_how_to_install_it() {
-	let mut test = library("at login without nibkeep-sync");
+fn without_nibsync_beside_nib_it_says_how_to_install_it() {
+	let mut test = library("at login without nibsync");
 	test.state = Some(test.here.join("state"));
 	assert!(matches!(
 		test.nib(&["sync", "--at-login", "on"]),
@@ -210,13 +210,13 @@ fn a_login_entry_that_the_person_turned_off_stays_off() {
 	std::fs::write(&file, format!("{written}Hidden=true\n")).expect("writes");
 	assert_eq!(
 		test.nib(&["sync", "--at-login", "on"]).expect("turns on"),
-		"Syncing from login is on, and nibkeep-sync syncs this library now; but its login entry is turned off in the system's startup settings, so it does not start when you log in.\n"
+		"Syncing from login is on, and nibsync syncs this library now; but its login entry is turned off in the system's startup settings, so it does not start when you log in.\n"
 	);
 	assert!(matches!(entry(&test), EntryState::Off(_)));
 	let printed = test.nib(&["device", "list"]).expect("lists");
 	assert!(
 		printed.ends_with(
-			"Syncing from login is on, but nibkeep-sync is not running; nib sync --at-login on starts it. Its login entry is turned off in the system's startup settings, so it does not start when you log in.\n"
+			"Syncing from login is on, but nibsync is not running; nib sync --at-login on starts it. Its login entry is turned off in the system's startup settings, so it does not start when you log in.\n"
 		),
 		"{printed}"
 	);

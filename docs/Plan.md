@@ -42,7 +42,7 @@
 | `nibkeep-std` | Vocabulary | The standard vocabulary: types for everyday subjects, such as people, organizations, books and their editions, audiobooks, films, series, games, pen names, characters, portrayals, logins and folders, which the project curates and spaces install ([Data model](spec/model.md#1-names)) | No | Phase 3 |
 | `nibkeep-governance` | Security | Users, replicas, spaces, members and roles, groups, claims, invitations, revocation, key distribution and rotation: the governing statements written, the rules of which changes count, and each space's roster | No | Phase 3, as `nibkeep-identity`; the log's rules from phase 1 joined it in phase 6 |
 | `nibkeep-node` | Engine | Everything an app needs behind one API: open a library, query, change, import, sync, manage devices and spaces, trees | Yes | Phase 3 |
-| `nibkeep-cli` | App | The generic command-line tool, in `apps/nib`; its binaries are `nib` and `nibkeep-sync` | Yes | Phase 3 |
+| `nibkeep-cli` | App | The generic command-line tool, in `apps/nib`; its binaries are `nib` and `nibsync` | Yes | Phase 3 |
 | `nibkeep-generate` | Tests | The library generator of the compatibility fixtures and the benchmarks, and `nibkeep-bench` | Yes | Phase 3 |
 | `nibkeep-sync` | Sync | Set reconciliation and blob transfer, as a state machine without I/O; from phase 7, the proofs that a replica holds a copy, while the planner and the removal of copies are in `nibkeep-node` | No | Phase 4 |
 | `nibkeep-net` | Transports | Connections through iroh, discovery on the home network that announces no names; relays and bundles on a USB drive later | Yes | Phase 4 |
@@ -114,7 +114,7 @@ nibkeep/
 ├── Cargo.toml          workspace: shared package settings, dependencies and lints
 ├── crates/             the libraries
 ├── apps/
-│   └── nib/            package nibkeep-cli: binaries nib and nibkeep-sync
+│   └── nib/            package nibkeep-cli: binaries nib and nibsync
 ├── fixtures/           compatibility fixtures, never deleted
 ├── fuzz/               fuzz targets
 ├── book.toml           the documents as a book, built with mdBook
