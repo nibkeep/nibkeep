@@ -421,25 +421,11 @@ impl Library {
 		wall_millis: u64,
 		rng: &mut impl CryptoRng,
 	) -> Result<(), NodeError> {
-		let own_key = self.replica.signing.verifying_key();
 		let personal = self.personal_holders()?;
 		for space in self.secret_spaces()? {
-			if !self.secrets_unlocked(space) {
+			let Some(roster) = self.giving_roster(space)? else {
 				continue;
-			}
-			let open = self.space(space)?;
-			let log = open.stored.log();
-			if log.is_revoked(&own_key, &open.keys)?
-				|| !log.is_listed(&own_key, &open.keys)?
-				|| log.is_ai_agent(&own_key, &open.keys)?
-				|| log.is_removed(&own_key, &open.keys)?
-			{
-				continue;
-			}
-			let roster = self.roster(space)?;
-			if roster.owner_of(&own_key) != Some(self.own_record(space)?) {
-				continue;
-			}
+			};
 			if !self.choose_secrets_key_with(space, &roster)? {
 				self.new_secrets_key(space, (&roster, personal.as_ref()), wall_millis, rng)?;
 			}
@@ -447,6 +433,98 @@ impl Library {
 			self.give_secrets_to_holders(space, (&roster, personal.as_ref()), wall_millis, rng)?;
 		}
 		Ok(())
+	}
+
+	/// The roster of a space whose secrets this replica gives out: one whose secrets it holds
+	/// unlocked, where it remains, has a key of its own and is no AI agent's.
+	fn giving_roster(&self, space: SpaceId) -> Result<Option<Roster>, NodeError> {
+		if !self.secrets_unlocked(space) {
+			return Ok(None);
+		}
+		let own_key = self.replica.signing.verifying_key();
+		let open = self.space(space)?;
+		let log = open.stored.log();
+		if log.is_revoked(&own_key, &open.keys)?
+			|| !log.is_listed(&own_key, &open.keys)?
+			|| log.is_ai_agent(&own_key, &open.keys)?
+			|| log.is_removed(&own_key, &open.keys)?
+		{
+			return Ok(None);
+		}
+		let roster = self.roster(space)?;
+		if roster.owner_of(&own_key) != Some(self.own_record(space)?) {
+			return Ok(None);
+		}
+		Ok(Some(roster))
+	}
+
+	/// Gives `replica`, a replica of this user's that this one has just given the personal
+	/// space's secrets, the keys it lacks of the other spaces whose secrets this replica gives
+	/// out, each linked with the personal space's key given to it: what
+	/// [`Library::settle_secrets_keys`] would give it the next time the secrets settle, by the
+	/// same rule, so that one gift of the person's brings the secrets of every space that both
+	/// hold. Returns how many keys it gave. A space where that fails is left to the next
+	/// settling, and the others are given theirs.
+	pub(super) fn give_other_spaces_secrets(
+		&mut self,
+		replica: EntityId,
+		wall_millis: u64,
+		rng: &mut impl CryptoRng,
+	) -> usize {
+		let Ok(Some(personal)) = self.personal_holders() else {
+			return 0;
+		};
+		// Its record in another space is the one whose key of its own is its own here.
+		let Some(its_key) = personal.roster.own_key_of(replica).copied() else {
+			return 0;
+		};
+		let Ok(spaces) = self.secret_spaces() else {
+			return 0;
+		};
+		let mut given = 0;
+		for space in spaces {
+			if space == self.info.personal {
+				continue;
+			}
+			given += self
+				.give_space_secrets_linked(space, (&personal, &its_key), wall_millis, rng)
+				.unwrap_or(0);
+		}
+		given
+	}
+
+	/// Gives the replica whose key of its own is `its_key`, in `space`, the keys it lacks of
+	/// those this replica gives out there, as [`Library::give_other_spaces_secrets`] says.
+	/// Returns how many keys it gave.
+	fn give_space_secrets_linked(
+		&mut self,
+		space: SpaceId,
+		(personal, its_key): (&PersonalHolders, &VerifyingKey),
+		wall_millis: u64,
+		rng: &mut impl CryptoRng,
+	) -> Result<usize, NodeError> {
+		let Some(roster) = self.giving_roster(space)? else {
+			return Ok(0);
+		};
+		let own = self.own_record(space)?;
+		let given_out = self.given_out(space, &roster)?;
+		let mut operations = Vec::new();
+		for holder in self.known_holders(space, &roster, own, Some(personal))? {
+			if holder.personal.is_none() || roster.own_key_of(holder.replica) != Some(its_key) {
+				continue;
+			}
+			for key in &given_out {
+				if !holder.has.contains(&(key.epoch, key.hash)) {
+					let gift = (key.epoch, &key.key, key.hash);
+					operations.push(linked_gift(space, &holder, gift, &given_out, rng));
+				}
+			}
+		}
+		let given = operations.len();
+		if given > 0 {
+			self.commit(space, operations, wall_millis, rng)?;
+		}
+		Ok(given)
 	}
 
 	/// This user's replicas known to hold the personal space's secrets, as

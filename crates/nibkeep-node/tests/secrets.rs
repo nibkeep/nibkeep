@@ -9,8 +9,8 @@ use nibkeep_crypto::{Key, PassphraseParams};
 use nibkeep_keys::{KeyFile, SecretsKeys};
 use nibkeep_model::{FieldDef, FieldName, TypeDef, TypeName, Value, ValueKind};
 use nibkeep_node::{
-	AskedFor, Edit, ExportKind, Joining, KeysError, Library, NetworkOptions, NewProtection,
-	NodeError, Protection, SecretsState, Unlocker,
+	AskedFor, Edit, ExportKind, Joining, KeysError, Library, NetworkOptions, NewDevice,
+	NewProtection, NodeError, Protection, SecretsState, Unlocker,
 };
 use nibkeep_testkit::TestRng;
 
@@ -549,6 +549,245 @@ fn a_device_that_asks_takes_the_secrets_when_it_next_unlocks_them() {
 	desk.settle_secrets(now() + 7_000, &mut rng)
 		.expect("settles");
 	assert_eq!(passwords(&desk, login), [text("hunter2")]);
+}
+
+/// The passwords of a login in `space`, as the library shows them today.
+fn passwords_in(
+	library: &Library,
+	space: nibkeep_base::SpaceId,
+	login: nibkeep_base::EntityId,
+) -> Vec<Value> {
+	library
+		.entity(space, login, this_day())
+		.expect("reads")
+		.expect("the login")
+		.values(&field("local.password"))
+		.iter()
+		.map(|shown| shown.value.clone())
+		.collect()
+}
+
+/// The laptop, which holds the secrets, the desk, which holds none, and Work, a space of
+/// theirs besides the personal one, where the laptop keeps a password.
+struct WithWork {
+	laptop: Library,
+	desk: Library,
+	login: nibkeep_base::EntityId,
+	work: nibkeep_base::SpaceId,
+	payroll: nibkeep_base::EntityId,
+	laptop_replica: nibkeep_base::EntityId,
+	desk_replica: nibkeep_base::EntityId,
+}
+
+fn with_work(test: &str, rng: &mut TestRng) -> WithWork {
+	let (_, mut laptop, login) = with_login(&format!("{test}, laptop"), rng);
+	laptop
+		.set_up_secrets(&secrets_passphrase(), now() + 500, rng)
+		.expect("sets up");
+	set_password(&mut laptop, login, "hunter2", now() + 1_000, rng).expect("sets");
+	let work = laptop
+		.create_space("Work", now() + 1_100, rng)
+		.expect("makes it");
+	laptop
+		.define_type(work, &login_type(), now() + 1_200, rng)
+		.expect("defines");
+	let payroll = laptop
+		.create_entity(
+			work,
+			&[LOGIN],
+			vec![(field("local.title"), text("Payroll"))],
+			now() + 1_300,
+			rng,
+		)
+		.expect("creates");
+	laptop
+		.edit_entity(
+			work,
+			payroll,
+			vec![Edit::Set(
+				field("local.password"),
+				vec![text("correct horse")],
+			)],
+			&today(),
+			now() + 1_400,
+			rng,
+		)
+		.expect("sets");
+	// The desk joins without the secrets, and is listed in Work too: it takes the space with
+	// the first sync, and the laptop hears of its listing with the second.
+	let mut desk = common::pair_device_as(&mut laptop, (test, "desk"), &NewDevice::computer(), rng);
+	synced(&mut desk, &mut laptop, now() + 2_000, (1, 2));
+	synced(&mut desk, &mut laptop, now() + 2_100, (3, 4));
+	assert!(desk.spaces().contains(&work));
+	let (laptop_replica, desk_replica) = (this_replica(&laptop).id, this_replica(&desk).id);
+	WithWork {
+		laptop,
+		desk,
+		login,
+		work,
+		payroll,
+		laptop_replica,
+		desk_replica,
+	}
+}
+
+/// What the library lists of this replica.
+fn this_replica(library: &Library) -> nibkeep_node::Replica {
+	library
+		.replicas()
+		.expect("lists")
+		.into_iter()
+		.find(|replica| replica.this)
+		.expect("this one")
+}
+
+/// The laptop gives the desk the secrets, as the person chose, with its secrets unlocked as
+/// `nib secret give` unlocks them; the desk takes them once both synced. Returns how many keys
+/// the laptop gave.
+fn give_to_desk(world: &mut WithWork, at: u64, rng: &mut TestRng) -> usize {
+	let WithWork {
+		laptop,
+		desk,
+		desk_replica,
+		..
+	} = world;
+	laptop.lock_secrets();
+	laptop.unlock_secrets(&SECRETS).expect("unlocks");
+	laptop.settle_secrets(at, rng).expect("settles");
+	let given = laptop
+		.give_secrets(*desk_replica, at + 100, rng)
+		.expect("gives");
+	laptop.lock_secrets();
+	desk.lock_secrets();
+	synced(desk, laptop, at + 1_000, (11, 12));
+	desk.unlock_secrets(&Unlocker::Passphrase("desk secrets"))
+		.expect("unlocks");
+	desk.settle_secrets(at + 2_000, rng).expect("settles");
+	given
+}
+
+#[test]
+fn a_device_given_the_secrets_takes_those_of_every_space_with_them() {
+	let mut rng = TestRng::new("secrets of every space");
+	let mut world = with_work("secrets of every space", &mut rng);
+	let (laptop_replica, desk_replica) = (world.laptop_replica, world.desk_replica);
+	world
+		.desk
+		.ask_for_secrets(laptop_replica, &desk_secrets(), now() + 3_000, &mut rng)
+		.expect("asks");
+	synced(&mut world.desk, &mut world.laptop, now() + 4_000, (5, 6));
+
+	// One gift of the person's gives both spaces' keys: the personal space's, which the desk
+	// asked for, and Work's, linked with it, as the laptop would pass it on once its secrets
+	// next settle.
+	assert_eq!(give_to_desk(&mut world, now() + 5_000, &mut rng), 2);
+	let WithWork {
+		laptop,
+		desk,
+		login,
+		work,
+		payroll,
+		..
+	} = &mut world;
+	assert!(desk.secrets_unlocked(*work));
+	assert_eq!(passwords(desk, *login), [text("hunter2")]);
+	assert_eq!(passwords_in(desk, *work, *payroll), [text("correct horse")]);
+
+	// Given again, it lacks nothing.
+	laptop.unlock_secrets(&SECRETS).expect("unlocks");
+	assert_eq!(
+		laptop
+			.give_secrets(desk_replica, now() + 9_000, &mut rng)
+			.expect("gives"),
+		0
+	);
+}
+
+#[test]
+fn an_infected_device_cannot_have_another_space_s_secrets_given_to_another_sealed_to_it() {
+	for listing in [None, Some(Listing::InTheSameChange)] {
+		let test = format!("redirected in a space {listing:?}");
+		let mut rng = TestRng::new(&test);
+		let mut world = with_work(&test, &mut rng);
+		let (laptop_replica, work) = (world.laptop_replica, world.work);
+		// A third device of the user's, which holds Work, turns against them.
+		let directory = nibkeep_testkit::empty_directory(
+			env!("CARGO_TARGET_TMPDIR"),
+			&format!("{test}, infected"),
+		);
+		std::fs::remove_dir(&directory).expect("removes");
+		let code = nibkeep_node::PairingCode::generate(&mut rng);
+		let (paired, joined) = common::pair_named(
+			&mut world.laptop,
+			&directory,
+			"phone",
+			(&code, &code),
+			&mut rng,
+		);
+		paired.expect("paired");
+		let mut infected = joined.expect("joined").library;
+		synced(&mut infected, &mut world.laptop, now() + 2_500, (5, 6));
+		synced(&mut infected, &mut world.laptop, now() + 2_600, (7, 8));
+		assert!(infected.spaces().contains(&work));
+		world
+			.desk
+			.ask_for_secrets(laptop_replica, &desk_secrets(), now() + 3_000, &mut rng)
+			.expect("asks");
+		synced(&mut world.desk, &mut world.laptop, now() + 4_000, (9, 10));
+
+		// In Work, where the desk names nobody it asks, it says that the desk's key to seal
+		// the secrets to is a thief's: signed with its own key, or with a key that it lists
+		// on the desk's record in the same change.
+		let desk_key = this_replica(&world.desk).signing.expect("a key");
+		let desk_in_work = nibkeep_governance::replica_record(work, &desk_key);
+		let thief = nibkeep_crypto::DecryptionKey::generate(&mut rng);
+		let mut operations = Vec::new();
+		if listing.is_some() {
+			let listed = nibkeep_crypto::SigningKey::generate(&mut rng);
+			operations.push(asserting(
+				desk_in_work,
+				nibkeep_governance::SIGNING_KEY,
+				Value::Text(listed.verifying_key().to_text()),
+				&mut rng,
+			));
+		}
+		operations.push(asserting(
+			desk_in_work,
+			nibkeep_governance::SECRETS_ENCRYPTION_KEY,
+			sealed_to(&thief),
+			&mut rng,
+		));
+		let NewProtection::Passphrase(passphrase, _) = common::protection() else {
+			unreachable!("a passphrase");
+		};
+		let unlocker = Unlocker::Passphrase(passphrase);
+		drop(infected);
+		common::forge(
+			&directory,
+			&unlocker,
+			(work, operations),
+			(None, now() + 4_500),
+			&mut rng,
+		);
+		let forged = common::current_statements(
+			&directory,
+			&unlocker,
+			work,
+			(desk_in_work, &nibkeep_governance::SECRETS_ENCRYPTION_KEY),
+		);
+		assert!(!forged.is_empty(), "{listing:?}");
+		let mut infected = Library::open(&directory, &unlocker).expect("opens");
+		synced(&mut infected, &mut world.laptop, now() + 4_800, (13, 14));
+
+		// Only the desk's own key says what to seal to: the gift of Work's key opens on the
+		// desk, which reads Work's password.
+		assert_eq!(give_to_desk(&mut world, now() + 5_000, &mut rng), 2);
+		assert_eq!(
+			passwords_in(&world.desk, work, world.payroll),
+			[text("correct horse")],
+			"{listing:?}"
+		);
+	}
 }
 
 #[test]

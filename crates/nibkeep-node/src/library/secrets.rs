@@ -567,9 +567,11 @@ impl Library {
 
 	/// Gives the secrets keys this replica holds to `replica`, which asked for them from this
 	/// one, sealed to the key it asked with, at the time `wall_millis`: in each space that
-	/// both are replicas of, those keys that it was not given yet. The secrets must be
-	/// unlocked: the person confirmed. It checks all of it before it gives any. Returns how
-	/// many keys it gave.
+	/// both are replicas of, those keys that it was not given yet; in a space where it asks
+	/// nobody, as in every space but the personal one, linked with the personal space's key.
+	/// The secrets must be unlocked: the person confirmed. It checks all of it before it gives
+	/// any, but for those other spaces, which follow, each on its own: one where giving fails
+	/// is left to the next time the secrets settle. Returns how many keys it gave.
 	///
 	/// # Errors
 	///
@@ -649,11 +651,14 @@ impl Library {
 				changes.push((space, operations));
 			}
 		}
-		let given = changes.iter().map(|(_, operations)| operations.len()).sum();
+		let given: usize = changes.iter().map(|(_, operations)| operations.len()).sum();
 		for (space, operations) in changes {
 			self.commit(space, operations, wall_millis, rng)?;
 		}
-		Ok(given)
+		// In the other spaces it names no replica to ask: their keys go linked with the personal
+		// space's, as the secrets would next settle. What fails here, that settling gives.
+		let passed = self.give_other_spaces_secrets(replica, wall_millis, rng);
+		Ok(given + passed)
 	}
 
 	/// Asks for the secrets of a shared space from `from`, the record there of a replica of
