@@ -10,7 +10,7 @@ use std::io::Write;
 use std::path::{Path, PathBuf};
 
 use clap::Subcommand;
-use nibkeep_base::EntityId;
+use nibkeep_base::{EntityId, SpaceId};
 use nibkeep_git::Git;
 use nibkeep_node::{
 	BlameLine, Change, Commit, Committed, FileDiff, Library, NodeError, Reverted, ToClone, Tree,
@@ -130,14 +130,18 @@ pub enum TreeCommand {
 	///
 	/// It shows what a commit would record, with the lines of text that changed. With a
 	/// revision, how the tree differs from it to the tree now; with two, from the first to
-	/// the second, as their authors had the tree. A secret file shows only that it changed,
-	/// unless --secrets asks for its lines. What one revision changed, nib show shows.
+	/// the second, as their authors had the tree. With paths after the revisions, as git
+	/// diff takes them, only the files at or under them. A secret file shows only that it
+	/// changed, unless --secrets asks for its lines. What one revision changed, nib show
+	/// shows.
 	Diff {
-		/// The revision to compare from.
-		#[arg(conflicts_with_all = ["since", "until"])]
-		from: Option<String>,
-		/// The revision to compare to.
-		to: Option<String>,
+		/// Up to two revisions to compare, then paths: the first that is no revision of the
+		/// tree begins the paths.
+		#[arg(value_name = "REVISION_OR_PATH", conflicts_with_all = ["since", "until"])]
+		given: Vec<String>,
+		/// Paths only, after --, as with --from and --to.
+		#[arg(last = true, value_name = "PATH")]
+		paths: Vec<PathBuf>,
 		/// The revision to compare from, as Mercurial, Fossil and Jujutsu name it.
 		#[arg(long = "from", id = "since", value_name = "REVISION")]
 		since: Option<String>,
@@ -1013,34 +1017,61 @@ fn read_command<E: Environment>(
 			log_output(&log, json, &environment.time_zone(), output)
 		}
 		TreeCommand::Diff {
-			from,
-			to,
+			given,
+			paths,
 			since,
 			until,
 			tree,
 			secrets,
 		} => {
-			let (tree, _) = named_or_here(library, tree.as_deref(), environment)?;
+			let (tree, root) = named_or_here(library, tree.as_deref(), environment)?;
 			let space = library.default_space();
 			if *secrets && !library.secrets_unlocked(space) {
 				secrets_for(library, (environment, timings), NodeError::SecretsLocked)?;
 			}
-			let (from, to) = (
-				from.as_ref().or(since.as_ref()),
-				to.as_ref().or(until.as_ref()),
-			);
-			let between = match (from, to) {
-				(None, _) => None,
-				(Some(from), to) => {
-					let from = TreePoint::Revision(library.find_entity(space, from)?);
-					let to = match to {
-						Some(to) => TreePoint::Revision(library.find_entity(space, to)?),
-						None => TreePoint::Now,
-					};
-					Some((from, to))
+			let mut revisions = Vec::new();
+			for named in [since, until].into_iter().flatten() {
+				revisions.push(revision_of(library, (space, tree), named)??);
+			}
+			let mut rest = given.as_slice();
+			while let Some((named, after)) = rest.split_first()
+				&& let Ok(revision) = revision_of(library, (space, tree), named)?
+			{
+				if revisions.len() == 2 {
+					return Err(CliError::DiffTakesTwoRevisions);
 				}
+				revisions.push(revision);
+				rest = after;
+			}
+			let between = match revisions[..] {
+				[] => None,
+				[from] => Some((TreePoint::Revision(from), TreePoint::Now)),
+				[from, to, ..] => Some((TreePoint::Revision(from), TreePoint::Revision(to))),
 			};
-			let diffs = library.tree_diff_with(space, tree, between, *secrets)?;
+			let mut diffs = library.tree_diff_with(space, tree, between, *secrets)?;
+			if !rest.is_empty() || !paths.is_empty() {
+				let mut chosen = Vec::new();
+				for path in paths {
+					chosen.push(path_given(path, root.as_deref(), environment)?);
+				}
+				let entries = library.tree_entries(space, tree)?;
+				for named in rest {
+					let path = path_given(Path::new(named), root.as_deref(), environment)?;
+					let on_disk = root.is_some()
+						&& fs::symlink_metadata(absolute(Path::new(named), environment)?).is_ok();
+					if !on_disk
+						&& !entries.iter().any(|entry| at_or_under(&entry.path, &path))
+						&& !diffs.iter().any(|diff| diff_at_or_under(diff, &path))
+					{
+						return Err(match revision_of(library, (space, tree), named)? {
+							Err(ambiguous @ NodeError::Ambiguous { .. }) => ambiguous.into(),
+							_ => CliError::NoRevisionOrPath(named.clone()),
+						});
+					}
+					chosen.push(path);
+				}
+				diffs.retain(|diff| chosen.iter().any(|path| diff_at_or_under(diff, path)));
+			}
 			if json {
 				return print_json(&diff_json(&diffs), output);
 			}
@@ -1385,6 +1416,57 @@ fn path_given<E: Environment>(
 		)?),
 		None => Ok(path.to_string_lossy().replace('\\', "/")),
 	}
+}
+
+/// The revision of `tree` that `named` names, or why it names none: a reference that could
+/// be several entities, one of them a revision of the tree, or [`NodeError::NoRevision`], as
+/// for a file's name, which names its entity.
+fn revision_of(
+	library: &Library,
+	(space, tree): (SpaceId, EntityId),
+	named: &str,
+) -> Result<Result<EntityId, NodeError>, CliError> {
+	let no_revision = || NodeError::NoRevision(named.to_owned());
+	let found = match library.find_entity(space, named) {
+		Ok(found) => found,
+		Err(NodeError::NoEntity(_)) => return Ok(Err(no_revision())),
+		Err(NodeError::Ambiguous {
+			reference,
+			candidates,
+		}) => {
+			for &candidate in &candidates {
+				if library.tree_of_revision(space, candidate)? == Some(tree) {
+					return Ok(Err(NodeError::Ambiguous {
+						reference,
+						candidates,
+					}));
+				}
+			}
+			return Ok(Err(no_revision()));
+		}
+		Err(error) => return Err(error.into()),
+	};
+	if library.tree_of_revision(space, found)? == Some(tree) {
+		Ok(Ok(found))
+	} else {
+		Ok(Err(no_revision()))
+	}
+}
+
+/// Whether `path` of a tree is `given`, or under it; every path is under the root, given
+/// as nothing.
+fn at_or_under(path: &str, given: &str) -> bool {
+	let given = given.trim_end_matches('/');
+	given.is_empty()
+		|| path
+			.strip_prefix(given)
+			.is_some_and(|rest| rest.is_empty() || rest.starts_with('/'))
+}
+
+/// Whether a file's diff is of `given` or under it, where it is or where it was.
+fn diff_at_or_under(diff: &FileDiff, given: &str) -> bool {
+	at_or_under(&diff.path, given)
+		|| matches!(&diff.change, Change::Moved { from } if at_or_under(from, given))
 }
 
 /// The point of a tree's history given on the command line: a revision, a moment, or now.

@@ -243,7 +243,11 @@ impl Library {
 	}
 
 	/// The tree that a revision is of, if `revision` is one.
-	pub(super) fn tree_of_revision(
+	///
+	/// # Errors
+	///
+	/// Returns an error if the library has no such space, or the space cannot be read.
+	pub fn tree_of_revision(
 		&self,
 		space: SpaceId,
 		revision: EntityId,

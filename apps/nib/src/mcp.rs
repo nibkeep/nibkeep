@@ -1336,8 +1336,14 @@ const TOOLS: [Tool; 13] = [
 		command: &["diff"],
 		parameters: &[
 			TREE,
-			required("from", Kind::Text, "from"),
-			parameter("to", Kind::Text, None, "to"),
+			// As options, since what follows `--` is paths.
+			Parameter {
+				option: Some("--from"),
+				..required("from", Kind::Text, "since")
+			}
+			.described("The revision to compare from."),
+			parameter("to", Kind::Text, Some("--to"), "until")
+				.described("The revision to compare to; without it, the tree now."),
 		],
 		changes: false,
 		about: None,

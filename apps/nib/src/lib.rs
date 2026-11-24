@@ -2614,6 +2614,12 @@ pub enum CliError {
 		"{0} is no revision: nib revert undoes a revision, and nib restore {0} writes a file as it was"
 	)]
 	RevertTakesRevision(String),
+	/// An argument of `nib diff` that is neither a revision of the tree nor a path in it.
+	#[error("{0} is no revision of the tree, nor a path in it")]
+	NoRevisionOrPath(String),
+	/// `nib diff` given more than two revisions.
+	#[error("nib diff compares two revisions at most, then takes paths")]
+	DiffTakesTwoRevisions,
 	/// A revocation was not confirmed.
 	#[error("nothing was revoked; add --yes to revoke for good")]
 	UnconfirmedRevoke,

@@ -819,6 +819,60 @@ fn log_diff_and_blame_read_the_tree_s_history() {
 }
 
 #[test]
+fn diff_takes_paths_after_its_revisions_as_git_diff_does() {
+	let (mut test, revisions) = with_two_commits("tree diff paths");
+	let here = test.here.clone();
+	write(&here, "notes.md", "one\nTWO\nthree\n");
+	write(&here, "docs/other.md", "Other\n");
+	// A file's name is a path, though it also names the file's entity.
+	let diff = test.nib(&["diff", "notes.md"]).expect("diffs a file");
+	assert!(diff.starts_with("edited    notes.md\n"), "{diff}");
+	assert!(diff.contains("+three"), "{diff}");
+	assert!(!diff.contains("other.md"), "{diff}");
+	let diff = test.nib(&["diff", "docs/"]).expect("diffs a folder");
+	assert!(diff.starts_with("new       docs/other.md\n"), "{diff}");
+	assert!(!diff.contains("notes.md"), "{diff}");
+	// After the revisions, a file that the copy no longer holds too.
+	let diff = test
+		.nib(&["diff", &revisions[0], &revisions[1], "old.txt"])
+		.expect("diffs");
+	assert!(diff.starts_with("deleted   old.txt\n"), "{diff}");
+	assert!(!diff.contains("notes.md"), "{diff}");
+	// After --, also with --from.
+	let diff = test
+		.nib(&["diff", "--from", &revisions[0], "--", "notes.md"])
+		.expect("diffs");
+	assert!(diff.contains("-two\n+TWO\n"), "{diff}");
+	assert!(!diff.contains("old.txt"), "{diff}");
+	// What is neither a revision nor a path is refused, as what it is.
+	let refused = test.nib(&["diff", "nothing.md"]).expect_err("refuses");
+	assert_eq!(
+		refused.to_string(),
+		"nothing.md is no revision of the tree, nor a path in it"
+	);
+	// Two files of one name make no revision ambiguous.
+	write(&here, "a/same.md", "A\n");
+	write(&here, "b/same.md", "B\n");
+	test.nib(&["commit", "--message", "Same"]).expect("commits");
+	let refused = test.nib(&["diff", "same.md"]).expect_err("refuses");
+	assert!(
+		matches!(refused, CliError::NoRevisionOrPath(ref named) if named == "same.md"),
+		"{refused:?}"
+	);
+	let refused = test
+		.nib(&["diff", "--from", "notes.md"])
+		.expect_err("refuses");
+	assert_eq!(refused.to_string(), "the tree has no revision notes.md");
+	let refused = test
+		.nib(&["diff", &revisions[0], &revisions[1], &revisions[0]])
+		.expect_err("refuses");
+	assert_eq!(
+		refused.to_string(),
+		"nib diff compares two revisions at most, then takes paths"
+	);
+}
+
+#[test]
 fn show_of_a_revision_shows_what_it_changed() {
 	let (mut test, revisions) = with_two_commits("tree show revision");
 	let shown = test.nib(&["show", &revisions[1]]).expect("shows");
