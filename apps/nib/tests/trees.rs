@@ -1081,7 +1081,9 @@ fn status_names_the_work_that_only_this_computer_holds() {
 	write(&test.here, "proj/draft.md", "Draft\n");
 	let status = test.nib(&["status"]).expect("status");
 	assert!(
-		status.contains("only here proj: changes not committed, 1 commit not pushed"),
+		status.contains(
+			"only here proj, a Git repository: changes not committed, 1 commit not pushed"
+		),
 		"{status}"
 	);
 }

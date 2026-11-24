@@ -1612,7 +1612,12 @@ fn status_output(
 	sealed_text(&status.sealed, output)?;
 	repositories_text(&repositories.changes, output)?;
 	for (path, work) in &repositories.work {
-		writeln!(output, "only here {}: {}", shown(path), work.join(", "))?;
+		writeln!(
+			output,
+			"only here {}, a Git repository: {}",
+			shown(path),
+			work.join(", ")
+		)?;
 	}
 	for path in &status.behind {
 		writeln!(
