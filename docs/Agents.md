@@ -17,13 +17,13 @@ Most people will not type `nib` commands. They will use apps made for one purpos
 
 ## Connecting an AI agent
 
-On the user's own computer, in the library's folder, one command allows AI agents there and adds the library's server to the computer's AI clients, such as Claude Code and Codex:
+On the user's own computer, in the library's folder, one command allows AI agents there and adds the library's server to Claude Code and Codex, where they are installed, through their own commands:
 
 ```sh
 nib mcp enable
 ```
 
-Each client then gets a key of its own on the user's replica, named as the client names itself, such as "Claude Code", in the personal space and without the secrets. A running session sees the server after a restart. `nib mcp enable --print` instead prints the server's command line, `nib mcp --library FOLDER`, and an `mcpServers` JSON entry for other clients. `nib mcp disable` revokes the clients' keys and removes the server.
+Each client then gets a key of its own on the user's replica, named as the client names itself, such as "Claude Code", in the personal space and without the secrets. A running session sees the server after a restart. `nib mcp enable --print` instead tells no client, and prints the server's command line, `nib mcp serve --library FOLDER`, and an `mcpServers` JSON entry for any other client. `nib mcp disable` revokes the clients' keys and removes the server.
 
 An AI agent kept apart, in a sandbox, under another account or on another device, gets a replica of its own. The user pairs it from a device that has the library:
 

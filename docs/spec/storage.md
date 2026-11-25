@@ -368,7 +368,7 @@ The associated data names the file a record is in and its place there, so a reco
 **Settings.** Several processes may have a database open, reading together and writing in turn ([technical design](../Technical-design.md#78-several-programs-on-one-replica)). The VFS hands locks and shared memory to SQLite's default VFS, which keeps the write-ahead log's index in `<database>-shm` beside the database. That file is not encrypted: it holds which page each frame holds, the database's size and SQLite's checksums of the frames, and SQLite deletes it when the last connection closes cleanly. Each connection first sets:
 
 - `PRAGMA temp_store = MEMORY`;
-- `PRAGMA journal_mode = WAL` and `PRAGMA synchronous = FULL`;
+- `PRAGMA journal_mode = WAL` and `PRAGMA synchronous = FULL`, with `fullfsync` and `checkpoint_fullfsync` on, as the log file's connections set them too; the state file then sets `PRAGMA synchronous = NORMAL` (section 5);
 - a wait of up to five seconds for a lock another connection holds;
 - SQLite's query planner stability guarantee (`SQLITE_DBCONFIG_ENABLE_QPSG`), so each statement is planned once whatever values are bound; the log file's connections set it too. Without it, SQLite 3.54 replans a statement whenever a number compared with a column changes between 0 or 1 and another value, and the state file reads several times slower;
 - transactions that take the write lock when they begin, so one that reads then writes never meets a change made in between; a long read-only transaction begins without it, so it keeps no writer waiting.
@@ -385,7 +385,7 @@ Sealed records keep a database from being read without its key, or changed or mo
 
 The state file keeps a space's state and search index on disk, read as needed ([technical design](../Technical-design.md#75-the-state-file)): every ordinary statement that operations asserted, which are superseded, and the indexes of the current ones, which search reads ([technical design](../Technical-design.md#76-search) says what they hold). It is an encrypted database (section 4), and nothing in it is authoritative: it can always be rebuilt from the log. Secret statements never reach it opened; a replica that opens them keeps them in memory.
 
-SQLite's `user_version` holds its format version, 13. A new file has version 0 until its tables are made, in the transaction that sets it; a file of another version is not used.
+SQLite's `user_version` holds its format version, 1. A new file has version 0 until its tables are made, in the transaction that sets it. A file of an earlier version is made anew, and one of a later version is refused (section 1.6).
 
 ```sql
 CREATE TABLE entities (

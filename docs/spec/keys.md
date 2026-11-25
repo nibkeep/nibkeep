@@ -6,7 +6,7 @@ A replica ([Identity](identity.md#1-users-people-devices-and-replicas)) keeps it
 
 ## 1. The file
 
-The key file is the CBOR array `[1, replica]`, or `[1, replica, secrets]` on a replica that holds secrets keys. `1` names suite 1, the format described here. `replica` and `secrets` are *compartments*, which open separately.
+The key file is the CBOR array `[1, replica]`, or `[1, replica, secrets]` on a replica that set up the secrets or asked for them, even before it holds any secrets key. `1` names suite 1, the format described here. `replica` and `secrets` are *compartments*, which open separately.
 
 A compartment is the array `[protection, envelope]`:
 
@@ -36,7 +36,7 @@ Spaces are sorted by the bytes of their IDs, and keys by epoch, without duplicat
 
 The replica compartment is unlocked when the app starts. The secrets compartment is unlocked each time the user confirms, and its keys are forgotten after a timeout ([6.9](../Design.md#69-secrets)).
 
-A replica gets its secrets compartment when the person stores the first secret. It has a protection of its own, never the replica compartment's passphrase, so unlocking the replica never unlocks the secrets. Either compartment can later be protected anew, with a new passphrase or a keystore key, and the two passphrases stay apart then too: the replica compartment never gets the secrets' passphrase.
+A replica gets its secrets compartment when the person sets up the secrets, as storing the first secret does, or when it asks another replica for them. It has a protection of its own, never the replica compartment's passphrase, so unlocking the replica never unlocks the secrets. Either compartment can later be protected anew, with a new passphrase or a keystore key, and the two passphrases stay apart then too: the replica compartment never gets the secrets' passphrase.
 
 A passphrase compartment opens only with the right passphrase. A keystore compartment opens only with the key in the keystore, which the platform may release only after its own confirmation, such as the device's lock or a fingerprint:
 
