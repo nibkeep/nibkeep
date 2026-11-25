@@ -3011,7 +3011,7 @@ dependencies = [
 
 [[package]]
 name = "nibkeep"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "nibkeep-base",
  "nibkeep-crypto",
@@ -3024,7 +3024,7 @@ dependencies = [
 
 [[package]]
 name = "nibkeep-base"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "blake3",
  "ciborium",
@@ -3036,14 +3036,14 @@ dependencies = [
 
 [[package]]
 name = "nibkeep-bonjour"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "libc",
 ]
 
 [[package]]
 name = "nibkeep-cli"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "anstyle-query",
  "apple-native-keyring-store",
@@ -3080,7 +3080,7 @@ dependencies = [
 
 [[package]]
 name = "nibkeep-crypto"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "aes-gcm 0.11.1",
  "argon2",
@@ -3100,14 +3100,14 @@ dependencies = [
 
 [[package]]
 name = "nibkeep-drives"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "windows-sys 0.61.2",
 ]
 
 [[package]]
 name = "nibkeep-end-to-end"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "ctrlc",
  "image",
@@ -3121,7 +3121,7 @@ dependencies = [
 
 [[package]]
 name = "nibkeep-generate"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "nibkeep-base",
  "nibkeep-crypto",
@@ -3137,7 +3137,7 @@ dependencies = [
 
 [[package]]
 name = "nibkeep-git"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "nibkeep-base",
  "nibkeep-node",
@@ -3145,7 +3145,7 @@ dependencies = [
 
 [[package]]
 name = "nibkeep-governance"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "base64ct",
  "blake3",
@@ -3159,7 +3159,7 @@ dependencies = [
 
 [[package]]
 name = "nibkeep-import"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "flate2",
  "image",
@@ -3179,7 +3179,7 @@ dependencies = [
 
 [[package]]
 name = "nibkeep-keys"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "keyring-core",
  "nibkeep-base",
@@ -3191,7 +3191,7 @@ dependencies = [
 
 [[package]]
 name = "nibkeep-log"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "nibkeep-base",
  "nibkeep-crypto",
@@ -3206,7 +3206,7 @@ dependencies = [
 
 [[package]]
 name = "nibkeep-model"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "blake3",
  "icu_locale",
@@ -3220,7 +3220,7 @@ dependencies = [
 
 [[package]]
 name = "nibkeep-net"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "iroh",
  "libc",
@@ -3234,7 +3234,7 @@ dependencies = [
 
 [[package]]
 name = "nibkeep-node"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "base64ct",
  "blake3",
@@ -3277,7 +3277,7 @@ dependencies = [
 
 [[package]]
 name = "nibkeep-passwords"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "arboard",
  "blake3",
@@ -3292,7 +3292,7 @@ dependencies = [
 
 [[package]]
 name = "nibkeep-sqlite-vfs"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "libsqlite3-sys",
  "nibkeep-testkit",
@@ -3302,7 +3302,7 @@ dependencies = [
 
 [[package]]
 name = "nibkeep-std"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "nibkeep-governance",
  "nibkeep-model",
@@ -3311,7 +3311,7 @@ dependencies = [
 
 [[package]]
 name = "nibkeep-store"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "getrandom 0.4.3",
  "nibkeep-base",
@@ -3331,7 +3331,7 @@ dependencies = [
 
 [[package]]
 name = "nibkeep-sync"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "blake3",
  "negentropy",
@@ -3348,7 +3348,7 @@ dependencies = [
 
 [[package]]
 name = "nibkeep-testkit"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "blake3",
  "nibkeep-base",
@@ -3359,14 +3359,14 @@ dependencies = [
 
 [[package]]
 name = "nibkeep-thumbnails"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "image",
 ]
 
 [[package]]
 name = "nibkeep-time"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "nibkeep-base",
  "proptest",
