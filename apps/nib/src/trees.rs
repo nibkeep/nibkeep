@@ -6,7 +6,7 @@
 //! [technical design: trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#15-trees
 
 use std::fs;
-use std::io::Write;
+use std::io::{self, Write};
 use std::path::{Path, PathBuf};
 
 use clap::Subcommand;
@@ -19,7 +19,7 @@ use nibkeep_node::{
 use serde_json::json;
 
 use crate::output::{count, moment_text, print_json, short, shown};
-use crate::{CliError, Environment, Timings, absolute, current_dir};
+use crate::{CliError, ColorWhen, Environment, Timings, absolute, current_dir};
 use nibkeep_node::pointer::{self, Settled};
 
 /// The commands of trees, named as Git, Mercurial, Subversion, Fossil and Jujutsu name
@@ -158,6 +158,17 @@ pub enum TreeCommand {
 		/// it: 3 unless given, 0 for the changed lines alone.
 		#[arg(short = 'U', long, value_name = "LINES")]
 		unified: Option<usize>,
+		/// When to color the lines, as Git does: auto, on a terminal that shows colors
+		/// unless `NO_COLOR` is set; always, as for a pager, and alone; or never.
+		#[arg(
+			long,
+			value_name = "WHEN",
+			num_args = 0..=1,
+			require_equals = true,
+			default_value = "auto",
+			default_missing_value = "always"
+		)]
+		color: ColorWhen,
 	},
 	/// Names the revision and author that last changed each line.
 	///
@@ -1028,6 +1039,7 @@ fn read_command<E: Environment>(
 			tree,
 			secrets,
 			unified,
+			color,
 		} => {
 			let (tree, root) = named_or_here(library, tree.as_deref(), environment)?;
 			let space = library.default_space();
@@ -1081,7 +1093,7 @@ fn read_command<E: Environment>(
 			if json {
 				return print_json(&diff_json(&diffs), output);
 			}
-			diff_text(&diffs, output)
+			diff_text(&diffs, color.colors(environment), output)
 		}
 		TreeCommand::Blame {
 			path,
@@ -1984,22 +1996,44 @@ pub(crate) fn diff_json(diffs: &[FileDiff]) -> serde_json::Value {
 	json!(shown)
 }
 
-/// Prints a diff: each file's change, and the lines of text that changed.
-pub(crate) fn diff_text(diffs: &[FileDiff], output: &mut dyn Write) -> Result<(), CliError> {
+/// Git's default colors of a diff, as escapes that start them: bold for files and their
+/// headers, cyan for the header of each hunk, red for removed lines and green for added ones.
+const BOLD: &str = "\u{1b}[1m";
+const CYAN: &str = "\u{1b}[36m";
+const RED: &str = "\u{1b}[31m";
+const GREEN: &str = "\u{1b}[32m";
+/// The escape that ends a color, as Git writes it, before the line break.
+const PLAIN: &str = "\u{1b}[m";
+
+/// Prints a diff: each file's change, and the lines of text that changed, in Git's colors
+/// if `colors` says so.
+pub(crate) fn diff_text(
+	diffs: &[FileDiff],
+	colors: bool,
+	output: &mut dyn Write,
+) -> Result<(), CliError> {
 	if diffs.is_empty() {
 		writeln!(output, "No differences")?;
 		return Ok(());
 	}
 	for diff in diffs {
+		let mut change = Vec::new();
 		changes_text(
 			&[TreeChange {
 				path: diff.path.clone(),
 				change: diff.change.clone(),
 			}],
-			output,
+			&mut change,
 		)?;
+		for line in String::from_utf8_lossy(&change).split_inclusive('\n') {
+			colored_line(line, colors.then_some(BOLD), output)?;
+		}
 		if let Some(patch) = &diff.patch {
-			write!(output, "{patch}")?;
+			if colors {
+				colored_patch(patch, output)?;
+			} else {
+				write!(output, "{patch}")?;
+			}
 		} else if diff.secret {
 			writeln!(
 				output,
@@ -2010,6 +2044,38 @@ pub(crate) fn diff_text(diffs: &[FileDiff], output: &mut dyn Write) -> Result<()
 		}
 	}
 	Ok(())
+}
+
+/// Prints a unified diff in Git's colors: its headers bold, up to the first hunk, as a
+/// removed line may start as a header does; each hunk's header cyan; removed lines red and
+/// added ones green; and the lines around them, and the note that a file ends without a
+/// line break, as they are.
+fn colored_patch(patch: &str, output: &mut dyn Write) -> io::Result<()> {
+	let mut in_hunks = false;
+	for line in patch.split_inclusive('\n') {
+		in_hunks |= line.starts_with("@@");
+		let color = match line.as_bytes().first() {
+			_ if !in_hunks => Some(BOLD),
+			Some(b'@') => Some(CYAN),
+			Some(b'-') => Some(RED),
+			Some(b'+') => Some(GREEN),
+			_ => None,
+		};
+		colored_line(line, color, output)?;
+	}
+	Ok(())
+}
+
+/// Prints a line, with its line break if it has one, in a color if one is given, which
+/// ends before the line break.
+fn colored_line(line: &str, color: Option<&str>, output: &mut dyn Write) -> io::Result<()> {
+	let Some(color) = color else {
+		return output.write_all(line.as_bytes());
+	};
+	let (line, end) = line
+		.strip_suffix('\n')
+		.map_or((line, ""), |line| (line, "\n"));
+	write!(output, "{color}{line}{PLAIN}{end}")
 }
 
 /// Prints blame: each line with the revision, author and time that last changed it.

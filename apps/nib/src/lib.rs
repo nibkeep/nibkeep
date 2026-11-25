@@ -427,6 +427,16 @@ pub enum Command {
 		/// made, as nib diff takes it: 3 unless given.
 		#[arg(short = 'U', long, value_name = "LINES")]
 		unified: Option<usize>,
+		/// Of a tree's revision, when to color what it changed, as nib diff takes it.
+		#[arg(
+			long,
+			value_name = "WHEN",
+			num_args = 0..=1,
+			require_equals = true,
+			default_value = "auto",
+			default_missing_value = "always"
+		)]
+		color: ColorWhen,
 	},
 	/// Moves an entity to another space, such as one you share.
 	///
@@ -889,6 +899,33 @@ pub enum Switch {
 	On,
 	/// Off.
 	Off,
+}
+
+/// When to color a diff, as Git takes it.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, ValueEnum)]
+pub enum ColorWhen {
+	/// On a terminal that shows colors.
+	Auto,
+	/// Always, as for a pager that shows them.
+	Always,
+	/// Never.
+	Never,
+}
+
+impl ColorWhen {
+	/// Whether to color, in this environment.
+	pub(crate) fn colors(self, environment: &impl Environment) -> bool {
+		match self {
+			Self::Auto => environment.colors(),
+			Self::Always => {
+				// Asked for, whether or not the terminal takes them; a Windows console is
+				// asked to.
+				crate::environment::takes_escapes();
+				true
+			}
+			Self::Never => false,
+		}
+	}
 }
 
 /// Whether a device takes the spaces made later, or asks first.
@@ -5255,7 +5292,7 @@ fn init_command<E: Environment>(
 fn show_command<E: Environment>(
 	library: &Library,
 	(reference, on, as_of): (&str, Option<Day>, Option<Moment>),
-	(unified, json): (Option<usize>, bool),
+	(unified, colors, json): (Option<usize>, bool, bool),
 	environment: &E,
 	output: &mut dyn Write,
 ) -> Result<(), CliError> {
@@ -5289,7 +5326,7 @@ fn show_command<E: Environment>(
 	}
 	output.write_all(&shown)?;
 	writeln!(output)?;
-	trees::diff_text(&diff, output)
+	trees::diff_text(&diff, colors, output)
 }
 
 /// Prints an entity for `nib show`, on a day, as recorded now or by a moment.
@@ -5377,10 +5414,11 @@ fn reading_command<E: Environment>(
 			on,
 			as_of,
 			unified,
+			color,
 		} => show_command(
 			library,
 			(entity, *on, *as_of),
-			(*unified, json),
+			(*unified, color.colors(environment), json),
 			environment,
 			output,
 		),

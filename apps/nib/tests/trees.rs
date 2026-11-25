@@ -939,6 +939,135 @@ fn diff_and_show_take_how_many_lines_to_show_around_a_change() {
 	assert!(between.contains("@@ -10 +10 @@"), "{between}");
 }
 
+/// Text without the escapes that color it.
+fn uncolored(text: &str) -> String {
+	[
+		"\u{1b}[1m",
+		"\u{1b}[31m",
+		"\u{1b}[32m",
+		"\u{1b}[36m",
+		"\u{1b}[m",
+	]
+	.iter()
+	.fold(text.to_owned(), |text, escape| text.replace(escape, ""))
+}
+
+#[test]
+fn diff_and_show_color_their_lines_on_a_terminal_as_git_does() {
+	let (mut test, revisions) = with_two_commits("tree diff colors");
+	let between = ["diff", revisions[0].as_str(), revisions[1].as_str()];
+	// For a program that reads what nib prints, no colors.
+	let plain = test.nib(&between).expect("diffs");
+	assert!(!plain.contains('\u{1b}'), "{plain:?}");
+
+	// On a terminal, Git's: files and their headers bold, the hunks' lines cyan, removed
+	// lines red and added ones green, each line ending its color.
+	test.colors = true;
+	let colored = test.nib(&between).expect("diffs");
+	assert_eq!(
+		colored,
+		"\u{1b}[1medited    notes.md\u{1b}[m\n\
+		 \u{1b}[1m--- a/notes.md\u{1b}[m\n\
+		 \u{1b}[1m+++ b/notes.md\u{1b}[m\n\
+		 \u{1b}[36m@@ -1,2 +1,2 @@\u{1b}[m\n \
+		 one\n\
+		 \u{1b}[31m-two\u{1b}[m\n\
+		 \u{1b}[32m+TWO\u{1b}[m\n\
+		 \u{1b}[1mdeleted   old.txt\u{1b}[m\n\
+		 \u{1b}[1m--- a/old.txt\u{1b}[m\n\
+		 \u{1b}[1m+++ b/old.txt\u{1b}[m\n\
+		 \u{1b}[36m@@ -1 +0,0 @@\u{1b}[m\n\
+		 \u{1b}[31m-Old\u{1b}[m\n"
+	);
+	assert_eq!(uncolored(&colored), plain);
+	let never = test
+		.nib(&["diff", "--color=never", &revisions[0], &revisions[1]])
+		.expect("diffs");
+	assert_eq!(never, plain);
+
+	// Asked for, also for a program, as git diff --color is; alone, it takes no revision
+	// for its value.
+	test.colors = false;
+	let asked = test
+		.nib(&["diff", "--color", &revisions[0], &revisions[1]])
+		.expect("diffs");
+	assert_eq!(asked, colored);
+	let always = test
+		.nib(&["diff", "--color=always", &revisions[0], &revisions[1]])
+		.expect("diffs");
+	assert_eq!(always, colored);
+	let auto = test
+		.nib(&["diff", "--color=auto", &revisions[0], &revisions[1]])
+		.expect("diffs");
+	assert_eq!(auto, plain);
+	// JSON stays as it is.
+	let json = test.nib(&["--json", "diff", "--color", &revisions[0], &revisions[1]]);
+	assert!(!json.expect("diffs").contains("\\u001b"));
+
+	// A removed line that starts as a header does, or an added one, is colored as a line.
+	let here = test.here.clone();
+	write(&here, "notes.md", "-- one\nTWO\n");
+	test.nib(&["commit", "--message", "Dashes"])
+		.expect("commits");
+	write(&here, "notes.md", "++ one\nTWO\n");
+	let lookalike = test.nib(&["diff", "--color"]).expect("diffs");
+	assert!(
+		lookalike.contains(
+			"\u{1b}[36m@@ -1,2 +1,2 @@\u{1b}[m\n\
+			 \u{1b}[31m--- one\u{1b}[m\n\
+			 \u{1b}[32m+++ one\u{1b}[m\n TWO\n"
+		),
+		"{lookalike:?}"
+	);
+
+	// Each hunk's header is cyan, a line keeps its carriage return inside its color, and the
+	// note that a file ends without a line break stays plain.
+	let lines: Vec<String> = (1..=12).map(|n| format!("line {n}\r")).collect();
+	write(&here, "far.md", &lines.join("\n"));
+	test.nib(&["commit", "--message", "Far"]).expect("commits");
+	let mut edited = lines.clone();
+	edited[0] = "LINE 1\r".to_owned();
+	edited[11] = "LINE 12\r".to_owned();
+	write(&here, "far.md", &edited.join("\n"));
+	let far = test
+		.nib(&["diff", "--color", "-U", "1", "far.md"])
+		.expect("diffs");
+	assert_eq!(
+		far,
+		"\u{1b}[1medited    far.md\u{1b}[m\n\
+		 \u{1b}[1m--- a/far.md\u{1b}[m\n\
+		 \u{1b}[1m+++ b/far.md\u{1b}[m\n\
+		 \u{1b}[36m@@ -1,2 +1,2 @@\u{1b}[m\n\
+		 \u{1b}[31m-line 1\r\u{1b}[m\n\
+		 \u{1b}[32m+LINE 1\r\u{1b}[m\n \
+		 line 2\r\n\
+		 \u{1b}[36m@@ -11,2 +11,2 @@\u{1b}[m\n \
+		 line 11\r\n\
+		 \u{1b}[31m-line 12\r\u{1b}[m\n\
+		 \\ No newline at end of file\n\
+		 \u{1b}[32m+LINE 12\r\u{1b}[m\n\
+		 \\ No newline at end of file\n",
+		"{far:?}"
+	);
+	let plain = test.nib(&["diff", "-U", "1", "far.md"]).expect("diffs");
+	assert_eq!(uncolored(&far), plain);
+
+	// nib show colors the diff of a revision the same way.
+	let shown = test
+		.nib(&["show", "--color", &revisions[1]])
+		.expect("shows");
+	assert!(
+		shown.contains("\u{1b}[31m-two\u{1b}[m\n\u{1b}[32m+TWO\u{1b}[m\n"),
+		"{shown:?}"
+	);
+	test.colors = true;
+	assert_eq!(test.nib(&["show", &revisions[1]]).expect("shows"), shown);
+	let plain = test
+		.nib(&["show", "--color=never", &revisions[1]])
+		.expect("shows");
+	assert_eq!(plain, uncolored(&shown));
+}
+
 #[test]
 fn restore_and_revert_write_the_copy_and_record_nothing() {
 	let (mut test, revisions) = with_two_commits("tree going back");

@@ -3045,6 +3045,7 @@ dependencies = [
 name = "nibkeep-cli"
 version = "0.1.0"
 dependencies = [
+ "anstyle-query",
  "apple-native-keyring-store",
  "clap",
  "ctrlc",

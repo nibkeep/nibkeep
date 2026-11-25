@@ -43,6 +43,8 @@ pub(crate) struct Test {
 	pub(crate) downloads: Option<PathBuf>,
 	/// The answers to questions on the terminal, in order, or `None` for no terminal.
 	pub(crate) answers: Option<VecDeque<&'static str>>,
+	/// Whether what `nib` prints goes to a terminal that shows colors.
+	pub(crate) colors: bool,
 	/// The questions asked on the terminal.
 	pub(crate) questions: Vec<String>,
 	/// The clipboard, if the environment has one.
@@ -136,6 +138,7 @@ impl Test {
 			languages: Vec::new(),
 			downloads: None,
 			answers: None,
+			colors: false,
 			questions: Vec::new(),
 			clipboard: Some(Rc::default()),
 			waited: Vec::new(),
@@ -283,6 +286,10 @@ impl Environment for Test {
 
 	fn can_ask(&self) -> bool {
 		self.answers.is_some()
+	}
+
+	fn colors(&self) -> bool {
+		self.colors
 	}
 
 	fn ask(&mut self, question: &str) -> io::Result<Option<String>> {

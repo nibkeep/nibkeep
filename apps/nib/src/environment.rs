@@ -22,6 +22,14 @@ pub struct Account {
 	pub full_name: Option<String>,
 }
 
+/// Whether the terminal takes the escapes that color text: on Windows, a console once it is
+/// asked to, or a terminal that names its type, as mintty does, whose output is no console;
+/// elsewhere, always.
+pub(crate) fn takes_escapes() -> bool {
+	anstyle_query::windows::enable_ansi_colors().unwrap_or(true)
+		|| anstyle_query::term_supports_ansi_color()
+}
+
 /// What commands need from the world.
 pub trait Environment {
 	/// The kind of random number generator.
@@ -111,6 +119,12 @@ pub trait Environment {
 	/// Whether [`Environment::ask`] has someone to ask, as before showing a code that would
 	/// be spent without an answer.
 	fn can_ask(&self) -> bool {
+		false
+	}
+
+	/// Whether what a command prints goes to a terminal that shows colors, so that a diff
+	/// is colored as Git colors it: no, unless the environment says so.
+	fn colors(&self) -> bool {
 		false
 	}
 
@@ -375,6 +389,14 @@ impl Environment for System {
 
 	fn can_ask(&self) -> bool {
 		io::stdin().is_terminal() && io::stderr().is_terminal()
+	}
+
+	fn colors(&self) -> bool {
+		// Not where NO_COLOR asks for none (https://no-color.org), nor on a dumb terminal.
+		io::stdout().is_terminal()
+			&& !anstyle_query::no_color()
+			&& anstyle_query::term_supports_color()
+			&& takes_escapes()
 	}
 
 	fn ask(&mut self, question: &str) -> io::Result<Option<String>> {
