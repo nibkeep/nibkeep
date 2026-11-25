@@ -58,14 +58,14 @@ How to run and record them is in `CONTRIBUTING.md` (Benchmarks), including profi
 
 `docs/Known-limits.md` lists what NibKeep does imperfectly. A fix that closes one limit and leaves a narrower one keeps the list as long as it was, and costs code each time. So limits are worked as follows.
 
-- **In the order of daily use.** The plan lists the limits that come before each stage of daily use (`docs/Plan.md`, "Known limits before daily use"), passwords first. Work on the list of the stage that comes next. A limit of a later stage waits, also one that a review has just found: record it with its mitigation, and go on. What a step itself breaks is no limit: fix it in the step.
-- **Formats before all.** A limit whose mitigation changes a format, or which changes count, goes on the plan's list for version 1 as a decision to make, whatever its stage.
+- **In the order the user sets.** Work on the limits the user names. Another limit waits, also one that a review has just found: record it with its mitigation, and go on. What a step itself breaks is no limit: fix it in the step.
+- **Formats before all.** A limit whose mitigation changes a format, or which changes count, needs a new version of that format ([version 1 of the formats](docs/Plan.md#version-1-of-the-formats)): bring it to the user as a decision to make.
 - **By cause, not one by one.** Before fixing a limit, read its group, and "Mitigations that several limits share" in Known limits. Where one mitigation closes several limits, build that one. When a review finds a hole, look for the others of its kind first, and decide each in one pass, as was done for which changes count: one rule of listing closed three holes.
 - **The remainder first.** Before the tests, write the limit that will stand in place of the one fixed, as Known limits would say it. A fix is worth building when nothing remains, or when what remains is of a lesser kind, as a wait in place of a loss. When the remainder weighs as much as what goes, or takes a paragraph to say, look for a simpler rule, a more cautious one too, or ask the user.
 - **The least rule.** A fix that adds to the log's rules, to governance or to sync says in its commit which simpler answer was weighed. A shape that only a rare act makes, such as two admins acting at once, gets the cheapest safe answer, such as giving nothing there.
 - **The infected device first.** When a step changes which changes count, what a device takes on another's word, or which keys a device is given, its first tests say what a device that turned against its user can write there, and what the others must still hold. The step also adds its new changes to what the simulation's infected replica writes (`crates/nibkeep-node/tests/infected_simulation.rs`).
-- **The list kept true, in the same commit.** Take the fixed limit out, or put its remainder into the group where it now belongs. Add what the step leaves behind, each with its group and its mitigation. Bring the plan's lists and the shared mitigations in line. Search Known limits for entries that the fix makes untrue, such as a mitigation that is now partly built.
-- **The balance, to the user.** The step's summary counts the limits it closed, narrowed, accepted and added, and names any that is left for version 1.
+- **The list kept true, in the same commit.** Take the fixed limit out, or put its remainder into the group where it now belongs. Add what the step leaves behind, each with its group and its mitigation. Bring the shared mitigations in line. Search Known limits for entries that the fix makes untrue, such as a mitigation that is now partly built.
+- **The balance, to the user.** The step's summary counts the limits it closed, narrowed, accepted and added, and names any that needs a new version of a format.
 
 ## 5. Working with the user
 
@@ -82,14 +82,15 @@ How to run and record them is in `CONTRIBUTING.md` (Benchmarks), including profi
 - **Git.** Work on `main` with no pull requests. Never force-push: a pushed commit stays as it is, and a fix goes on top. Commit only when asked; the development workflow of section 2 counts as asking. No DCO sign-off on the user's behalf.
 - **Deleting.** Look before deleting or overwriting. Don't `pkill` patterns that could match your own shell.
 - **Documentation:**
-  - No personal information about the user.
+  - No personal information about the user, nor anything of their own use of NibKeep, such as what they keep in it or on which devices.
+  - Other projects are named only neutrally, without judging them.
   - `HANDOVER.md`, which is not committed, holds only the stage of the implementation: what is built, what is not, and what waits for the user. It is no diary: how a step was built is in its commit, and a step's review, checks and CI runs are not kept.
   - `CLAUDE.local.md`, not committed either, holds what is true only of the user's computer, devices, accounts and data.
   - What others can use goes to the documentation: how to build and test in `CONTRIBUTING.md`, known limits and tests that fail now and then in `docs/Known-limits.md`, technical decisions and their reasons in `docs/Technical-design.md`, changed in place when a decision changes.
   - Keep politically sensitive place names out.
-- **Writing style.** Plain English, short sentences. A distinction people find elusive is a design smell.
+- **Writing style.** Plain English, short sentences, one idea each. Say a thing once, in the document it belongs to, and link to it from the others. Say what is, not how it came to be. A distinction people find elusive is a design smell.
 - **Threat priorities.** One infected device must not damage the others. Memory theft matters only for passwords and other secrets.
-- **Formats at version 1.** A format changes only by a new version, which every later version of NibKeep reads (`docs/Plan.md`, "Version 1 of the formats"). No doc may say that something is in daily use before the plan's known limits for that stage are closed.
+- **Formats at version 1.** A format changes only by a new version, which every later version of NibKeep reads (`docs/Plan.md`, "Version 1 of the formats").
 
 ## 7. Pitfalls
 
@@ -101,5 +102,5 @@ How to run and record them is in `CONTRIBUTING.md` (Benchmarks), including profi
 - **Unchecked queries.** When fetching from Wikidata, check queries against real answers. The service writes times without a leading `+`, which once silently dropped every date.
 - **The power-cut test.** LazyFS itself sometimes aborts mid-run ("terminate called without an active exception"), and the test's child, or the test process itself, dies of SIGBUS (Known limits, Tests, says when). No data check has failed this way. Rerun it.
 - **CI.** A job that does not start at all is not a code failure: look at why it did not start. Its jobs take the latest stable Rust, so after a release Formatting and Clippy can fail on code that a commit did not touch: `rustup update stable` first, then fix and commit that apart.
-- **The clipboard on the user's computer.** A test that copies, as those of `nib secret copy` do, replaces what the user copied. Run them where the user does not see them, with a clipboard of their own; `CLAUDE.local.md` says how on the desktop.
+- **The clipboard on the user's computer.** A test that copies, as those of `nib secret copy` do, replaces what the user copied. Run them where the user does not see them, with a clipboard of their own, as `CLAUDE.local.md` may say.
 - **Benchmarks in memory.** On Arch, `/tmp` is tmpfs: a library measured there never reaches a disk, and synchronizing costs nothing. `bench-record.py` keeps its libraries in `target/bench-libraries`; by hand, give `nibkeep-bench` a directory on a disk too.

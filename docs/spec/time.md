@@ -2,7 +2,7 @@
 
 - **Version:** 1
 
-NibKeep distinguishes two kinds of time ([6.3](../Design.md#63-time)): when something was true, the *valid time*, and when it was recorded, the *system time*. This specification describes how both are written and how valid time answers the questions of time travel. The reasons for the choices are in the [technical design](../Technical-design.md#3-time).
+NibKeep has two kinds of time ([6.3](../Design.md#63-time)): the *valid time*, when something was true, and the *system time*, when it was recorded. This specification says how both are written and how valid time answers the questions of time travel. The reasons are in the [technical design](../Technical-design.md#3-time).
 
 ## 1. Valid time
 
@@ -26,9 +26,9 @@ Further rules:
 
 - A year has exactly four digits, or `Y` and more than four digits, with at most 15 digits in all. `-0000` is not a year.
 - Only the last one or two digits of a four-digit year without a sign can be unspecified. A year with unspecified digits stands alone, without month or day. An unspecified month is followed by an unspecified day or by nothing.
-- A time runs from `00:00:00` to `23:59:59`; there are no leap seconds. A time zone is `Z` for UTC, `+hh` or `-hh` for whole hours, and `+hh:mm` or `-hh:mm` otherwise, from `-12` to `+14`. `+00`, `-00`, `+00:00` and `+04:00` are rejected, because `Z` and `+04` write the same offsets.
-- An interval's ends are dates without times, possibly qualified. Both ends cannot be open or unknown. The start cannot be later than the end: an interval is rejected when its start date begins after its end date ends, compared as written, before qualifiers widen them. So `1985~/1984` is rejected.
-- Every value has exactly one text form: the text is printed back exactly as it was accepted. Software that imports dates from elsewhere converts them to these forms.
+- A time runs from `00:00:00` to `23:59:59`, with no leap seconds. A time zone is `Z` for UTC, `+hh` or `-hh` for whole hours, and `+hh:mm` or `-hh:mm` otherwise, from `-12` to `+14`. `+00`, `-00`, `+00:00` and `+04:00` are rejected, as `Z` and `+04` write the same offsets.
+- An interval's ends are dates without times, possibly qualified. At most one end is open or unknown. An interval is rejected when its start date begins after its end date ends, compared as written, before qualifiers widen them. So `1985~/1984` is rejected.
+- Every value has exactly one text form: it is printed back exactly as it was accepted. Software that imports dates from elsewhere converts them to these forms.
 
 In CBOR, valid time is a text string.
 
@@ -52,15 +52,15 @@ Every date covers a range of days, from the first to the last day it could mean.
 
 Seasons follow the meteorological seasons of the northern hemisphere.
 
-A qualified date (`?`, `~` or `%`) widens its range by one unit of its precision on each side: `1985~` covers 1984 to 1986, `198X?` covers 1970 to 1999, `1985-04~` covers March to May 1985, a season widens by three months, and a day by one day. Unspecified parts add no precision: `1985-04-XX~` widens like `1985-04~`, and `2004-XX~` like `2004~`. A qualified date is never certain.
+A qualified date (`?`, `~` or `%`) widens its range by one unit of its precision on each side. `1985~` covers 1984 to 1986, `198X?` 1970 to 1999, and `1985-04~` March to May 1985. A season widens by three months, a day by one day. Unspecified parts add no precision: `1985-04-XX~` widens like `1985-04~`, and `2004-XX~` like `2004~`. A qualified date is never certain.
 
 ## 2. Time travel
 
-Time travel asks two questions about a day ([time travel](../Design.md#63-time)). Each answer is *yes*, *uncertain*, *no*, or *date unknown* when there is no valid time at all, in which case the fact is shown with a "date unknown" marker.
+Time travel asks two questions about a day ([time travel](../Design.md#63-time)). The answer is *yes*, *uncertain* or *no*. A fact with no valid time at all gets *date unknown*, and is shown with a "date unknown" marker.
 
 **Does a state hold on that day?** For a single date, the state holds throughout the date's range. The answer is *yes* within the range of an unqualified date without unspecified digits, *uncertain* within the range of any other date, and *no* outside it.
 
-For an interval, the start lies somewhere within the range of the start date, and the end within the range of the end date. The answer is *yes* between the last possible start and the first possible end, *uncertain* elsewhere between the first possible start and the last possible end, and *no* outside. An open end (`..`) means the state held from the beginning of time, or still holds. An unknown end (an empty end) means nobody knows when the state started or ended: the answer is *uncertain* on every day that the other end does not rule out, and never *yes*.
+For an interval, the start lies somewhere in the start date's range, and the end in the end date's range. The answer is *yes* between the last possible start and the first possible end, *uncertain* elsewhere between the first possible start and the last possible end, and *no* outside. An open end (`..`) means the state held from the beginning of time, or still holds. An unknown end (an empty end) means nobody knows when the state started or ended. The answer is then *uncertain* on every day that the other end does not rule out, and never *yes*.
 
 The [data model](model.md#6-current-values) says which question applies to a value: an interval is a state, and any other date an event. In a field with one value, a value also stops where the next one starts.
 
@@ -72,10 +72,10 @@ System time is a hybrid logical clock timestamp: a pair of integers, the millise
 
 A device's clock follows these rules:
 
-1. **A new local event** gets the device's wall clock time with counter 0, if that is later than the last timestamp. Otherwise it gets the last timestamp's milliseconds and the next counter value. When the counter is used up, the milliseconds advance by one. Timestamps therefore never go backwards, even when the wall clock does.
+1. **A new local event** gets the device's wall clock time with counter 0, if that is later than the last timestamp. Otherwise it gets the last timestamp's milliseconds and the next counter value. When the counter is used up, the milliseconds advance by one. So timestamps never go backwards, even when the wall clock does.
 2. **A timestamp received from another device** becomes the last timestamp if it is later, so every later local event comes after it.
-3. **A received timestamp too far ahead** of the device's wall clock, by more than an allowed drift, is rejected and does not change the clock. What happens to the data that carried it is up to the caller.
-4. After a restart, the clock resumes from the latest timestamp it handed out or received. Data that has been checked but not accepted yet, such as a change that waits for its parents, does not change the clock; its timestamp counts once the data is accepted.
-5. **The last millisecond** is 9999-12-31T23:59:59.999Z. A wall clock that reads later counts as that millisecond. Received timestamps and timestamps to resume from that are later are rejected. A clock that has handed out the last counter value of the last millisecond hands out no more timestamps.
+3. **A received timestamp too far ahead** of the device's wall clock, by more than an allowed drift, is rejected and leaves the clock unchanged. The caller decides what happens to the data that carried it.
+4. After a restart, the clock resumes from the latest timestamp it handed out or received. Data that is checked but not yet accepted, such as a change that waits for its parents, does not change the clock. Its timestamp counts once the data is accepted.
+5. **The last millisecond** is 9999-12-31T23:59:59.999Z. A wall clock that reads later counts as that millisecond. Received timestamps, and timestamps to resume from, that are later are rejected. A clock that has handed out the last counter value of the last millisecond hands out no more timestamps.
 
-Because a change's timestamp is later than the timestamps of the changes it builds on, the changes with timestamps up to a given time form a consistent history.
+A change's timestamp is later than those of the changes it builds on. So the changes with timestamps up to a given time form a consistent history.

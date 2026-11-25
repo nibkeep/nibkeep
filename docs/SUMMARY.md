@@ -19,4 +19,3 @@
 - [Development plan](Plan.md)
 - [Known limits](Known-limits.md)
 - [Working with AI agents](Agents.md)
-- [Prior art](Prior-Art.md)

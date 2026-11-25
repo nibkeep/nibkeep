@@ -1,6 +1,8 @@
 # Specifications
 
-The formats that NibKeep stores and sends, described precisely enough to write another implementation ([P3](../Design.md#p3-your-data-outlives-nibkeep)). A format is specified here before anything relies on it. The specifications are at version 1: every change to a format changes its version, and for structures that carry one, their suite number. Each new version says whether engines that know only the version before still read and write what it stores, or must leave it alone ([technical design](../Technical-design.md#710-separate-apps-on-one-library)). All of them left draft together, at version 1 ([the plan](../Plan.md#version-1-of-the-formats)).
+These are the formats that NibKeep stores and sends, described precisely enough to write another implementation ([P3](../Design.md#p3-your-data-outlives-nibkeep)). A format is specified here before anything relies on it.
+
+All the specifications are at version 1 ([the plan](../Plan.md#version-1-of-the-formats)). Every change to a format changes its version and, for structures that carry one, their suite number. Each new version says whether engines that know only the previous version can still read and write what it stores, or must leave it alone ([technical design](../Technical-design.md#710-separate-apps-on-one-library)).
 
 | Specification | Covers |
 | --- | --- |
