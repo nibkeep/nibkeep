@@ -3,11 +3,11 @@
 NibKeep is a local-first, peer-to-peer system for personal data. It keeps a typed, versioned graph of the things in your life, together with the files they refer to, and replicates it across your own devices and those of the people you share it with. It needs no company's server.
 
 > [!NOTE]
-> NibKeep is in early development. Its crates are on [crates.io](https://crates.io/crates/nibkeep) at 0.x, while their API still changes freely. Its formats are at version 1: from now on they change only by new versions, which every later version of NibKeep reads. What it still does imperfectly is in the [known limits](docs/Known-limits.md).
+> NibKeep is in early development. Its crates are on [crates.io](https://crates.io/crates/nibkeep) at 0.x, while their API still changes freely. Its formats are at version 1: from now on they change only by new versions, which every later version of NibKeep reads. What it still does imperfectly is in the [known limits](https://nibkeep.github.io/nibkeep/Known-limits.html).
 
 ## Documents
 
-The [documentation](docs/README.md) describes what NibKeep is for, how it is built and why, the formats it stores and sends, and how it gets built step by step. Start with the [design guidelines](docs/Design.md), then the [technical design](docs/Technical-design.md). The documents also read as [a book](https://nibkeep.github.io/nibkeep/), with a sidebar and search; [CONTRIBUTING.md](CONTRIBUTING.md#working-on-the-documentation) says how to build it yourself.
+The [documentation](https://nibkeep.github.io/nibkeep/) says what NibKeep is for, how it is built and why, which formats it stores and sends, and how it gets built step by step. Start with the [design guidelines](https://nibkeep.github.io/nibkeep/Design.html), then the [technical design](https://nibkeep.github.io/nibkeep/Technical-design.html). The same documents are in [`docs/`](https://github.com/nibkeep/nibkeep/tree/main/docs), and [CONTRIBUTING.md](https://github.com/nibkeep/nibkeep/blob/main/CONTRIBUTING.md#working-on-the-documentation) says how to build the book yourself.
 
 ## Building
 
@@ -34,8 +34,8 @@ A program of your own takes the engine as one crate, [`nibkeep`](https://docs.rs
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Please report security problems privately, as described in [SECURITY.md](SECURITY.md).
+See [CONTRIBUTING.md](https://github.com/nibkeep/nibkeep/blob/main/CONTRIBUTING.md). Please report security problems privately, as described in [SECURITY.md](https://github.com/nibkeep/nibkeep/blob/main/SECURITY.md).
 
 ## License
 
-The code is licensed under either the [MIT license](LICENSE-MIT) or the [Apache License 2.0](LICENSE-APACHE), at your option. The documentation and specifications in `docs/` are licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+The code is licensed under either the [MIT license](https://github.com/nibkeep/nibkeep/blob/main/LICENSE-MIT) or the [Apache License 2.0](https://github.com/nibkeep/nibkeep/blob/main/LICENSE-APACHE), at your option. The documentation and specifications in `docs/` are licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).

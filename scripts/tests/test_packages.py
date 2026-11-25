@@ -5,6 +5,7 @@ states them, and what crates.io asks of a package.
 """
 
 import pathlib
+import re
 import tomllib
 import unittest
 
@@ -14,6 +15,8 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent.parent
 LICENSES = ("LICENSE-MIT", "LICENSE-APACHE")
 # Tools of this repository's own tests and benchmarks, which are not published.
 UNPUBLISHED = {"nibkeep-testkit", "nibkeep-generate", "nibkeep-end-to-end"}
+# The target of a Markdown link, inline or by reference.
+LINK = re.compile(r"\]\(\s*<?([^)\s>]+)|^\s{0,3}\[[^\]]+\]:\s*<?(\S+?)>?$", re.M)
 
 
 def manifests():
@@ -81,6 +84,20 @@ class Packages(unittest.TestCase):
 			for table in manifest.get("target", {}).values():
 				used |= set(table.get("dependencies", {}))
 			self.assertFalse(used & UNPUBLISHED, manifest["package"]["name"])
+
+	def test_the_readme_of_every_published_package_links_by_full_addresses(self):
+		# crates.io takes a relative link in a package's readme as relative to the package's
+		# own folder in the repository, where the documents it names are not.
+		for folder, manifest in manifests().items():
+			if not published(manifest):
+				continue
+			readme = manifest["package"]["readme"]
+			path = ROOT / workspace()["package"]["readme"] if isinstance(readme, dict) else folder / readme
+			text = re.sub(r"^```.*?^```", "", path.read_text(encoding="utf-8"), flags=re.M | re.S)
+			text = re.sub(r"`[^`\n]*`", "", text)
+			for inline, reference in LINK.findall(text):
+				with self.subTest(package=manifest["package"]["name"], link=inline or reference):
+					self.assertRegex(inline or reference, r"^(https?://|#)")
 
 
 if __name__ == "__main__":
