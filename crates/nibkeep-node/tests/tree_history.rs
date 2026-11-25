@@ -282,6 +282,60 @@ fn a_revision_s_diff_shows_what_it_changed_and_nothing_else() {
 }
 
 #[test]
+fn a_diff_shows_as_many_unchanged_lines_around_a_change_as_asked() {
+	let mut rng = TestRng::new("tree diff context");
+	let (library, tree, root, revisions) = with_history("tree diff context", &mut rng);
+	let personal = library.personal_space();
+	let patch = |diffs: &[nibkeep_node::FileDiff], path: &str| {
+		let diff = diffs.iter().find(|diff| diff.path == path).expect("a diff");
+		diff.patch.clone().expect("a text diff")
+	};
+	// Three lines unless asked, as Git shows.
+	assert_eq!(nibkeep_node::DIFF_CONTEXT, 3);
+	let unasked = library
+		.revision_diff(personal, revisions[2], false)
+		.expect("diffs")
+		.expect("a revision");
+	assert!(
+		patch(&unasked, "notes.md").contains(" TWO\n"),
+		"{unasked:?}"
+	);
+	// None: the changed lines alone.
+	let none = library
+		.revision_diff_with_context(personal, revisions[2], (false, 0))
+		.expect("diffs")
+		.expect("a revision");
+	let none = patch(&none, "notes.md");
+	assert!(none.contains("@@ -4 +4 @@\n-four\n+FOUR\n"), "{none}");
+	assert!(!none.contains("three"), "{none}");
+	// One, and the copy's diff takes it too.
+	write(&root, "notes.md", "ONE\nTWO\nthree\nFOUR\n");
+	let one = library
+		.tree_diff_with_context(personal, tree, None, (false, 1))
+		.expect("diffs");
+	let one = patch(&one, "notes.md");
+	assert!(one.contains("@@ -1,2 +1,2 @@\n-one\n+ONE\n TWO\n"), "{one}");
+	assert!(!one.contains("three"), "{one}");
+	// More than the file has: all of it, between two revisions too.
+	let all = library
+		.tree_diff_with_context(
+			personal,
+			tree,
+			Some((
+				TreePoint::Revision(revisions[1]),
+				TreePoint::Revision(revisions[2]),
+			)),
+			(false, usize::MAX),
+		)
+		.expect("diffs");
+	let all = patch(&all, "notes.md");
+	assert!(
+		all.contains("@@ -1,4 +1,4 @@\n one\n TWO\n three\n"),
+		"{all}"
+	);
+}
+
+#[test]
 fn blame_names_the_revision_that_last_changed_each_line_across_moves() {
 	let mut rng = TestRng::new("tree blame");
 	let (mut library, tree, root, revisions) = with_history("tree blame", &mut rng);

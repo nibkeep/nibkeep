@@ -13,8 +13,8 @@ use clap::Subcommand;
 use nibkeep_base::{EntityId, SpaceId};
 use nibkeep_git::Git;
 use nibkeep_node::{
-	BlameLine, Change, Commit, Committed, FileDiff, Library, NodeError, Reverted, ToClone, Tree,
-	TreeChange, TreeLogEntry, TreePoint, TreeSecrets, TreeStatus, Updated, Written,
+	BlameLine, Change, Commit, Committed, DIFF_CONTEXT, FileDiff, Library, NodeError, Reverted,
+	ToClone, Tree, TreeChange, TreeLogEntry, TreePoint, TreeSecrets, TreeStatus, Updated, Written,
 };
 use serde_json::json;
 
@@ -154,6 +154,10 @@ pub enum TreeCommand {
 		/// Shows the lines of secret files too, asking for the secrets' passphrase.
 		#[arg(long)]
 		secrets: bool,
+		/// How many unchanged lines to show around each change, as Git and Mercurial take
+		/// it: 3 unless given, 0 for the changed lines alone.
+		#[arg(short = 'U', long, value_name = "LINES")]
+		unified: Option<usize>,
 	},
 	/// Names the revision and author that last changed each line.
 	///
@@ -1023,6 +1027,7 @@ fn read_command<E: Environment>(
 			until,
 			tree,
 			secrets,
+			unified,
 		} => {
 			let (tree, root) = named_or_here(library, tree.as_deref(), environment)?;
 			let space = library.default_space();
@@ -1048,7 +1053,8 @@ fn read_command<E: Environment>(
 				[from] => Some((TreePoint::Revision(from), TreePoint::Now)),
 				[from, to, ..] => Some((TreePoint::Revision(from), TreePoint::Revision(to))),
 			};
-			let mut diffs = library.tree_diff_with(space, tree, between, *secrets)?;
+			let shown = (*secrets, unified.unwrap_or(DIFF_CONTEXT));
+			let mut diffs = library.tree_diff_with_context(space, tree, between, shown)?;
 			if !rest.is_empty() || !paths.is_empty() {
 				let mut chosen = Vec::new();
 				for path in paths {

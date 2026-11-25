@@ -50,7 +50,7 @@ use super::Library;
 use super::entities::NewValue;
 use crate::NodeError;
 
-pub use self::diff::FileDiff;
+pub use self::diff::{DIFF_CONTEXT, FileDiff};
 pub use self::history::{BlameLine, TreeLogEntry, TreePoint};
 pub use self::paths::is_safe_tree_path;
 pub use self::update::Updated;

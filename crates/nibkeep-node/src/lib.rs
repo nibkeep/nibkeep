@@ -75,10 +75,10 @@ pub use library::thumbnails::{
 	MOST_PICTURE_BYTES, Thumbnail, ThumbnailCounts, ThumbnailOf, Thumbnailer, ThumbnailsMade,
 };
 pub use library::trees::{
-	BlameLine, Change, CloneFolder, Commit, Committed, CopiesRemoved, CutShort, FileDiff,
-	GitRepository, InTree, MadeSecret, RecordedRepository, Reverted, StartPreview, ToClone, Tree,
-	TreeChange, TreeEntry, TreeEntryKind, TreeLogEntry, TreePoint, TreeSecrets, TreeStarted,
-	TreeStatus, Updated, Written, is_safe_tree_path, tree_path_at,
+	BlameLine, Change, CloneFolder, Commit, Committed, CopiesRemoved, CutShort, DIFF_CONTEXT,
+	FileDiff, GitRepository, InTree, MadeSecret, RecordedRepository, Reverted, StartPreview,
+	ToClone, Tree, TreeChange, TreeEntry, TreeEntryKind, TreeLogEntry, TreePoint, TreeSecrets,
+	TreeStarted, TreeStatus, Updated, Written, is_safe_tree_path, tree_path_at,
 };
 pub use library::verify::{Problem, Report, SpaceReport};
 pub use library::waiting::{

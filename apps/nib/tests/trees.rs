@@ -890,6 +890,56 @@ fn show_of_a_revision_shows_what_it_changed() {
 }
 
 #[test]
+fn diff_and_show_take_how_many_lines_to_show_around_a_change() {
+	let mut test = library("tree diff context");
+	let here = test.here.clone();
+	let lines: Vec<String> = (1..=20).map(|n| format!("line {n}")).collect();
+	write(&here, "long.md", &format!("{}\n", lines.join("\n")));
+	let started = test.json(&["init", "--yes", "--message", "Start"]);
+	let start = started["revision"].as_str().expect("a revision").to_owned();
+	let mut edited = lines.clone();
+	edited[9] = "LINE 10".to_owned();
+	write(&here, "long.md", &format!("{}\n", edited.join("\n")));
+	let patch = |diff: &serde_json::Value| diff[0]["patch"].as_str().expect("a patch").to_owned();
+
+	// Three lines around a change unless asked, as Git shows.
+	let three = patch(&test.json(&["diff"]));
+	assert!(three.contains("@@ -7,7 +7,7 @@"), "{three}");
+	assert!(
+		three.contains(" line 7\n") && !three.contains(" line 6\n"),
+		"{three}"
+	);
+	// None: the changed lines alone.
+	let none = patch(&test.json(&["diff", "-U", "0"]));
+	assert!(none.contains("@@ -10 +10 @@"), "{none}");
+	assert!(!none.contains(" line 9\n"), "{none}");
+	// More than the file holds: all of it.
+	let all = patch(&test.json(&["diff", "--unified", "1000", "long.md"]));
+	assert!(all.contains("@@ -1,20 +1,20 @@"), "{all}");
+	assert!(
+		all.contains(" line 1\n") && all.contains(" line 20\n"),
+		"{all}"
+	);
+
+	// A revision shows the same way.
+	let second = test.json(&["commit", "--message", "Shout"]);
+	let revision = second["revision"].as_str().expect("a revision").to_owned();
+	let shown = test.json(&["show", &revision, "-U", "1"]);
+	let one = shown["diff"][0]["patch"].as_str().expect("a patch");
+	assert!(one.contains("@@ -9,3 +9,3 @@"), "{one}");
+	let printed = test
+		.nib(&["show", &revision, "--unified", "0"])
+		.expect("shows");
+	assert!(printed.contains("-line 10\n+LINE 10\n"), "{printed}");
+	assert!(!printed.contains(" line 9\n"), "{printed}");
+	// Between two revisions, as for the copy.
+	let between = test
+		.nib(&["diff", "-U", "0", &start, &revision])
+		.expect("diffs");
+	assert!(between.contains("@@ -10 +10 @@"), "{between}");
+}
+
+#[test]
 fn restore_and_revert_write_the_copy_and_record_nothing() {
 	let (mut test, revisions) = with_two_commits("tree going back");
 	let here = test.here.clone();

@@ -423,6 +423,10 @@ pub enum Command {
 		/// --on, as it was on that day.
 		#[arg(long, value_name = "WHEN", value_parser = parse_moment)]
 		as_of: Option<Moment>,
+		/// Of a tree's revision, how many unchanged lines to show around each change it
+		/// made, as nib diff takes it: 3 unless given.
+		#[arg(short = 'U', long, value_name = "LINES")]
+		unified: Option<usize>,
 	},
 	/// Moves an entity to another space, such as one you share.
 	///
@@ -5251,12 +5255,13 @@ fn init_command<E: Environment>(
 fn show_command<E: Environment>(
 	library: &Library,
 	(reference, on, as_of): (&str, Option<Day>, Option<Moment>),
-	json: bool,
+	(unified, json): (Option<usize>, bool),
 	environment: &E,
 	output: &mut dyn Write,
 ) -> Result<(), CliError> {
 	let (space, entity) = library.locate_or_deleted(reference)?;
-	let Some(diff) = library.revision_diff(space, entity, false)? else {
+	let context = unified.unwrap_or(nibkeep_node::DIFF_CONTEXT);
+	let Some(diff) = library.revision_diff_with_context(space, entity, (false, context))? else {
 		return show_entity(
 			library,
 			(space, entity),
@@ -5367,9 +5372,18 @@ fn reading_command<E: Environment>(
 				output,
 			)
 		}
-		Command::Show { entity, on, as_of } => {
-			show_command(library, (entity, *on, *as_of), json, environment, output)
-		}
+		Command::Show {
+			entity,
+			on,
+			as_of,
+			unified,
+		} => show_command(
+			library,
+			(entity, *on, *as_of),
+			(*unified, json),
+			environment,
+			output,
+		),
 		Command::History { entity, field } => history_command(
 			library,
 			(entity, field.as_deref()),

@@ -19,6 +19,10 @@ use crate::library::Library;
 /// How many of a file's first bytes tell whether it is text: as many as Git reads.
 const TEXT_HEAD: usize = 8_000;
 
+/// How many unchanged lines a diff shows around each change, unless asked for another
+/// number: three, as Git and Mercurial show.
+pub const DIFF_CONTEXT: usize = 3;
+
 /// How one file or link of a tree differs between two points.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct FileDiff {
@@ -35,6 +39,15 @@ pub struct FileDiff {
 	/// secrets unlocked
 	/// ([technical design: secrets in trees](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#151-secrets-in-trees)).
 	pub secret: bool,
+}
+
+/// What a diff shows of each file's lines.
+#[derive(Clone, Copy)]
+struct Shown {
+	/// Whether the lines of secret files show, read with the secrets unlocked.
+	secrets: bool,
+	/// How many unchanged lines show around each change.
+	context: usize,
 }
 
 /// What one side of a diff holds at a path.
@@ -81,13 +94,31 @@ impl Library {
 		between: Option<(TreePoint, TreePoint)>,
 		secrets: bool,
 	) -> Result<Vec<FileDiff>, NodeError> {
+		self.tree_diff_with_context(space, tree, between, (secrets, DIFF_CONTEXT))
+	}
+
+	/// How a tree differs, as [`Library::tree_diff_with`] tells it, with `context` unchanged
+	/// lines around each change in place of [`DIFF_CONTEXT`]: none shows the changed lines
+	/// alone, and as many as a file has show all of it.
+	///
+	/// # Errors
+	///
+	/// As [`Library::tree_diff`].
+	pub fn tree_diff_with_context(
+		&self,
+		space: SpaceId,
+		tree: EntityId,
+		between: Option<(TreePoint, TreePoint)>,
+		(secrets, context): (bool, usize),
+	) -> Result<Vec<FileDiff>, NodeError> {
+		let shown = Shown { secrets, context };
 		let mut diffs = match between {
 			Some((from, to)) => {
 				let before = self.tree_state_at(space, tree, from)?;
 				let after = self.tree_state_at(space, tree, to)?;
-				self.diff_states(space, (&before, &after), secrets)?
+				self.diff_states(space, (&before, &after), shown)?
 			}
-			None => self.diff_copy(space, tree, secrets)?,
+			None => self.diff_copy(space, tree, shown)?,
 		};
 		diffs.sort_by(|a, b| a.path.cmp(&b.path));
 		Ok(diffs)
@@ -107,6 +138,21 @@ impl Library {
 		revision: EntityId,
 		secrets: bool,
 	) -> Result<Option<Vec<FileDiff>>, NodeError> {
+		self.revision_diff_with_context(space, revision, (secrets, DIFF_CONTEXT))
+	}
+
+	/// What a revision changed, as [`Library::revision_diff`] tells it, with `context`
+	/// unchanged lines around each change in place of [`DIFF_CONTEXT`].
+	///
+	/// # Errors
+	///
+	/// As [`Library::revision_diff`].
+	pub fn revision_diff_with_context(
+		&self,
+		space: SpaceId,
+		revision: EntityId,
+		(secrets, context): (bool, usize),
+	) -> Result<Option<Vec<FileDiff>>, NodeError> {
 		let Some(tree) = self.tree_of_revision(space, revision)? else {
 			return Ok(None);
 		};
@@ -116,7 +162,8 @@ impl Library {
 		};
 		let parts: BTreeSet<_> = changes.iter().copied().collect();
 		let (after, before) = self.tree_states_of_changes(space, tree, last, &parts)?;
-		let mut diffs = self.diff_states(space, (&before, &after), secrets)?;
+		let shown = Shown { secrets, context };
+		let mut diffs = self.diff_states(space, (&before, &after), shown)?;
 		diffs.sort_by(|a, b| a.path.cmp(&b.path));
 		Ok(Some(diffs))
 	}
@@ -126,7 +173,7 @@ impl Library {
 		&self,
 		space: SpaceId,
 		(before, after): (&TreeState, &TreeState),
-		secrets: bool,
+		shown: Shown,
 	) -> Result<Vec<FileDiff>, NodeError> {
 		let entities: BTreeSet<EntityId> = before
 			.by_entity
@@ -160,8 +207,7 @@ impl Library {
 			}
 			let old = old.as_ref().map_or(Side::Nothing, Side::Version);
 			let new = new.as_ref().map_or(Side::Nothing, Side::Version);
-			let shown = (secret, secrets);
-			diffs.push(self.file_diff(space, (path, change), (&old, &new), shown)?);
+			diffs.push(self.file_diff(space, (path, change), (&old, &new), (secret, shown))?);
 		}
 		Ok(diffs)
 	}
@@ -171,7 +217,7 @@ impl Library {
 		&self,
 		space: SpaceId,
 		tree: EntityId,
-		secrets: bool,
+		shown: Shown,
 	) -> Result<Vec<FileDiff>, NodeError> {
 		let _locked = self.lock_trees()?;
 		let root = self.root_here(space, tree)?;
@@ -198,22 +244,21 @@ impl Library {
 			};
 			let path = pending.path.clone();
 			let at = (path, pending.change.clone());
-			let shown = (pending.secret, secrets);
-			diffs.push(self.file_diff(space, at, (&old, &new), shown)?);
+			diffs.push(self.file_diff(space, at, (&old, &new), (pending.secret, shown))?);
 		}
 		Ok(diffs)
 	}
 
 	/// How one file differs between two sides; of a secret file, only that it changed unless
-	/// `shown` asks for its lines.
+	/// `shown` asks for the lines of secret files.
 	fn file_diff(
 		&self,
 		space: SpaceId,
 		(path, change): (String, Change),
 		(old, new): (&Side<'_>, &Side<'_>),
-		(secret, shown): (bool, bool),
+		(secret, shown): (bool, Shown),
 	) -> Result<FileDiff, NodeError> {
-		if secret && !shown {
+		if secret && !shown.secrets {
 			return Ok(FileDiff {
 				path,
 				change,
@@ -236,6 +281,7 @@ impl Library {
 				let old_text = String::from_utf8_lossy(old_bytes);
 				let new_text = String::from_utf8_lossy(new_bytes);
 				let made = diffy::DiffOptions::new()
+					.set_context_len(shown.context)
 					.set_original_filename(format!("a/{from}"))
 					.set_modified_filename(format!("b/{path}"))
 					.create_patch(&old_text, &new_text)
