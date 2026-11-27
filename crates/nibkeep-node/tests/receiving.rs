@@ -4,13 +4,13 @@
 //!
 //! [technical design: saving in batches]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#77-saving-in-batches
 
-mod common;
+use crate::common;
 
 use std::path::Path;
 use std::sync::mpsc;
 
-use common::in_process::Pipe;
-use common::{now, protection};
+use crate::common::in_process::Pipe;
+use crate::common::{now, protection};
 use nibkeep_governance::{NAME, PERSON};
 use nibkeep_model::{Name, Value};
 use nibkeep_node::{Joining, Library, Syncing, Unlocker};

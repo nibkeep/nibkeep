@@ -6,12 +6,10 @@
 //!
 //! [technical design: recovery codes]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes
 
-mod common;
-
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use common::devices::{Devices, bytes};
+use crate::common::devices::{Devices, bytes};
 use nibkeep_crypto::RecoveryCode;
 use nibkeep_node::{Backup, BackupUpdate, NewBackup, RECOVERY_FILE, RecoveryFile};
 

@@ -23,6 +23,8 @@ cargo deny check
 
 Continuous integration takes the latest stable Rust, so after a release its formatting and Clippy jobs can fail on code that nobody changed: `rustup update stable`, then `cargo fmt --all` and `cargo clippy --fix`. Debug builds of the workspace and its tests are large, and `target/debug` grows by tens of gigabytes a day of work: when builds slow down as the disk fills, delete it and `fuzz/target`.
 
+Each crate's integration tests build into one program, `tests/main.rs`, in which each file of `tests/` is a module, so that the debug information of the crate and its dependencies is linked once, not once for each file. A new file there needs its `mod` line, which a test checks. A test's name starts with its file's, so `cargo test -p nibkeep-node --test tests -- spaces::` runs the tests of `spaces.rs`. A file whose tests change something for the whole process that the crate's other tests must not see, such as the default keystore or the program's name, is a program of its own, a `[[test]]` in the crate's `Cargo.toml`. As the tests of every file run at once, a test's folders take names that no other test of the program takes.
+
 `cargo install --locked --path apps/nib` installs `nib` and, beside it, `nibsync`, which syncs the libraries turned on with `nib sync --at-login on` ([technical design](docs/Technical-design.md#106-syncing-from-login)).
 
 `NIBKEEP_STATE` names another folder for its list than this computer's folder of NibKeep's state; it keeps `nib` and `nibsync` from the person's login entry, which would not serve that list, as `NIBKEEP_NO_LOGIN_ENTRY` does alone. `NIBKEEP_NO_KEYSTORE` keeps `nib` and `nibsync` from the computer's keystore, as tests run them. `NIBKEEP_CEILING` names a folder in which and above which `nib` looks for no library, as Git's `GIT_CEILING_DIRECTORIES` does, so that a test never finds yours.
@@ -111,11 +113,11 @@ for part in libs/libpcache lazyfs; do
 done
 ```
 
-Then name its program when running the tests; without it, each test says so and passes. One cuts the power under a library that one program writes to, under one that two programs write to at once, under one that receives a sync, under a library and its copy of a tree with secret files, which commits its own and updates its copy with another device's, and under one that deletes a space it dropped, made on the real disk and copied to LazyFS for each cut, as LazyFS tells no free space, without which a library takes no other replica's account; the other under an encrypted database. The last of the library's runs without LazyFS too, with crashes alone, in the usual tests on every system but iOS (`--test tree_crashes`):
+Then name its program when running the tests; without it, each test says so and passes. One cuts the power under a library that one program writes to, under one that two programs write to at once, under one that receives a sync, under a library and its copy of a tree with secret files, which commits its own and updates its copy with another device's, and under one that deletes a space it dropped, made on the real disk and copied to LazyFS for each cut, as LazyFS tells no free space, without which a library takes no other replica's account; the other under an encrypted database. The last of the library's runs without LazyFS too, with crashes alone, in the usual tests on every system but iOS (`tree_crashes::`):
 
 ```sh
-NIBKEEP_LAZYFS=~/Work/lazyfs/lazyfs/build/lazyfs cargo test -p nibkeep-node --test power_loss
-NIBKEEP_LAZYFS=~/Work/lazyfs/lazyfs/build/lazyfs cargo test -p nibkeep-store --test power_loss
+NIBKEEP_LAZYFS=~/Work/lazyfs/lazyfs/build/lazyfs cargo test -p nibkeep-node --test tests -- power_loss::
+NIBKEEP_LAZYFS=~/Work/lazyfs/lazyfs/build/lazyfs cargo test -p nibkeep-store --test tests -- power_loss::
 ```
 
 `NIBKEEP_POWER_LOSS_ROUNDS` sets how many power cuts each makes, and how many crashes `tree_crashes` makes; the long tests make 200. The encrypted database's test fails when LazyFS keeps its files on a btrfs disk, and passes with `CARGO_TARGET_DIR` on tmpfs; the library's passes on both.
@@ -173,7 +175,7 @@ A new revision starts a new series, whose numbers compare with no earlier one. S
 The importer's recipe, `RECIPE` in `crates/nibkeep-generate/src/real.rs`, numbers what an import holds. A new recipe starts a new series too, so it is raised when what the importer makes of the data changes, and only then. A test imports a sample and compares it with `crates/nibkeep-generate/tests/recipe.txt`; when it differs, raise `RECIPE` and write the file again:
 
 ```sh
-NIBKEEP_BLESS=1 cargo test -p nibkeep-generate --test real
+NIBKEEP_BLESS=1 cargo test -p nibkeep-generate --test tests -- real::
 ```
 
 #### Checking a change

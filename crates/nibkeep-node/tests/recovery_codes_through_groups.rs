@@ -10,9 +10,9 @@
 //!
 //! [technical design: recovery codes]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes
 
-mod common;
+use crate::common;
 
-use common::{invite_member, now, sync_in_memory, user_library};
+use crate::common::{invite_member, now, sync_in_memory, user_library};
 use nibkeep_base::SpaceId;
 use nibkeep_crypto::RecoveryCode;
 use nibkeep_node::{Library, MemberRole, RecoveryKeys, Unlocker};

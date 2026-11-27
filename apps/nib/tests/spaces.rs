@@ -3,10 +3,10 @@
 //!
 //! [technical design: sharing]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing
 
-mod common;
+use crate::common;
 
+use crate::common::{ids_hidden, library};
 use clap::Parser;
-use common::{ids_hidden, library};
 use nibkeep_cli::{Cli, CliError};
 use nibkeep_node::NodeError;
 

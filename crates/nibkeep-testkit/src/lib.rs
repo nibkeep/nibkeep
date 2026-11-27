@@ -130,6 +130,28 @@ pub fn test_directory(default: impl AsRef<Path>) -> PathBuf {
 	}
 }
 
+/// The name of the test running on this thread, with its file's module, such as
+/// `crash::a_crash_while_writing_leaves_the_last_committed_state`: libtest runs each test on
+/// a thread of that name. A test that runs its own program again, as a child to crash, passes
+/// it with `--exact`, so that the child runs that test alone.
+///
+/// # Panics
+///
+/// Panics on a thread that is not a test's own: one without a name, or the main thread, on
+/// which libtest runs a test when it cannot start a thread for it.
+#[must_use]
+pub fn this_test() -> String {
+	let name = std::thread::current()
+		.name()
+		.expect("the test's thread, which libtest names after the test")
+		.to_owned();
+	assert_ne!(
+		name, "main",
+		"the test runs on the main thread, as libtest could start no thread for it, so its name is unknown"
+	);
+	name
+}
+
 /// Raises the process's limit of open files, once, on iOS, which gives an app 256 unless it
 /// asks for more: a test runs several devices at once in one app, each with its databases
 /// and sockets open, which an iPhone's six threads of tests ran out of. Not on macOS, which

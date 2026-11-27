@@ -1,12 +1,10 @@
 //! The current values of a space: concurrent writes, last writer wins, valid time, types,
 //! deletion and merges.
 
-mod common;
-
 use nibkeep_model::storage::{Infallibly, Statements};
 use std::collections::BTreeSet;
 
-use common::{at, entity, field, set, statement, statement_id, text, values};
+use crate::common::{at, entity, field, set, statement, statement_id, text, values};
 use nibkeep_base::cbor;
 use nibkeep_model::{
 	FieldDef, Operation, Qualifiers, Resolution, State, Statement, TypeName, Value, ValueKind,

@@ -10,9 +10,9 @@
 //!
 //! [technical design: claims]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#139-claims-to-the-admin-role
 
-mod common;
+use crate::common;
 
-use common::{DRIFT, counts_in, pair, send, text, texts};
+use crate::common::{DRIFT, counts_in, pair, send, text, texts};
 use nibkeep_base::{EntityId, SpaceId, StatementId};
 use nibkeep_crypto::{DecryptionKey, EncryptionKey, SigningKey};
 use nibkeep_governance::replica_record;

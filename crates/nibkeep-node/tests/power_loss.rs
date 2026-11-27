@@ -14,14 +14,14 @@
 
 #![cfg(target_os = "linux")]
 
-mod common;
+use crate::common;
 
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 use std::time::Duration;
 
-use common::tree_rounds::{tree_child, tree_rounds};
-use common::tree_turns::TreePlaces;
+use crate::common::tree_rounds::{tree_child, tree_rounds};
+use crate::common::tree_turns::TreePlaces;
 use nibkeep_crypto::PassphraseParams;
 use nibkeep_crypto::rand_core::TryRng;
 use nibkeep_governance::{NAME, PERSON};
@@ -34,7 +34,6 @@ const PASSPHRASE: &str = "correct horse";
 
 /// Set in the child, to the directory of the test.
 const CHILD: &str = "NIBKEEP_POWER_LOSS_CHILD";
-const TEST: &str = "power_cuts_lose_nothing_committed";
 
 /// How many power cuts a run makes, unless `NIBKEEP_POWER_LOSS_ROUNDS` says how many.
 const ROUNDS: u64 = 8;
@@ -177,7 +176,7 @@ fn power_cuts_lose_nothing_committed() {
 		.map_or(ROUNDS, |rounds| rounds.parse().expect("a number"));
 	for round in 0..rounds {
 		let mut process = Command::new(std::env::current_exe().expect("this test"))
-			.args(["--exact", TEST, "--nocapture"])
+			.args(["--exact", &nibkeep_testkit::this_test(), "--nocapture"])
 			.env(CHILD, &directory)
 			.stdout(Stdio::null())
 			.stderr(child::errors(&directory))
@@ -222,7 +221,6 @@ fn power_cuts_lose_nothing_committed() {
 /// Set in each writer of the test with two writers, to its own directory beside the
 /// library's.
 const WRITER: &str = "NIBKEEP_POWER_LOSS_WRITER";
-const TWO_WRITERS: &str = "power_cuts_with_two_writers_lose_nothing_committed";
 
 /// The writers of the test with two writers, each named after its directory.
 const WRITERS: [&str; 2] = ["onewriter", "twowriter"];
@@ -298,7 +296,7 @@ fn power_cuts_with_two_writers_lose_nothing_committed() {
 			.map(|writer| child::noted::<1>(writer)[0]);
 		let mut processes = writers.each_ref().map(|writer| {
 			Command::new(std::env::current_exe().expect("this test"))
-				.args(["--exact", TWO_WRITERS, "--nocapture"])
+				.args(["--exact", &nibkeep_testkit::this_test(), "--nocapture"])
 				.env(WRITER, writer)
 				.stdout(Stdio::null())
 				.stderr(child::errors(writer))
@@ -355,7 +353,6 @@ fn power_cuts_with_two_writers_lose_nothing_committed() {
 
 /// Set in the child of the test of receiving, to the directory of the test.
 const RECEIVER: &str = "NIBKEEP_POWER_LOSS_RECEIVER";
-const RECEIVING: &str = "power_cuts_while_receiving_lose_nothing_saved";
 
 /// How many people the replica on the real disk adds for each child of the test of
 /// receiving, which the replica on LazyFS receives.
@@ -441,7 +438,7 @@ fn power_cuts_while_receiving_lose_nothing_saved() {
 		.map_or(ROUNDS, |rounds| rounds.parse().expect("a number"));
 	for round in 0..rounds {
 		let mut process = Command::new(std::env::current_exe().expect("this test"))
-			.args(["--exact", RECEIVING, "--nocapture"])
+			.args(["--exact", &nibkeep_testkit::this_test(), "--nocapture"])
 			.env(RECEIVER, &directory)
 			.stdout(Stdio::null())
 			.stderr(child::errors(&directory))
@@ -497,9 +494,6 @@ fn power_cuts_in_a_tree_with_secrets_lose_nothing_committed() {
 	let places = TreePlaces::new(&directory, &laptop);
 	tree_rounds(TREE_CUTS, ROUNDS, &places, &laptop, || lazyfs.cut_power());
 }
-
-/// The name of the test of deleting a dropped space, which its child runs.
-const DROP_CUTS: &str = "power_cuts_while_deleting_a_dropped_space_leave_it_whole_or_gone";
 
 /// Set in the child of the test of deleting a dropped space, to the LazyFS mount, which
 /// holds the laptop's library in `laptop`.
@@ -679,7 +673,7 @@ fn power_cuts_while_deleting_a_dropped_space_leave_it_whole_or_gone() {
 		copy_synced(&made.join("laptop"), &laptop);
 		child::note(&directory, &[usize::try_from(round).expect("small"), 0]);
 		let mut process = Command::new(std::env::current_exe().expect("this test"))
-			.args(["--exact", DROP_CUTS, "--nocapture"])
+			.args(["--exact", &nibkeep_testkit::this_test(), "--nocapture"])
 			.env(CHILD, &directory)
 			.env(DROP_CHILD, &lazyfs.mount)
 			.env("NIBKEEP_POWER_LOSS_DROPPED", project.to_string())

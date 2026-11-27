@@ -1,9 +1,7 @@
 //! What a field shows on a day (`docs/spec/model.md`, section 6): in a field with one value,
 //! each value until the next one starts; in a field with many, each by its own valid time.
 
-mod common;
-
-use common::{at, entity, field, statement, text};
+use crate::common::{at, entity, field, statement, text};
 use nibkeep_model::storage::Infallibly;
 use nibkeep_model::{
 	FieldDef, Operation, Qualifiers, Resolution, State, Statement, Value, ValueKind, fields,

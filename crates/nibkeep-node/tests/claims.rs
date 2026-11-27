@@ -9,9 +9,7 @@
 //!
 //! [technical design: claims]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#139-claims-to-the-admin-role
 
-mod common;
-
-use common::{invite_member, now, sync_in_memory, user_library};
+use crate::common::{invite_member, now, sync_in_memory, user_library};
 use nibkeep_base::SpaceId;
 use nibkeep_node::{Library, MemberRole, NodeError};
 use nibkeep_testkit::TestRng;

@@ -6,13 +6,13 @@
 //!
 //! [technical design: sharing]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing
 
-mod common;
+use crate::common;
 
 use std::sync::Mutex;
 use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 use std::time::Duration;
 
-use common::{TIMEOUT, now, pair_named, sync_in_memory};
+use crate::common::{TIMEOUT, now, pair_named, sync_in_memory};
 use nibkeep_base::{EntityId, SpaceId};
 use nibkeep_crypto::PassphraseParams;
 use nibkeep_model::{Name, TypeName, Value};
@@ -23,7 +23,8 @@ use nibkeep_node::{
 };
 use nibkeep_testkit::TestRng;
 
-/// A name for a folder of this file's tests, which run at once, that no other takes.
+/// A name for a folder of this file's tests, which run at once with the program's others, that
+/// no other test takes.
 fn folder_name(name: &str) -> String {
 	static NEXT: AtomicUsize = AtomicUsize::new(0);
 	format!(

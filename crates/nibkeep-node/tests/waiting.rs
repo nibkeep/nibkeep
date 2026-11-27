@@ -5,9 +5,9 @@
 //!
 //! [technical design: copies that wait]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#911-copies-that-wait
 
-mod common;
+use crate::common;
 
-use common::devices::{Devices, bytes};
+use crate::common::devices::{Devices, bytes};
 use nibkeep_node::{DAY, DeviceRole, NodeError};
 use nibkeep_std::CONTENT;
 

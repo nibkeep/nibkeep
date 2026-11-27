@@ -1,11 +1,9 @@
 //! `nib init` and `nib status`: a library for a user, this device, a replica on it, and a
 //! personal space, in a folder of its own, which commands find as Git finds a repository.
 
-mod common;
-
 use std::path::Path;
 
-use common::Test;
+use crate::common::Test;
 use nibkeep_cli::CliError;
 
 /// What `nib status` says of a new library in this folder, which it names as the file

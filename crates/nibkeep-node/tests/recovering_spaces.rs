@@ -10,12 +10,10 @@
 //!
 //! [technical design: recovery codes]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes
 
-mod common;
-
 use std::path::{Path, PathBuf};
 
-use common::devices::on_disk;
-use common::{
+use crate::common::devices::on_disk;
+use crate::common::{
 	invite_member, listed_there, now, own_key, pair_device, protection, sync_in_memory, this_day,
 	user_library,
 };

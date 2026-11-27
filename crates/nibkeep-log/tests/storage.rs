@@ -1,9 +1,7 @@
 //! The storage of the log's state: changes taken back without applying them again, and a
 //! storage that fails.
 
-mod common;
-
-use common::{DRIFT, Device, add, text, texts};
+use crate::common::{DRIFT, Device, add, text, texts};
 use nibkeep_base::{EntityId, StatementId};
 use nibkeep_log::{Log, LogError, Received, SpaceKeys};
 use nibkeep_model::storage::{Memory, Origin, Recorded, Statements};

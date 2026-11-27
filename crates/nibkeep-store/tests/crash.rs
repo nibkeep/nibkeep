@@ -11,7 +11,7 @@ use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 use std::time::Duration;
 
-mod common;
+use crate::common;
 
 use nibkeep_base::Hash;
 use nibkeep_log::SpaceKeys;
@@ -21,16 +21,12 @@ use nibkeep_store::{StoredLog, log_path};
 use nibkeep_testkit::{TestRng, child, millis_at};
 
 const DRIFT: u64 = 3_600_000;
-const TEST: &str = "a_crash_while_writing_leaves_the_last_committed_state";
-const BLOBS_TEST: &str = "a_crash_while_importing_leaves_every_blob_whole";
 
 /// Set in the child process, to the directory it writes to.
 const CHILD: &str = "NIBKEEP_CRASH_TEST_DIRECTORY";
 
 /// Set in the child process that imports blobs, to the directory it writes to.
 const BLOBS_CHILD: &str = "NIBKEEP_CRASH_TEST_BLOBS_DIRECTORY";
-
-const ENCRYPTED_TEST: &str = "a_crash_while_writing_an_encrypted_database_loses_nothing_committed";
 
 /// Set in the child process that writes an encrypted database, to the directory it writes
 /// to.
@@ -89,7 +85,7 @@ fn a_crash_while_writing_leaves_the_last_committed_state() {
 
 	for round in 0..6 {
 		let mut child = Command::new(std::env::current_exe().expect("this test"))
-			.args(["--exact", TEST, "--nocapture"])
+			.args(["--exact", &nibkeep_testkit::this_test(), "--nocapture"])
 			.env(CHILD, &directory)
 			.stdout(Stdio::null())
 			.stderr(child::errors(&directory))
@@ -121,8 +117,6 @@ fn a_crash_while_writing_leaves_the_last_committed_state() {
 		);
 	}
 }
-
-const BATCHES_TEST: &str = "a_crash_while_saving_batches_keeps_whole_batches";
 
 /// Set in the child process that saves batches, to the directory it writes to.
 const BATCHES_CHILD: &str = "NIBKEEP_CRASH_TEST_BATCHES_DIRECTORY";
@@ -180,7 +174,7 @@ fn a_crash_while_saving_batches_keeps_whole_batches() {
 
 	for round in 0..6 {
 		let mut child = Command::new(std::env::current_exe().expect("this test"))
-			.args(["--exact", BATCHES_TEST, "--nocapture"])
+			.args(["--exact", &nibkeep_testkit::this_test(), "--nocapture"])
 			.env(BATCHES_CHILD, &directory)
 			.stdout(Stdio::null())
 			.stderr(child::errors(&directory))
@@ -300,7 +294,7 @@ fn a_crash_while_importing_leaves_every_blob_whole() {
 
 	for round in 0..6 {
 		let mut child = Command::new(std::env::current_exe().expect("this test"))
-			.args(["--exact", BLOBS_TEST, "--nocapture"])
+			.args(["--exact", &nibkeep_testkit::this_test(), "--nocapture"])
 			.env(BLOBS_CHILD, &directory)
 			.stdout(Stdio::null())
 			.stderr(child::errors(&directory))
@@ -368,7 +362,7 @@ fn a_crash_while_writing_an_encrypted_database_loses_nothing_committed() {
 		nibkeep_testkit::empty_directory(env!("CARGO_TARGET_TMPDIR"), "crash while encrypting");
 	for round in 0..12 {
 		let mut child = Command::new(std::env::current_exe().expect("this test"))
-			.args(["--exact", ENCRYPTED_TEST, "--nocapture"])
+			.args(["--exact", &nibkeep_testkit::this_test(), "--nocapture"])
 			.env(ENCRYPTED_CHILD, &directory)
 			.stdout(Stdio::null())
 			.stderr(child::errors(&directory))
@@ -391,9 +385,6 @@ fn a_crash_while_writing_an_encrypted_database_loses_nothing_committed() {
 		common::check(&database, "child", noted, round);
 	}
 }
-
-const SHARED_TEST: &str =
-	"two_processes_write_an_encrypted_database_at_once_and_a_crash_harms_neither";
 
 /// Set in the child process that writes beside the test's own process, to the directory of
 /// its notes, whose parent holds the database.
@@ -419,7 +410,7 @@ fn two_processes_write_an_encrypted_database_at_once_and_a_crash_harms_neither()
 	for round in 0..4 {
 		let mut child = child::Guard(
 			Command::new(std::env::current_exe().expect("this test"))
-				.args(["--exact", SHARED_TEST, "--nocapture"])
+				.args(["--exact", &nibkeep_testkit::this_test(), "--nocapture"])
 				.env(SHARED_CHILD, &notebook)
 				.stdout(Stdio::null())
 				.stderr(child::errors(&notebook))
@@ -474,8 +465,6 @@ fn two_processes_write_an_encrypted_database_at_once_and_a_crash_harms_neither()
 	);
 }
 
-const PURGE_TEST: &str = "a_crash_while_purging_leaves_nothing_purged_in_either_file";
-
 /// Set in the child process that purges, to the directory it writes to.
 const PURGE_CHILD: &str = "NIBKEEP_CRASH_TEST_PURGE_DIRECTORY";
 
@@ -528,7 +517,7 @@ fn a_crash_while_purging_leaves_nothing_purged_in_either_file() {
 	let path = log_path(&directory, space);
 	for round in 0..8 {
 		let mut child = Command::new(std::env::current_exe().expect("this test"))
-			.args(["--exact", PURGE_TEST, "--nocapture"])
+			.args(["--exact", &nibkeep_testkit::this_test(), "--nocapture"])
 			.env(PURGE_CHILD, &directory)
 			.stdout(Stdio::null())
 			.stderr(child::errors(&directory))

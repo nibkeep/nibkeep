@@ -3,12 +3,12 @@
 //! it, stays itself; and a device that joins beside a copy takes in what only the copy
 //! held (technical design: copies of a replica).
 
-mod common;
+use crate::common;
 
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use common::{files, now, pair_with, sync_in_memory};
+use crate::common::{files, now, pair_with, sync_in_memory};
 use nibkeep_base::EntityId;
 use nibkeep_node::{
 	Drive, Library, NewLibrary, NewProtection, NodeError, PairingCode, PassphraseParams, Unlocker,

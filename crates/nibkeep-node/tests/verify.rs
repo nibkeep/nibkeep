@@ -1,11 +1,11 @@
 //! Checking a library: its log files, its blobs and its indexes.
 
-mod common;
+use crate::common;
 
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use common::{library, now};
+use crate::common::{library, now};
 use nibkeep_base::Hash;
 use nibkeep_node::{Library, Problem, Unlocker};
 use nibkeep_testkit::TestRng;

@@ -1,8 +1,6 @@
 //! Values carry their kind, and values of kinds from newer versions survive.
 
-mod common;
-
-use common::entity;
+use crate::common::entity;
 use nibkeep_base::Hash;
 use nibkeep_base::cbor::{self, Map, ToCbor, Value as Cbor};
 use nibkeep_model::{Value, ValueKind};

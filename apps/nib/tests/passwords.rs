@@ -1,11 +1,9 @@
 //! What daily use of passwords needs from `nib secret`: copying a secret, marked as
 //! sensitive and cleared afterwards; generating passwords; and one-time codes.
 
-mod common;
-
 use std::time::Duration;
 
-use common::{Test, library};
+use crate::common::{Test, library};
 use nibkeep_cli::CliError;
 use nibkeep_passwords::{GeneratorError, OneTimeCode, OneTimeError};
 

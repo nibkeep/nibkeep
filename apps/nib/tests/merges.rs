@@ -1,9 +1,7 @@
 //! `nib merge`: entities that turn out to be the same, and merges undone.
 
-mod common;
-
+use crate::common::{Test, library};
 use clap::Parser as _;
-use common::{Test, library};
 
 /// A library with a person recorded twice, and a book credited to the second record.
 fn with_duplicates(name: &str) -> Test {

@@ -3,13 +3,11 @@
 //!
 //! [technical design: importers]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#912-importers-and-where-files-came-from
 
-mod common;
-
 use std::fs::{self, File};
 use std::io::Write;
 use std::path::PathBuf;
 
-use common::library;
+use crate::common::library;
 use nibkeep_testkit::media::Photo;
 
 fn folder(name: &str) -> PathBuf {

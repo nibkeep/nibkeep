@@ -1,11 +1,11 @@
 //! `nib secret`: secret values, asked for without being shown, and shown only after the
 //! passphrase of the library's secrets.
 
-mod common;
+use crate::common;
 
 use std::fs;
 
-use common::{Test, library};
+use crate::common::{Test, library};
 use nibkeep_cli::CliError;
 use nibkeep_node::{
 	KEYSTORE_SERVICE, KeysError, Library, NetworkOptions, NewProtection, NodeError, Unlocker,
@@ -223,7 +223,7 @@ fn a_field_made_secret_by_another_type_is_named_secret() {
 	assert_eq!(json["secret_fields"][0], "local.password");
 }
 
-use common::TIMEOUT;
+use crate::common::TIMEOUT;
 
 /// A time after the tests' changes, for syncs.
 fn later() -> u64 {

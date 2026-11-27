@@ -1,8 +1,6 @@
 //! `nib type`: types and their fields.
 
-mod common;
-
-use common::Test;
+use crate::common::Test;
 use serde_json::json;
 
 /// A library to work in, unlocked by the mock keystore.

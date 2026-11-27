@@ -3,13 +3,13 @@
 //! records what it does, which other programs read and ask through; and pairing borrows its
 //! network.
 
-mod common;
+use crate::common;
 
 use std::net::{Ipv4Addr, SocketAddr, UdpSocket};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::{Duration, Instant};
 
-use common::{library, now, pair_with};
+use crate::common::{library, now, pair_with};
 use nibkeep_governance::{NAME, PERSON};
 use nibkeep_model::{Name, Value};
 use nibkeep_node::{

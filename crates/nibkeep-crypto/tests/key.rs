@@ -1,6 +1,6 @@
 //! Keys: generating them, deriving keys for separate purposes, and keeping them secret.
 
-mod common;
+use crate::common;
 
 use nibkeep_crypto::Key;
 

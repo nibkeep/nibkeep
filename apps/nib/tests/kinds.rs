@@ -1,8 +1,6 @@
 //! Decimals, quantities with their units, and names, through `nib`.
 
-mod common;
-
-use common::{Test, library};
+use crate::common::{Test, library};
 use serde_json::json;
 
 /// A library with a type of dogs: a name, a price and a weight in kilograms.

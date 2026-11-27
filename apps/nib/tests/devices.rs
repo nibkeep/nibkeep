@@ -1,9 +1,9 @@
 //! `nib device` and `nib sync` in one library, without another device to reach.
 
-mod common;
+use crate::common;
 
+use crate::common::library;
 use clap::Parser;
-use common::library;
 use nibkeep_cli::{Cli, CliError};
 use nibkeep_node::NodeError;
 

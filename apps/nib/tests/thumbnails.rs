@@ -4,13 +4,11 @@
 //!
 //! [technical design: thumbnails]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#98-thumbnails
 
-mod common;
-
 use std::fs;
 use std::io::Cursor;
 use std::path::{Path, PathBuf};
 
-use common::library;
+use crate::common::library;
 use image::{DynamicImage, ImageFormat, Rgb, RgbImage};
 use nibkeep_cli::CliError;
 

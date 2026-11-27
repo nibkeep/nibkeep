@@ -1,9 +1,7 @@
 //! Links: `nib show` lists what links to an entity, and `nib new` notes a relationship
 //! recorded before with the same participants. The standard vocabulary gives the types.
 
-mod common;
-
-use common::{Test, ids_hidden, library};
+use crate::common::{Test, ids_hidden, library};
 
 /// A library with the people behind a pen name, the pen name, and the first three Expanse
 /// novels credited to it.

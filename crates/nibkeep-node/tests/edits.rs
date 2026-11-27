@@ -1,9 +1,7 @@
 //! Edits of entities: values set, added, removed and cleared, deletion and restoring, and
 //! search.
 
-mod common;
-
-use common::{library, now, this_day, today};
+use crate::common::{library, now, this_day, today};
 use nibkeep_base::EntityId;
 use nibkeep_model::{FieldDef, FieldName, TypeDef, TypeName, Value, ValueKind, fields};
 use nibkeep_node::{Edit, Library, NodeError};

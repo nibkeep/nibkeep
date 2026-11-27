@@ -4,14 +4,14 @@
 //!
 //! [technical design: thumbnails]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#98-thumbnails
 
-mod common;
+use crate::common;
 
 use std::fs;
 use std::io::Cursor;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
-use common::{library, now, pair_named, sync_in_memory, this_day};
+use crate::common::{library, now, pair_named, sync_in_memory, this_day};
 use image::{DynamicImage, ImageFormat, Rgb, RgbImage};
 use nibkeep_base::{EntityId, Hash};
 use nibkeep_crypto::PassphraseParams;

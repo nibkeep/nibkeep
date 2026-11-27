@@ -4,9 +4,7 @@
 //!
 //! [technical design: spaces and moves]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#131-spaces-and-moves
 
-mod common;
-
-use common::{library, now, this_day, today};
+use crate::common::{library, now, this_day, today};
 use nibkeep_base::{EntityId, SpaceId};
 use nibkeep_log::list::MEMBERSHIP;
 use nibkeep_model::{FieldDef, FieldName, Name, TypeDef, TypeName, Value, ValueKind, fields};

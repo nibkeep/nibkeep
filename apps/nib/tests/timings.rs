@@ -1,11 +1,9 @@
 //! `nib --timings`: how long each part of a command took.
 
-mod common;
-
 use std::time::{Duration, Instant};
 
+use crate::common::Test;
 use clap::Parser;
-use common::Test;
 use nibkeep_cli::{Cli, Timings};
 
 /// Runs `nib` with these arguments and timings, and returns them.

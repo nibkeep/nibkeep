@@ -1,9 +1,9 @@
 //! Who made a change: the replica that signed it, the user it belongs to, and the person
 //! linked to the user in the space.
 
-mod common;
+use crate::common;
 
-use common::{library, now, this_day, today};
+use crate::common::{library, now, this_day, today};
 use nibkeep_base::{EntityId, StatementId};
 use nibkeep_crypto::SigningKey;
 use nibkeep_governance::{LINKED_PERSON, NAME};

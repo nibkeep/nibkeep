@@ -8,12 +8,10 @@
 //! [design: S14]: https://github.com/nibkeep/nibkeep/blob/main/docs/Design.md#5-scenarios
 //! [technical design: storage policies]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#93-storage-policies
 
-mod common;
-
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use common::{now, pair_joining, sync_in_memory, this_day, today};
+use crate::common::{now, pair_joining, sync_in_memory, this_day, today};
 use nibkeep_base::{EntityId, SpaceId};
 use nibkeep_model::{Name, Value, fields};
 use nibkeep_node::{

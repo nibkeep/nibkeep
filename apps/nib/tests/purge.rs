@@ -1,8 +1,6 @@
 //! `nib purge`: values removed for good, once confirmed.
 
-mod common;
-
-use common::library;
+use crate::common::library;
 use nibkeep_cli::CliError;
 
 #[test]

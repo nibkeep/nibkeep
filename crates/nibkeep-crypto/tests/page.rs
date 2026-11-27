@@ -1,8 +1,6 @@
 //! Sealed records: the pages of the state file, each encrypted in place with XAES-256-GCM.
 
-mod common;
-
-use common::{FixedBytes, hex, rng};
+use crate::common::{FixedBytes, hex, rng};
 use nibkeep_crypto::{CryptoError, Key, PAGE_NONCE_LEN, PAGE_TAG_LEN, PageCipher, RECORD_OVERHEAD};
 
 /// The test vectors of XAES-256-GCM in C2SP: the key, the associated data, the ciphertext

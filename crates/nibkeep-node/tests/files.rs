@@ -1,12 +1,10 @@
 //! Files: content stored once however often it is added, with where it was found, and
 //! what photos and videos say of themselves (Design 6.4).
 
-mod common;
-
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use common::{library, now, this_day, today};
+use crate::common::{library, now, this_day, today};
 use nibkeep_model::{FieldName, Name, TypeName, Value, fields};
 use nibkeep_node::{AddedFile, Edit, Kept, Library, NodeError, resolved_path};
 use nibkeep_std::{

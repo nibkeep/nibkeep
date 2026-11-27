@@ -1,9 +1,7 @@
 //! Languages through the engine: the ranked languages of the user, the device and the app,
 //! values in a language, forms of one value, and what a reader sees and finds (S17).
 
-mod common;
-
-use common::{now, this_day, today};
+use crate::common::{now, this_day, today};
 use nibkeep_base::EntityId;
 use nibkeep_crypto::PassphraseParams;
 use nibkeep_governance::{NAME, PERSON};

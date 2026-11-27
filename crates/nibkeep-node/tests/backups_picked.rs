@@ -4,12 +4,10 @@
 //!
 //! [technical design: backups]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#910-backups
 
-mod common;
-
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use common::devices::{Devices, bytes};
+use crate::common::devices::{Devices, bytes};
 use nibkeep_node::{
 	Backup, BackupDrive, BackupFolder, BackupUpdate, NewBackup, NodeError, PickerRules,
 	backup_named_in,

@@ -1,11 +1,9 @@
 //! `nib sync --at-login`: syncing a library from login, through `nibsync`
 //! ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#106-syncing-from-login)).
 
-mod common;
-
 use std::path::PathBuf;
 
-use common::{Test, library};
+use crate::common::{Test, library};
 use nibkeep_cli::CliError;
 use nibkeep_cli::Firewall;
 use nibkeep_node::at_login::{AtLogin, ENGINE_VERSION, EntryState, LoginEntry, Served};

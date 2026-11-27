@@ -1,10 +1,8 @@
 //! `nib export`: the personal space in ordinary files, JSON and SHA-256 sums.
 
-mod common;
-
 use std::fs;
 
-use common::library;
+use crate::common::library;
 use nibkeep_cli::CliError;
 use nibkeep_node::NodeError;
 

@@ -1,8 +1,6 @@
 //! Scenarios from the design guidelines, as far as phase 1 reaches.
 
-mod common;
-
-use common::{Device, add, field, set, text};
+use crate::common::{Device, add, field, set, text};
 use nibkeep_base::{EntityId, Hash};
 use nibkeep_log::{SpaceKeys, list};
 use nibkeep_model::storage::Infallibly;

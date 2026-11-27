@@ -73,9 +73,9 @@ fn found(library: &Library, word: &str) -> Vec<String> {
 }
 
 /// Runs this test again as a child process, with [`CHILD`] set to `directory`.
-fn start_child(test: &str, directory: &Path) -> std::process::Child {
+fn start_child(directory: &Path) -> std::process::Child {
 	Command::new(std::env::current_exe().expect("this test"))
-		.args(["--exact", test, "--nocapture"])
+		.args(["--exact", &nibkeep_testkit::this_test(), "--nocapture"])
 		.env(CHILD, directory)
 		.stdout(Stdio::null())
 		.stderr(child::errors(directory))
@@ -89,10 +89,10 @@ fn start_child(test: &str, directory: &Path) -> std::process::Child {
 /// as before a child that starts slowly on Windows, would form a burst, whose transaction
 /// holds the state file's write lock while that program waits for the other, which cannot
 /// open the library meanwhile (docs/Known-limits.md).
-fn open_with_child(test: &str, directory: &Path) -> (Library, std::process::Child) {
+fn open_with_child(directory: &Path) -> (Library, std::process::Child) {
 	let library = open(directory);
 	let test_directory = directory.parent().expect("the test's directory");
-	let mut other = start_child(test, test_directory);
+	let mut other = start_child(test_directory);
 	child::wait_for_note(&mut other, test_directory);
 	(library, other)
 }
@@ -170,7 +170,6 @@ fn a_field_that_another_program_makes_secret_is_sealed_here_too() {
 #[test]
 #[cfg_attr(target_os = "ios", ignore = "an iOS app may not start a process")]
 fn another_program_writes_while_this_one_does() {
-	const TEST: &str = "another_program_writes_while_this_one_does";
 	if let Some(directory) = std::env::var_os(CHILD) {
 		let directory = PathBuf::from(directory);
 		let mut library = open(&directory.join("library"));
@@ -184,7 +183,7 @@ fn another_program_writes_while_this_one_does() {
 	let directory = library("another program");
 	let mut rng = TestRng::new("this program");
 	let test = directory.parent().expect("the test's directory");
-	let (mut library, mut other) = open_with_child(TEST, &directory);
+	let (mut library, mut other) = open_with_child(&directory);
 	for number in 0..SIDE_BY_SIDE {
 		add_person(&mut library, &format!("Parentperson {number}"), &mut rng);
 	}
@@ -200,7 +199,6 @@ fn another_program_writes_while_this_one_does() {
 #[test]
 #[cfg_attr(target_os = "ios", ignore = "an iOS app may not start a process")]
 fn another_program_killed_while_this_one_writes_leaves_the_replica_sound() {
-	const TEST: &str = "another_program_killed_while_this_one_writes_leaves_the_replica_sound";
 	if let Some(directory) = std::env::var_os(CHILD) {
 		let directory = PathBuf::from(directory);
 		let mut library = open(&directory.join("library"));
@@ -216,7 +214,7 @@ fn another_program_killed_while_this_one_writes_leaves_the_replica_sound() {
 	let directory = library("another program killed");
 	let mut rng = TestRng::new("this program, which lives on");
 	let test = directory.parent().expect("the test's directory");
-	let (mut library, mut other) = open_with_child(TEST, &directory);
+	let (mut library, mut other) = open_with_child(&directory);
 	std::thread::scope(|scope| {
 		scope.spawn(|| {
 			child::kill_after_progress(&mut other, test, 0, Duration::from_millis(100));

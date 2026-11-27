@@ -2,9 +2,7 @@
 //! reconciles, every replica receives every blob key, and each side asks for the blobs it
 //! keeps and lacks ([Sync](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/sync.md#3-syncing)).
 
-mod common;
-
-use common::{Replica, sync};
+use crate::common::{Replica, sync};
 use nibkeep_base::Hash;
 use nibkeep_log::SpaceKeys;
 use nibkeep_sync::Synced;

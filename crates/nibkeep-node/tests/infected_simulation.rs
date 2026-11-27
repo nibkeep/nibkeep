@@ -19,14 +19,14 @@
 //! seeds infect a device of the person's, odd ones an AI agent's replica.
 //! `NIBKEEP_SIMULATION_DEBUG` reports every step of a run that fails, not only the last.
 
-mod common;
+use crate::common;
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::Write as _;
 use std::io::Read;
 
-use common::in_process::{pipes, settle};
-use common::{now, own_key, pair_ai_agent_named, pair_joining, replica_keys, this_day};
+use crate::common::in_process::{pipes, settle};
+use crate::common::{now, own_key, pair_ai_agent_named, pair_joining, replica_keys, this_day};
 use nibkeep_base::{EntityId, Hash, SpaceId, StatementId};
 use nibkeep_crypto::rand_core::TryRng;
 use nibkeep_crypto::{Key, PassphraseParams, Signature, VerifyingKey};

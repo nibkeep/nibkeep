@@ -1,8 +1,6 @@
 //! Keys derived from passphrases with Argon2id.
 
-mod common;
-
-use common::hex;
+use crate::common::hex;
 use nibkeep_base::cbor::{self, ToCbor, Value};
 use nibkeep_crypto::{CryptoError, Key, PassphraseParams};
 

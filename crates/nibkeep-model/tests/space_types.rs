@@ -1,12 +1,10 @@
 //! Types in a space: defined by entities, combined with the types in code, and grown by
 //! adding fields.
 
-mod common;
-
 use nibkeep_model::storage::Infallibly;
 use std::collections::BTreeSet;
 
-use common::{at, entity, statement};
+use crate::common::{at, entity, statement};
 use nibkeep_base::cbor::{self, FromCbor, Map, MapKey, ToCbor, Value as Cbor};
 use nibkeep_model::schema::{self, FIELD_DEFINITION, TYPE_DEFINITION};
 use nibkeep_model::{

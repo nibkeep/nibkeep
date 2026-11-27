@@ -6,13 +6,11 @@
 //!
 //! [technical design: importers]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#912-importers-and-where-files-came-from
 
-mod common;
-
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 
-use common::{library, now, today, values};
+use crate::common::{library, now, today, values};
 use image::imageops::FilterType;
 use image::{DynamicImage, Rgb, RgbImage};
 use nibkeep_base::Hash;

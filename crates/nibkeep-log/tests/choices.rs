@@ -9,9 +9,9 @@
 //!
 //! [technical design: devices that choose their spaces]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces
 
-mod common;
+use crate::common;
 
-use common::{DRIFT, Device, add, counts_in, pair, send, text};
+use crate::common::{DRIFT, Device, add, counts_in, pair, send, text};
 use nibkeep_base::{EntityId, SpaceId};
 use nibkeep_crypto::{DecryptionKey, EncryptionKey};
 use nibkeep_governance::{Choice, replica_record};

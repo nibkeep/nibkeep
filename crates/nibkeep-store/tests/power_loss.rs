@@ -16,7 +16,7 @@ use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 use std::time::Duration;
 
-mod common;
+use crate::common;
 
 use nibkeep_crypto::rand_core::TryRng;
 use nibkeep_testkit::lazyfs::{LazyFs, unmount};
@@ -24,7 +24,6 @@ use nibkeep_testkit::{TestRng, child};
 
 /// Set in the child, to the directory of the test.
 const CHILD: &str = "NIBKEEP_POWER_LOSS_ENCRYPTED_CHILD";
-const TEST: &str = "power_cuts_lose_nothing_committed_to_an_encrypted_database";
 
 /// How many power cuts a run makes, unless `NIBKEEP_POWER_LOSS_ROUNDS` says how many.
 const ROUNDS: u64 = 8;
@@ -73,7 +72,7 @@ fn power_cuts_lose_nothing_committed_to_an_encrypted_database() {
 				let notebook = directory.join(name);
 				child::Guard(
 					Command::new(std::env::current_exe().expect("this test"))
-						.args(["--exact", TEST, "--nocapture"])
+						.args(["--exact", &nibkeep_testkit::this_test(), "--nocapture"])
 						.env(CHILD, &notebook)
 						.stdout(Stdio::null())
 						.stderr(child::errors(&notebook))

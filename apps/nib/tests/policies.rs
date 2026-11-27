@@ -3,13 +3,11 @@
 //!
 //! [technical design: storage policies]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#93-storage-policies
 
-mod common;
-
 use std::collections::VecDeque;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use common::{Test, ids_hidden, library};
+use crate::common::{Test, ids_hidden, library};
 use nibkeep_cli::CliError;
 
 /// A folder of files to add, apart from the library's.

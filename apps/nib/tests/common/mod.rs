@@ -369,7 +369,7 @@ impl Environment for Test {
 	}
 }
 
-/// Uses the mock keystore, once for all tests of a file.
+/// Uses the mock keystore, once for all the tests.
 fn mock_keystore() {
 	static ONCE: Once = Once::new();
 	ONCE.call_once(|| {

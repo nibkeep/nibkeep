@@ -5,11 +5,11 @@
 //!
 //! [technical design: AI agents]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#14-ai-agents
 
-mod common;
+use crate::common;
 
 use std::path::{Path, PathBuf};
 
-use common::{library, now, pair_named, replica_keys, sync_in_memory};
+use crate::common::{library, now, pair_named, replica_keys, sync_in_memory};
 use nibkeep_base::cbor::{self, Value as Cbor};
 use nibkeep_base::{EntityId, SpaceId};
 use nibkeep_crypto::{Envelope, SigningKey};

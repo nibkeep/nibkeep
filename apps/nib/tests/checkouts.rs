@@ -4,12 +4,10 @@
 //!
 //! [technical design: checkouts]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#92-checkouts
 
-mod common;
-
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use common::{Test, library};
+use crate::common::{Test, library};
 use nibkeep_cli::CliError;
 use nibkeep_node::NodeError;
 

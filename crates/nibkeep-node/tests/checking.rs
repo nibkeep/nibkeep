@@ -4,13 +4,11 @@
 //!
 //! [technical design: checking and repair]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#97-checking-and-repair
 
-mod common;
-
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::time::Duration;
 
-use common::{now, pair_named, replica_folder, sync_in_memory};
+use crate::common::{now, pair_named, replica_folder, sync_in_memory};
 use nibkeep_base::{EntityId, Hash, SpaceId};
 use nibkeep_node::{
 	COUNTS_FOR_MILLIS, CheckRun, CopyHeld, Damaged, Drive, Library, NewLibrary, NewProtection,

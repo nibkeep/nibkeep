@@ -9,9 +9,9 @@
 //!
 //! [technical design: sharing]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing
 
-mod common;
+use crate::common;
 
-use common::{invite_member, now, pair_named, sync_in_memory, user_library};
+use crate::common::{invite_member, now, pair_named, sync_in_memory, user_library};
 use nibkeep_base::{EntityId, SpaceId};
 use nibkeep_model::{Name, TypeName, Value};
 use nibkeep_node::{Library, MemberRole, NodeError, PairingCode};

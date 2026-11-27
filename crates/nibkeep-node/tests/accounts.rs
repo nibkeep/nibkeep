@@ -3,12 +3,10 @@
 //!
 //! [technical design: where the copies are]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#96-where-the-copies-are
 
-mod common;
-
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use common::{now, pair_named, sync_in_memory};
+use crate::common::{now, pair_named, sync_in_memory};
 use nibkeep_base::{EntityId, SpaceId};
 use nibkeep_node::{
 	CopyHeld, DeviceMarks, DeviceRole, Drive, Library, NewLibrary, NewProtection, NewRule,

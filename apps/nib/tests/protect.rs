@@ -1,8 +1,8 @@
 //! `nib protect`: a new passphrase for the library or its secrets, or the keystore instead.
 
-mod common;
+use crate::common;
 
-use common::library;
+use crate::common::library;
 use nibkeep_cli::CliError;
 use nibkeep_node::{KeysError, NodeError};
 

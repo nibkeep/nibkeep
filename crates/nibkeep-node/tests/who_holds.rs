@@ -13,12 +13,10 @@
 //!
 //! [technical design: devices that choose their spaces]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces
 
-mod common;
-
 use std::path::{Path, PathBuf};
 
-use common::devices::{Devices, bytes, on_disk};
-use common::{
+use crate::common::devices::{Devices, bytes, on_disk};
+use crate::common::{
 	listed_there, now, own_key, own_record, pair_device_as, protection, sync_rounds, user_library,
 };
 use nibkeep_base::{EntityId, SpaceId};

@@ -2,9 +2,9 @@
 //! library has only once the person sets it up, and opens only once they confirm
 //! (Design 6.9).
 
-mod common;
+use crate::common;
 
-use common::{LOGIN, library, login_type, now, passwords, this_day, today};
+use crate::common::{LOGIN, library, login_type, now, passwords, this_day, today};
 use nibkeep_crypto::{Key, PassphraseParams};
 use nibkeep_keys::{KeyFile, SecretsKeys};
 use nibkeep_model::{FieldDef, FieldName, TypeDef, TypeName, Value, ValueKind};

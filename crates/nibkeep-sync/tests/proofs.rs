@@ -3,9 +3,7 @@
 //! holds the blob for a while, and proves nothing it is removing itself
 //! ([Sync](https://github.com/nibkeep/nibkeep/blob/main/docs/spec/sync.md#3-syncing)).
 
-mod common;
-
-use common::{Replica, sync};
+use crate::common::{Replica, sync};
 use nibkeep_base::Hash;
 use nibkeep_log::SpaceKeys;
 use nibkeep_sync::{CHALLENGES_AT_ONCE, Challenge};

@@ -1,13 +1,13 @@
 //! Imports: an export brought into a library, adding what it lacks
 //! (`docs/spec/export.md`, section 7).
 
-mod common;
+use crate::common;
 
 use std::collections::BTreeSet;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use common::{library, now, sum_again, today};
+use crate::common::{library, now, sum_again, today};
 use nibkeep_base::EntityId;
 use nibkeep_model::{FieldDef, FieldName, Name, TypeDef, TypeName, Value, ValueKind, fields};
 use nibkeep_node::{Edit, ExportKind, Library, NodeError};

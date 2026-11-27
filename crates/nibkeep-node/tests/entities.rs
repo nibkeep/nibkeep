@@ -1,8 +1,8 @@
 //! Entities in a library's spaces: created, shown, listed, and found by reference.
 
-mod common;
+use crate::common;
 
-use common::{library, now, this_day};
+use crate::common::{library, now, this_day};
 use nibkeep_base::EntityId;
 use nibkeep_governance::{NAME, PERSON};
 use nibkeep_model::{FieldDef, FieldName, Name, TypeDef, TypeName, Value, ValueKind};

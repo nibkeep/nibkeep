@@ -5,9 +5,9 @@
 //!
 //! [technical design: spaces and moves]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#131-spaces-and-moves
 
-mod common;
+use crate::common;
 
-use common::{invite_member, now, pair_named, sync_in_memory, user_library};
+use crate::common::{invite_member, now, pair_named, sync_in_memory, user_library};
 use nibkeep_base::{EntityId, SpaceId};
 use nibkeep_model::{FieldName, Name, TypeName, Value, fields};
 use nibkeep_node::{Behind, Edit, Library, MemberRole, MoveHistory, PairingCode};

@@ -1,8 +1,6 @@
 //! Messages sealed to a public key with HPKE and X-Wing.
 
-mod common;
-
-use common::{rng, vectors};
+use crate::common::{rng, vectors};
 use nibkeep_base::cbor::{self, ToCbor, Value};
 use nibkeep_crypto::{CryptoError, DecryptionKey, EncryptionKey, Key, SealedMessage};
 

@@ -10,14 +10,12 @@
 //!
 //! [technical design: groups]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#138-groups
 
-mod common;
-
 use std::cell::Cell;
 use std::collections::BTreeSet;
 use std::sync::mpsc;
 
-use common::in_process::Pipe;
-use common::{invite_member, now, sync_in_memory, user_library};
+use crate::common::in_process::Pipe;
+use crate::common::{invite_member, now, sync_in_memory, user_library};
 use nibkeep_base::{EntityId, Hash, SpaceId, StatementId};
 use nibkeep_log::{Change, ChangeId, Draft, Kind, Parcel, Payload};
 use nibkeep_model::{Name, Operation, Statement, TypeName, Value, fields};

@@ -40,7 +40,7 @@ pub(crate) fn tree_rounds(
 	check_tree_after(0, places, (0, 0), true);
 	for round in 1..=rounds {
 		let mut process = Command::new(std::env::current_exe().expect("this test"))
-			.args(["--exact", test, "--nocapture"])
+			.args(["--exact", &nibkeep_testkit::this_test(), "--nocapture"])
 			.env(TREE_CHILD, &places.directory)
 			.env(TREE_LAPTOP, laptop)
 			.stdout(Stdio::null())

@@ -4,12 +4,10 @@
 //!
 //! [technical design: copies that wait]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#911-copies-that-wait
 
-mod common;
-
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use common::library;
+use crate::common::library;
 use nibkeep_cli::CliError;
 use nibkeep_node::NodeError;
 

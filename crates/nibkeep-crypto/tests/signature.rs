@@ -1,8 +1,6 @@
 //! Signatures with Ed25519, over a context and a message.
 
-mod common;
-
-use common::{hex, rng};
+use crate::common::{hex, rng};
 use nibkeep_base::cbor::{self, ToCbor, Value};
 use nibkeep_crypto::{CryptoError, Signature, SigningKey, VerifyingKey};
 

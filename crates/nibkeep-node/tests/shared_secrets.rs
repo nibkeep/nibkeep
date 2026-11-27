@@ -6,9 +6,9 @@
 //!
 //! [technical design: sharing]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing
 
-mod common;
+use crate::common;
 
-use common::{LOGIN, invite_member, login_type, now, pair_joining, sync_in_memory, today};
+use crate::common::{LOGIN, invite_member, login_type, now, pair_joining, sync_in_memory, today};
 use nibkeep_base::{EntityId, SpaceId};
 use nibkeep_crypto::PassphraseParams;
 use nibkeep_model::{FieldName, Value};

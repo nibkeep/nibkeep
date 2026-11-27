@@ -1,4 +1,5 @@
 [package]
+autotests = false
 name = "nibkeep-model"
 description = "Entities, statements, qualifiers and types for NibKeep"
 version.workspace = true
@@ -24,3 +25,12 @@ proptest = { workspace = true }
 
 [lints]
 workspace = true
+
+[[test]]
+name = "tests"
+path = "tests/main.rs"
+
+# Fills the process's table of shared names, which the other tests must not find full.
+[[test]]
+name = "many_names"
+path = "tests/many_names.rs"

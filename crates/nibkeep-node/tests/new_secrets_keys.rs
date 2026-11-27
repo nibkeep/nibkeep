@@ -6,11 +6,13 @@
 //!
 //! [technical design: sharing]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing
 
-mod common;
+use crate::common;
 
 use std::path::PathBuf;
 
-use common::{LOGIN, library, login_type, now, pair_joining, pair_named, sync_in_memory, today};
+use crate::common::{
+	LOGIN, library, login_type, now, pair_joining, pair_named, sync_in_memory, today,
+};
 use nibkeep_base::EntityId;
 use nibkeep_crypto::{Key, PassphraseParams};
 use nibkeep_governance::SealedSecretsKey;

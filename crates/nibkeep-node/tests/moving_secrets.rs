@@ -6,11 +6,11 @@
 //!
 //! [technical design: sharing]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing
 
-mod common;
+use crate::common;
 
 use std::io::Read as _;
 
-use common::{
+use crate::common::{
 	LOGIN, invite_member, login_type, now, pair_named, sync_in_memory, this_day, user_library,
 };
 use nibkeep_base::{EntityId, SpaceId};

@@ -2,7 +2,7 @@
 //! one fails on both sides and grants nothing. The device that shows the code proves it
 //! first, so a joiner tells nothing of itself to one that does not know it.
 
-mod common;
+use crate::common;
 
 use std::collections::BTreeMap;
 use std::convert::Infallible;

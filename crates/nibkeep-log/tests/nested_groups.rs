@@ -11,11 +11,11 @@
 //!
 //! [technical design: groups]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#138-groups
 
-mod common;
+use crate::common;
 
 use std::collections::BTreeMap;
 
-use common::{DRIFT, counts_in, pair, send, text, texts};
+use crate::common::{DRIFT, counts_in, pair, send, text, texts};
 use nibkeep_base::{EntityId, SpaceId, StatementId};
 use nibkeep_crypto::{DecryptionKey, EncryptionKey, SigningKey};
 use nibkeep_governance::{Anchor, GroupRef, Joining};

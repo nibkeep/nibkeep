@@ -1,8 +1,6 @@
 //! `nib edit` and `nib find`: changing entities, and finding them by their words.
 
-mod common;
-
-use common::{Test, ids_hidden, library};
+use crate::common::{Test, ids_hidden, library};
 
 /// A library with a book.
 fn with_a_book(name: &str) -> Test {

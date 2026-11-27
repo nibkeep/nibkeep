@@ -1,11 +1,9 @@
 //! Ordered lists: position keys, the order of items, and moves that merge.
 
-mod common;
-
 use nibkeep_model::storage::Infallibly;
 use std::collections::BTreeSet;
 
-use common::{Device, add, set};
+use crate::common::{Device, add, set};
 use nibkeep_base::EntityId;
 use nibkeep_log::{SpaceKeys, list};
 use nibkeep_model::{FieldDef, Value};

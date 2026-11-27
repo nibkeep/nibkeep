@@ -1,11 +1,11 @@
 //! Secret fields: two layers of encryption, locking, and purging.
 
-mod common;
+use crate::common;
 
 use nibkeep_model::storage::Infallibly;
 use std::collections::BTreeSet;
 
-use common::{DRIFT, Device, field, set, text};
+use crate::common::{DRIFT, Device, field, set, text};
 use nibkeep_base::cbor::{self, ToCbor, Value as Cbor};
 use nibkeep_base::{EntityId, StatementId};
 use nibkeep_crypto::Envelope;

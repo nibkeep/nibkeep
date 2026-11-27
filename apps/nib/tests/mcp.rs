@@ -5,12 +5,12 @@
 //!
 //! [technical design: AI agents]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#14-ai-agents
 
-mod common;
+use crate::common;
 
 use std::path::{Path, PathBuf};
 
+use crate::common::Test;
 use clap::Parser;
-use common::Test;
 use nibkeep_cli::{Cli, CliError, McpServer};
 use nibkeep_crypto::PassphraseParams;
 use nibkeep_node::{Library, NetworkOptions, NewLibrary, NewProtection};
@@ -19,7 +19,7 @@ use serde_json::{Value, json};
 
 const CURRENT: &str = "2026-07-28";
 const BEFORE: &str = "2025-11-25";
-use common::TIMEOUT;
+use crate::common::TIMEOUT;
 
 fn now() -> u64 {
 	millis_at("2026-10-12", 10, 0)

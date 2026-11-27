@@ -3,9 +3,9 @@
 //!
 //! [technical design: recovery codes]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes
 
-mod common;
+use crate::common;
 
-use common::{TIMEOUT, Test, library};
+use crate::common::{TIMEOUT, Test, library};
 use nibkeep_cli::CliError;
 use nibkeep_crypto::RecoveryCode;
 use nibkeep_node::{

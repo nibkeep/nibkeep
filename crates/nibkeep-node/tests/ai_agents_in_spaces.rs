@@ -5,9 +5,9 @@
 //!
 //! [technical design: sharing]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing
 
-mod common;
+use crate::common;
 
-use common::{TIMEOUT, invite_member, now, protection, sync_in_memory, user_library};
+use crate::common::{TIMEOUT, invite_member, now, protection, sync_in_memory, user_library};
 use nibkeep_base::{EntityId, SpaceId};
 use nibkeep_model::{FieldName, Name, TypeName, Value};
 use nibkeep_node::{

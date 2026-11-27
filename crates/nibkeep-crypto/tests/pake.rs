@@ -1,8 +1,6 @@
 //! Keys agreed on from a short code with SPAKE2.
 
-mod common;
-
-use common::rng;
+use crate::common::rng;
 use nibkeep_crypto::{CryptoError, Key, Pake, PakeSide};
 
 /// Runs SPAKE2 between side A with one password and side B with another, and returns the

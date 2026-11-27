@@ -9,9 +9,9 @@
 //!
 //! [technical design: recovery codes]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes
 
-mod common;
+use crate::common;
 
-use common::{Device, add, counts_in, making_member, pair, send, text};
+use crate::common::{Device, add, counts_in, making_member, pair, send, text};
 use nibkeep_base::{EntityId, SpaceId};
 use nibkeep_crypto::{DecryptionKey, EncryptionKey, RecoveryCode};
 use nibkeep_governance::{

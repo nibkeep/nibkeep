@@ -4,11 +4,11 @@
 //!
 //! [technical design: recovery codes]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes
 
-mod common;
+use crate::common;
 
 use std::path::PathBuf;
 
-use common::{library, now, pair_ai_agent_named, pair_named, sync_in_memory};
+use crate::common::{library, now, pair_ai_agent_named, pair_named, sync_in_memory};
 use nibkeep_crypto::RecoveryCode;
 use nibkeep_node::{Library, NodeError, PairingCode, RecoveryCheck};
 use nibkeep_testkit::TestRng;

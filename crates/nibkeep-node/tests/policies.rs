@@ -3,12 +3,12 @@
 //!
 //! [technical design: storage policies]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#93-storage-policies
 
-mod common;
+use crate::common;
 
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use common::{library, now, today};
+use crate::common::{library, now, today};
 use nibkeep_base::EntityId;
 use nibkeep_model::{Value, fields};
 use nibkeep_node::{

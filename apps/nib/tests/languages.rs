@@ -1,10 +1,8 @@
 //! Languages in `nib`: the ranked languages of the user, the device and the app, values in a
 //! language, and other forms of a value.
 
-mod common;
-
+use crate::common::{Test, ids_hidden};
 use clap::Parser;
-use common::{Test, ids_hidden};
 
 /// A library started with the mock keystore, whose user reads `ranges`.
 fn library(name: &str, ranges: &str) -> Test {

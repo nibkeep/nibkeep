@@ -5,12 +5,10 @@
 //!
 //! [technical design: importers]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#912-importers-and-where-files-came-from
 
-mod common;
-
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use common::{library, now, today, values};
+use crate::common::{library, now, today, values};
 use nibkeep_model::Value;
 use nibkeep_node::{FileFrom, FoundElsewhere, Kept, Library};
 use nibkeep_std::{DESCRIPTION, FROM_SOURCE, ORIGIN_OF, PATH, SOURCE_NAME, SOURCE_PATH, TAKEN};

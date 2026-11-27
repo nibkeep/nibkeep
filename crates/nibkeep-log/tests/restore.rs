@@ -4,11 +4,9 @@
 //!
 //! [technical design: copies that wait]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#911-copies-that-wait
 
-mod common;
-
 use std::collections::BTreeSet;
 
-use common::{Device, add, field, items, set, text, texts};
+use crate::common::{Device, add, field, items, set, text, texts};
 use nibkeep_base::cbor::{self, Value as Cbor};
 use nibkeep_base::{EntityId, Hash, StatementId};
 use nibkeep_log::{

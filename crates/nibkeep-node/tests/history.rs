@@ -1,9 +1,7 @@
 //! History in system time: every value an entity has had, when it was recorded, by whom and
 //! when it was replaced; and an entity as the library had recorded it at a moment.
 
-mod common;
-
-use common::{library, now, this_day, today};
+use crate::common::{library, now, this_day, today};
 use nibkeep_base::EntityId;
 use nibkeep_model::{FieldDef, FieldName, Name, TypeDef, TypeName, Value, ValueKind, fields};
 use nibkeep_node::{Edit, History, Library};

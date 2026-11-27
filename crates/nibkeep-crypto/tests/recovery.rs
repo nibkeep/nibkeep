@@ -1,6 +1,6 @@
 //! Recovery codes: their text, the characters that check it, and the keys derived from them.
 
-mod common;
+use crate::common;
 
 use nibkeep_crypto::{NotARecoveryCode, RecoveryCode};
 

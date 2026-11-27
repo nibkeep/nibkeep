@@ -1,12 +1,10 @@
 //! Sealed blobs: content encrypted in chunks with a key of its own.
 
-mod common;
-
 use std::io::{BufReader, Cursor, ErrorKind, Read, Seek, SeekFrom};
 
+use crate::common::{FixedBytes, TestRng, hex, rng};
 use chacha20poly1305::aead::{Aead, KeyInit, Payload};
 use chacha20poly1305::{ChaCha20Poly1305, Nonce};
-use common::{FixedBytes, TestRng, hex, rng};
 use nibkeep_base::Hash;
 use nibkeep_crypto::{BLOB_CHUNK_LEN, BlobReader, Key, seal_blob};
 

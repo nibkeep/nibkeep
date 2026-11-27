@@ -1,9 +1,7 @@
 //! Logins and folders, as a password manager keeps them: a login is found by its name,
 //! sites and user name without the secrets, and what signs in stays sealed (S11).
 
-mod common;
-
-use common::{library, now, this_day};
+use crate::common::{library, now, this_day};
 use nibkeep_crypto::PassphraseParams;
 use nibkeep_model::{Value, fields};
 use nibkeep_node::{Library, NewProtection, Unlocker};

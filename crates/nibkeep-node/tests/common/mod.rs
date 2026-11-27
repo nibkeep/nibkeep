@@ -293,7 +293,7 @@ pub(crate) fn passwords(
 		.collect()
 }
 
-/// A name for a folder of the tests, which run at once, that no other test of the file takes.
+/// A name for a folder of the tests, which run at once, that no other test of the program takes.
 pub(crate) fn unique_folder(name: &str) -> String {
 	static NEXT: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
 	format!(

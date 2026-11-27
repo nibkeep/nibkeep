@@ -5,13 +5,13 @@
 //! replica whose record another device of the user's no longer types as a replica's states
 //! its endpoint once, not at every sync.
 
-mod common;
+use crate::common;
 
 use std::sync::Mutex;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::Duration;
 
-use common::{TIMEOUT, library, now, pair_with, this_day};
+use crate::common::{TIMEOUT, library, now, pair_with, this_day};
 use nibkeep_model::{FieldDef, FieldName, TypeDef, TypeName, Value, ValueKind};
 use nibkeep_node::{
 	Joining, Library, Network, NetworkOptions, NodeError, PairingCode, Showing, SyncError,

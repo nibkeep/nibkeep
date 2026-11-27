@@ -1,8 +1,6 @@
 //! Statements, their qualifiers, and the operations that change them.
 
-mod common;
-
-use common::{entity, field, statement, statement_id, text};
+use crate::common::{entity, field, statement, statement_id, text};
 use nibkeep_base::cbor::{self, Map, ToCbor, Value as Cbor};
 use nibkeep_model::storage::Infallibly;
 use nibkeep_model::{Operation, Qualifiers, State, Statement, Value, fields};

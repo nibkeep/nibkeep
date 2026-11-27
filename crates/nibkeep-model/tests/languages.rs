@@ -1,9 +1,7 @@
 //! Languages and scripts (`docs/spec/model.md`, section 11): language tags on values, forms
 //! of one value, and the form and order that a reader's ranked languages choose.
 
-mod common;
-
-use common::{at, entity, field, statement, statement_id, text};
+use crate::common::{at, entity, field, statement, statement_id, text};
 use nibkeep_model::storage::Infallibly;
 use nibkeep_model::{
 	FieldDef, Languages, Operation, Qualifiers, Resolution, State, Tag, Value, ValueKind, fields,

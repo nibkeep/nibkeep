@@ -1,11 +1,11 @@
 //! Exports: a space in ordinary files, JSON and SHA-256 sums (`docs/spec/export.md`).
 
-mod common;
+use crate::common;
 
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use common::{library, now, sum_again, today};
+use crate::common::{library, now, sum_again, today};
 use nibkeep_base::EntityId;
 use nibkeep_model::{
 	Decimal, FieldDef, FieldName, Name, Quantity, TypeDef, TypeName, Value, ValueKind, fields,

@@ -1,8 +1,6 @@
 //! `nib verify`: checking the library.
 
-mod common;
-
-use common::library;
+use crate::common::library;
 use serde_json::json;
 
 #[test]

@@ -1,9 +1,7 @@
 //! `nib new`, `nib show` and `nib list`: entities and their values.
 
-mod common;
-
+use crate::common::{Test, ids_hidden, library};
 use clap::CommandFactory;
-use common::{Test, ids_hidden, library};
 use nibkeep_cli::Cli;
 
 /// A library with the type of books and an author.

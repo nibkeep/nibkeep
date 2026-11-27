@@ -4,12 +4,12 @@
 //!
 //! [technical design: checkouts]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#92-checkouts
 
-mod common;
+use crate::common;
 
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use common::{TIMEOUT, library, now, pair_with, sync_in_memory};
+use crate::common::{TIMEOUT, library, now, pair_with, sync_in_memory};
 use nibkeep_base::EntityId;
 use nibkeep_node::{
 	CopyState, Library, NetworkOptions, PairingCode, answer, resolved_path, sync_with_others,

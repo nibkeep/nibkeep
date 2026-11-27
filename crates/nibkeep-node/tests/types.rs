@@ -1,8 +1,6 @@
 //! Types in a library's spaces: defined, grown, and read back.
 
-mod common;
-
-use common::library;
+use crate::common::library;
 use nibkeep_base::SpaceId;
 use nibkeep_model::{FieldDef, FieldName, TypeDef, TypeName, ValueKind};
 use nibkeep_node::{Library, NodeError, Unlocker};
@@ -132,7 +130,7 @@ fn an_unknown_space_is_refused() {
 #[test]
 fn a_definition_that_would_change_nothing_is_refused() {
 	let mut rng = TestRng::new("refused");
-	let (_, mut library) = library("refused", &mut rng);
+	let (_, mut library) = library("type refused", &mut rng);
 	let personal = library.personal_space();
 	let now = millis_at("2026-10-12", 11, 0);
 	library

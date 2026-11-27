@@ -5,11 +5,11 @@
 //!
 //! [technical design: AI agents]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#14-ai-agents
 
-mod common;
+use crate::common;
 
 use std::path::PathBuf;
 
-use common::{library, now, pair_ai_agent_named, pair_named, sync_in_memory};
+use crate::common::{library, now, pair_ai_agent_named, pair_named, sync_in_memory};
 use nibkeep_base::EntityId;
 use nibkeep_crypto::PassphraseParams;
 use nibkeep_model::{FieldDef, FieldName, Name, TypeDef, TypeName, Value, ValueKind, fields};

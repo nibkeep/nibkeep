@@ -1,8 +1,6 @@
 //! `nib edit --date` and `--on`, and `nib show --on`: values that change over time.
 
-mod common;
-
-use common::{Test, ids_hidden, library};
+use crate::common::{Test, ids_hidden, library};
 
 /// A library with a person whose employer has one value at a time.
 fn with_a_person(name: &str) -> Test {

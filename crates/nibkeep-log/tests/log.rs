@@ -1,12 +1,12 @@
 //! Changes: signed, linked by hashes, accepted on their headers, and applied in any order
 //! once their payloads and keys are there.
 
-mod common;
+use crate::common;
 
 use nibkeep_model::storage::Infallibly;
 use std::collections::BTreeSet;
 
-use common::{DRIFT, Device, add, field, items, set, text, texts};
+use crate::common::{DRIFT, Device, add, field, items, set, text, texts};
 use nibkeep_base::Hash;
 use nibkeep_base::cbor::{self, ToCbor, Value as Cbor};
 use nibkeep_base::small::SmallSet;

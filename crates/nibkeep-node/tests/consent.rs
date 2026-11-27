@@ -15,9 +15,9 @@
 //!
 //! [technical design: devices that choose their spaces]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces
 
-mod common;
+use crate::common;
 
-use common::{
+use crate::common::{
 	invite_member, now, own_key, own_record, pair_device_as, pair_joining_as, sync_rounds,
 	user_library,
 };

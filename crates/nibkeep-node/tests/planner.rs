@@ -4,14 +4,12 @@
 //!
 //! [technical design: the planner]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#99-the-planner
 
-mod common;
-
 use std::fs;
 use std::io::Cursor;
 use std::sync::Arc;
 
-use common::devices::{Devices, blob_files, bytes, damage_blobs};
-use common::replica_folder;
+use crate::common::devices::{Devices, blob_files, bytes, damage_blobs};
+use crate::common::replica_folder;
 use image::{DynamicImage, ImageFormat, Rgb, RgbImage};
 use nibkeep_node::{DeviceRole, NodeError, Thumbnail, Thumbnailer};
 use nibkeep_testkit::media::Photo;

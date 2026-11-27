@@ -4,14 +4,12 @@
 //!
 //! [technical design: trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#15-trees
 
-mod common;
-
 use std::fs;
 use std::path::Path;
 use std::time::{Duration, SystemTime};
 
+use crate::common::{Test, library};
 use clap::Parser;
-use common::{Test, library};
 use nibkeep_cli::{Cli, CliError};
 use nibkeep_node::NodeError;
 

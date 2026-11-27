@@ -1,12 +1,12 @@
 //! Secret files: content that only the replicas holding the secrets read, sealed in the
 //! store, with no record of where it was found or of its plain copies (technical design: secret files).
 
-mod common;
+use crate::common;
 
 use std::io::Read;
 use std::path::{Path, PathBuf};
 
-use common::{library, now, this_day, today, values};
+use crate::common::{library, now, this_day, today, values};
 use nibkeep_base::{EntityId, Hash};
 use nibkeep_crypto::PassphraseParams;
 use nibkeep_model::Value;

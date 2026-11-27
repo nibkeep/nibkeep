@@ -8,9 +8,9 @@ use std::fs;
 use std::panic::{AssertUnwindSafe, catch_unwind};
 use std::path::Path;
 
-mod common;
+use crate::common;
 
-use common::{library, now, this_day, today};
+use crate::common::{library, now, this_day, today};
 use nibkeep_base::{EntityId, SpaceId};
 use nibkeep_governance::{NAME, PERSON};
 use nibkeep_model::{FieldDef, FieldName, Name, TypeDef, TypeName, Value, ValueKind, fields};

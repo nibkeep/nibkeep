@@ -9,9 +9,11 @@
 //!
 //! [technical design: devices that choose their spaces]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces
 
-mod common;
+use crate::common;
 
-use common::{LOGIN, invite_member, login_type, now, own_key, pair_joining, sync_rounds, today};
+use crate::common::{
+	LOGIN, invite_member, login_type, now, own_key, pair_joining, sync_rounds, today,
+};
 use nibkeep_base::{EntityId, SpaceId};
 use nibkeep_crypto::{PassphraseParams, VerifyingKey};
 use nibkeep_model::{FieldName, Name, TypeName, Value};

@@ -1,9 +1,9 @@
 //! Merging entities that turn out to be the same, and undoing a merge (`docs/spec/model.md`,
 //! section 7).
 
-mod common;
+use crate::common;
 
-use common::{library, now, this_day};
+use crate::common::{library, now, this_day};
 use nibkeep_base::EntityId;
 use nibkeep_model::{FieldDef, FieldName, Name, TypeDef, Value, ValueKind, fields};
 use nibkeep_node::{Library, NodeError};

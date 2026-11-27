@@ -1,13 +1,13 @@
 //! Blob keys: wrapped with the space key, and those of content in secret fields with the
 //! secrets key inside it; opened on other devices, and purged.
 
-mod common;
+use crate::common;
 
 use nibkeep_model::storage::Infallibly;
 
 use std::collections::BTreeSet;
 
-use common::Device;
+use crate::common::Device;
 use nibkeep_base::cbor::{self, ToCbor, Value as Cbor};
 use nibkeep_base::{Hash, SpaceId};
 use nibkeep_crypto::Key;

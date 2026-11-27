@@ -7,9 +7,7 @@
 //!
 //! [technical design: recovery codes]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes
 
-mod common;
-
-use common::{
+use crate::common::{
 	invite_member, listed_there, now, own_key, own_record, pair_device, sync_rounds, user_library,
 };
 use nibkeep_node::{MemberRole, Taking};

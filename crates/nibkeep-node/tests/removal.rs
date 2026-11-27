@@ -5,15 +5,15 @@
 //!
 //! [technical design: the planner]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#99-the-planner
 
-mod common;
+use crate::common;
 
 use std::fs;
 use std::net::{Ipv4Addr, SocketAddr, UdpSocket};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::{Duration, Instant};
 
-use common::devices::{Devices, blob_files, bytes};
-use common::replica_folder;
+use crate::common::devices::{Devices, blob_files, bytes};
+use crate::common::replica_folder;
 use nibkeep_base::{EntityId, Hash, SpaceId};
 use nibkeep_node::{Behind, DeviceRole, MoveHistory, MoveSecrets, NewProtection};
 

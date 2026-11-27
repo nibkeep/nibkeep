@@ -4,9 +4,9 @@
 //!
 //! [technical design: migrations]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#57-migrations
 
-mod common;
+use crate::common;
 
-use common::{entity, field, statement, statement_id, text};
+use crate::common::{entity, field, statement, statement_id, text};
 use nibkeep_base::{EntityId, SpaceId, StatementId};
 use nibkeep_model::storage::Infallibly;
 use nibkeep_model::{

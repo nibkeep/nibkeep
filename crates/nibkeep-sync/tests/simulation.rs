@@ -2,11 +2,11 @@
 //! now and then, over connections that may break off: once every pair has synced, they
 //! hold the same, and a sync after that sends nothing.
 
-mod common;
+use crate::common;
 
 use std::collections::BTreeMap;
 
-use common::{Replica, sync};
+use crate::common::{Replica, sync};
 use nibkeep_base::{EntityId, Hash, StatementId};
 use nibkeep_log::SpaceKeys;
 use nibkeep_model::storage::Infallibly;

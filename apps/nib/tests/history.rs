@@ -1,9 +1,7 @@
 //! `nib history` and `nib show --as-of`: the record over time, in system time.
 
-mod common;
-
+use crate::common::{Test, ids_hidden, library};
 use clap::Parser as _;
-use common::{Test, ids_hidden, library};
 use nibkeep_testkit::millis_at;
 
 /// A library with a note titled "Milk", made at 10:00 on 2026-10-12, then retitled at 10:05

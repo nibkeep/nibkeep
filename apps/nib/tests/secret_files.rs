@@ -4,12 +4,10 @@
 //!
 //! [technical design: secret files]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#95-secret-files
 
-mod common;
-
 use std::fs;
 
+use crate::common::{Test, library};
 use clap::Parser;
-use common::{Test, library};
 use nibkeep_cli::{Cli, CliError};
 use nibkeep_node::{KeysError, NodeError};
 

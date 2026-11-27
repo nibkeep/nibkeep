@@ -1,9 +1,7 @@
 //! Values that change over time, through the engine: a change in the world, a correction,
 //! and a correction in the past (`docs/spec/model.md`, section 6).
 
-mod common;
-
-use common::{library, now, today};
+use crate::common::{library, now, today};
 use nibkeep_base::EntityId;
 use nibkeep_model::{FieldDef, FieldName, TypeDef, TypeName, Value, ValueKind};
 use nibkeep_node::{Dating, Edit, Library};

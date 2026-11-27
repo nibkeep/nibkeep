@@ -667,7 +667,7 @@ fn a_change_to_what_the_importer_imports_comes_with_a_new_recipe() {
 		env::var_os("NIBKEEP_BLESS").is_some_and(|bless| bless == "1"),
 		"what the importer imports changed, which starts a new series of the benchmarks: \
 		 raise RECIPE in src/real.rs, then write tests/recipe.txt again with NIBKEEP_BLESS=1 \
-		 cargo test -p nibkeep-generate --test real"
+		 cargo test -p nibkeep-generate --test tests -- real::"
 	);
 	assert!(
 		recorded.is_none_or(|recorded| RECIPE > recorded),

@@ -4,13 +4,13 @@
 //!
 //! [technical design: secrets in trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#151-secrets-in-trees
 
-mod common;
+use crate::common;
 
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::time::{Duration, SystemTime};
 
-use common::{library, now, this_day, today};
+use crate::common::{library, now, this_day, today};
 use nibkeep_base::{EntityId, Hash, SpaceId};
 use nibkeep_crypto::PassphraseParams;
 use nibkeep_model::{FieldName, Value};

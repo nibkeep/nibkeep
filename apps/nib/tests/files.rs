@@ -1,12 +1,10 @@
 //! `nib file add`: files and folders added, content stored once, and photos that say when
 //! and where they were taken.
 
-mod common;
-
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use common::library;
+use crate::common::library;
 use nibkeep_cli::CliError;
 use nibkeep_testkit::media::Photo;
 

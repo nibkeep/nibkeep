@@ -5,9 +5,7 @@
 //!
 //! [technical design: recovery codes]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes
 
-mod common;
-
-use common::{Device, add, assert as asserting, pair, send, text, texts};
+use crate::common::{Device, add, assert as asserting, pair, send, text, texts};
 use nibkeep_base::EntityId;
 use nibkeep_crypto::{DecryptionKey, EncryptionKey, RecoveryCode};
 use nibkeep_governance::{

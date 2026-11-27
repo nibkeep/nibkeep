@@ -1,8 +1,6 @@
 //! Types: optional fields, unknown fields, secret fields, roles and labels.
 
-mod common;
-
-use common::{at, entity, set, statement_id, text};
+use crate::common::{at, entity, set, statement_id, text};
 use nibkeep_base::EntityId;
 use nibkeep_base::cbor::{self, Map, ToCbor, Value as Cbor};
 use nibkeep_model::storage::Infallibly;

@@ -6,11 +6,11 @@
 //! [technical design: sharing]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing
 //! [technical design: spaces and moves]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#131-spaces-and-moves
 
-mod common;
+use crate::common;
 
 use std::path::PathBuf;
 
-use common::{library, now, pair_ai_agent_named, pair_named, sync_in_memory};
+use crate::common::{library, now, pair_ai_agent_named, pair_named, sync_in_memory};
 use nibkeep_model::{TypeName, Value};
 use nibkeep_node::{Library, PairingCode, Unlocker};
 use nibkeep_testkit::TestRng;

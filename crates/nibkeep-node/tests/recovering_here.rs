@@ -5,14 +5,12 @@
 //!
 //! [technical design: recovery codes]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes
 
-mod common;
-
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::time::SystemTime;
 
-use common::devices::{Devices, bytes, on_disk};
-use common::{protection, this_day};
+use crate::common::devices::{Devices, bytes, on_disk};
+use crate::common::{protection, this_day};
 use nibkeep_base::EntityId;
 use nibkeep_crypto::RecoveryCode;
 use nibkeep_model::{FieldName, Value};

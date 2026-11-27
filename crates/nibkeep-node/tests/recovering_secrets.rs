@@ -8,12 +8,12 @@
 //!
 //! [technical design: recovery codes]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#111-recovery-codes
 
-mod common;
+use crate::common;
 
 use std::path::{Path, PathBuf};
 
-use common::devices::on_disk;
-use common::{LOGIN, library, login_type, now, pair_named, protection, today};
+use crate::common::devices::on_disk;
+use crate::common::{LOGIN, library, login_type, now, pair_named, protection, today};
 use nibkeep_base::{EntityId, SpaceId};
 use nibkeep_crypto::{DecryptionKey, Key, PassphraseParams, RecoveryCode, key_hash};
 use nibkeep_governance::{RecoveryStatement, SealedSecretsKey};

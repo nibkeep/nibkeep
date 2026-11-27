@@ -5,11 +5,9 @@
 //!
 //! [technical design: revocation]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#11-revocation-and-new-keys
 
-mod common;
-
 use std::path::PathBuf;
 
-use common::{
+use crate::common::{
 	LOGIN, library, login_type, now, pair_joining, pair_named, passwords, sync_in_memory, this_day,
 	today,
 };

@@ -3,12 +3,10 @@
 //!
 //! [technical design: backups]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#910-backups
 
-mod common;
-
 use std::fs;
 use std::path::PathBuf;
 
-use common::library;
+use crate::common::library;
 
 /// An empty folder that a drive's folder stands in for.
 fn drive(name: &str) -> PathBuf {

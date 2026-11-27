@@ -10,9 +10,7 @@
 //!
 //! [technical design: groups]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#138-groups
 
-mod common;
-
-use common::{invite_member, now, sync_in_memory, user_library};
+use crate::common::{invite_member, now, sync_in_memory, user_library};
 use nibkeep_base::{EntityId, SpaceId};
 use nibkeep_model::{Name, TypeName, Value};
 use nibkeep_node::{Library, MemberRole, NodeError};

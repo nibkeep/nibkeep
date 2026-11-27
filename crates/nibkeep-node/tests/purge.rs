@@ -1,8 +1,8 @@
 //! Purging values for good through the library.
 
-mod common;
+use crate::common;
 
-use common::{library, now, this_day, today};
+use crate::common::{library, now, this_day, today};
 use nibkeep_model::{FieldDef, FieldName, TypeDef, TypeName, Value, ValueKind};
 use nibkeep_node::{Edit, Library, NodeError, Unlocker};
 use nibkeep_testkit::TestRng;

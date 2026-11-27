@@ -1,9 +1,7 @@
 //! Relationships: links read from their other end, search through links and pen names,
 //! relationships recorded twice, and scenario S12 against the standard vocabulary.
 
-mod common;
-
-use common::{library, now, this_day, today};
+use crate::common::{library, now, this_day, today};
 use nibkeep_base::EntityId;
 use nibkeep_model::{FieldDef, FieldName, Name, TypeDef, TypeName, Value, ValueKind, fields};
 use nibkeep_node::{Edit, Library, Links, More};

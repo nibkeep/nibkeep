@@ -4,13 +4,13 @@
 //!
 //! [technical design: trees]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#15-trees
 
-mod common;
+use crate::common;
 
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::time::{Duration, SystemTime};
 
-use common::{library, now, sync_in_memory};
+use crate::common::{library, now, sync_in_memory};
 use nibkeep_base::EntityId;
 use nibkeep_node::{
 	Change, Commit, Library, NodeError, PairingCode, TreePoint, Written, resolved_path,

@@ -1,8 +1,6 @@
 //! Envelopes: data encrypted with a key.
 
-mod common;
-
-use common::{FixedBytes, hex, rng};
+use crate::common::{FixedBytes, hex, rng};
 use nibkeep_base::cbor::{self, ToCbor, Value};
 use nibkeep_crypto::{CryptoError, Envelope, Key};
 

@@ -1,12 +1,12 @@
 //! The storage of a state: opened secret statements kept in a layer of their own answer as
 //! if they were kept with the ordinary ones, and leave them as they were when forgotten.
 
-mod common;
+use crate::common;
 
 use std::collections::BTreeSet;
 use std::convert::Infallible;
 
-use common::{at, entity, field, statement, statement_id, text, values};
+use crate::common::{at, entity, field, statement, statement_id, text, values};
 use nibkeep_base::StatementId;
 use nibkeep_model::storage::{AsOf, Infallibly, Layers, Memory, Origin, Overlay, Statements};
 use nibkeep_model::{Operation, State, Statement, Value};

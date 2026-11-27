@@ -3,9 +3,9 @@
 //!
 //! [technical design: purging]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#64-purging
 
-mod common;
+use crate::common;
 
-use common::{DRIFT, Device, add, field, set, text, texts};
+use crate::common::{DRIFT, Device, add, field, set, text, texts};
 use nibkeep_base::{EntityId, StatementId};
 use nibkeep_log::{Kind, Log, LogError, Parcel, Received, SpaceKeys};
 use nibkeep_model::storage::{Infallibly, Statements};

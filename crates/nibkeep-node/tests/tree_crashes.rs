@@ -4,10 +4,8 @@
 //! until the test kills it. The laptop's library and copy must then open, hold every commit
 //! noted, and be found sound. The same with power cuts, on LazyFS, is in `power_loss.rs`.
 
-mod common;
-
-use common::tree_rounds::{tree_child, tree_rounds};
-use common::tree_turns::TreePlaces;
+use crate::common::tree_rounds::{tree_child, tree_rounds};
+use crate::common::tree_turns::TreePlaces;
 
 /// The name of this test, which its child runs.
 const TEST: &str = "crashes_in_a_tree_with_secrets_lose_nothing_committed";

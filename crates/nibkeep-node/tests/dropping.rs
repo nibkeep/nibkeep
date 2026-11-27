@@ -14,13 +14,13 @@
 //!
 //! [technical design: devices that choose their spaces]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#1310-devices-that-choose-their-spaces
 
-mod common;
+use crate::common;
 
 use std::fs;
 use std::path::PathBuf;
 
-use common::devices::{Devices, blob_files, bytes};
-use common::{invite_member, now, own_record, replica_folder, sync_rounds};
+use crate::common::devices::{Devices, blob_files, bytes};
+use crate::common::{invite_member, now, own_record, replica_folder, sync_rounds};
 use nibkeep_base::{EntityId, Hash, SpaceId};
 use nibkeep_crypto::PassphraseParams;
 use nibkeep_model::{Name, TypeName, Value};

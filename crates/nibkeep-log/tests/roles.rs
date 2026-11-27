@@ -8,9 +8,9 @@
 //!
 //! [technical design: sharing]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#13-sharing
 
-mod common;
+use crate::common;
 
-use common::{Device, add, counts_in, pair, send, text, texts};
+use crate::common::{Device, add, counts_in, pair, send, text, texts};
 use nibkeep_base::{EntityId, Hash, SpaceId, StatementId};
 use nibkeep_crypto::RecoveryCode;
 use nibkeep_crypto::{DecryptionKey, EncryptionKey};

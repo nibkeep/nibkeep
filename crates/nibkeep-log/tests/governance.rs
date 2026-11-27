@@ -4,11 +4,11 @@
 //!
 //! [technical design: revocation]: https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#11-revocation-and-new-keys
 
-mod common;
+use crate::common;
 
 use std::collections::BTreeSet;
 
-use common::{DRIFT, Device, add, pair, send, text, texts};
+use crate::common::{DRIFT, Device, add, pair, send, text, texts};
 use nibkeep_base::EntityId;
 use nibkeep_log::{
 	Change, ChangeId, Draft, Kind, Log, LogError, Parcel, Payload, SpaceKeys, Status,

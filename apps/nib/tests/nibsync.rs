@@ -2,13 +2,11 @@
 //! that the list names runs, and the other gives way
 //! ([technical design](https://github.com/nibkeep/nibkeep/blob/main/docs/Technical-design.md#106-syncing-from-login)).
 
-mod common;
-
 use std::path::{Path, PathBuf};
 use std::process::{Child, Command, Stdio};
 use std::time::{Duration, Instant};
 
-use common::Test;
+use crate::common::Test;
 use nibkeep_node::at_login::{
 	AtLogin, ENGINE_VERSION, Served, ServiceStatus, Serving, service_running, service_version,
 };
