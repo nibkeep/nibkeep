@@ -41,6 +41,7 @@
 | `nibkeep-governance` | Security | Users, replicas, spaces, members, roles, groups, claims, invitations, revocation, key distribution and rotation; the rules of which changes count; each space's roster | No |
 | `nibkeep-node` | Engine | Everything an app needs behind one API: open a library, query, change, import, sync, manage devices, spaces and trees | Yes |
 | `nibkeep-cli` | App | The command-line tool, in `apps/nib`, with the binaries `nib` and `nibsync` | Yes |
+| `nibkeep-app` | App | What the core of every app answers alike, as JSON: the library held between the app's calls, set up, unlocked and locked, synced, with devices added and spaces joined, the spaces on a device, recovery codes and syncing from login ([technical design](Technical-design.md#17-apps)) | Yes |
 | `nibkeep-generate` | Tests | The library generator behind the compatibility fixtures and the benchmarks, and `nibkeep-bench` | Yes |
 | `nibkeep-sync` | Sync | Set reconciliation, blob transfer and proofs that a replica holds a copy, as a state machine without I/O. The planner and the removal of copies are in `nibkeep-node` | No |
 | `nibkeep-net` | Transports | Connections through iroh, and discovery on the home network that announces no names; relays and bundles on a USB drive later | Yes |
@@ -67,6 +68,7 @@ Arrows point from a crate to the crates it uses. Left out of the diagram:
 ```mermaid
 flowchart TB
     cli["nibkeep-cli (nib)"]
+    app["nibkeep-app"]
     import["nibkeep-import"]
     node["nibkeep-node"]
     net["nibkeep-net"]
@@ -82,6 +84,7 @@ flowchart TB
     time["nibkeep-time"]
     base["nibkeep-base"]
     cli --> node
+    app --> node
     cli --> import
     cli --> git["nibkeep-git"]
     git --> node

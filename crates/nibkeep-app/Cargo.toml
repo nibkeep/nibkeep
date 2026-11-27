@@ -1,0 +1,48 @@
+[package]
+autotests = false
+name = "nibkeep-app"
+description = "What the core of every NibKeep app needs: the library held between the app's calls, set up, unlocked and locked, synced, with devices added and spaces joined, recovery codes and syncing from login, all as JSON"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+readme.workspace = true
+keywords.workspace = true
+# Not published while its API still changes freely; it carries the licenses all the same.
+publish = false
+
+[features]
+# Cheap passphrases and short waits, for an app's own tests: never in a build that people use.
+testing = []
+
+[dependencies]
+nibkeep-base = { workspace = true }
+nibkeep-crypto = { workspace = true }
+nibkeep-node = { workspace = true }
+getrandom = { workspace = true }
+jiff = { workspace = true }
+keyring-core = { workspace = true }
+serde_json = { workspace = true }
+zeroize = { workspace = true }
+
+# The computer's keystore, which can keep a library's key, as nib's does. A phone's comes
+# from the app, which alone reaches it.
+[target.'cfg(target_os = "macos")'.dependencies]
+apple-native-keyring-store = { workspace = true }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+windows-native-keyring-store = { workspace = true }
+
+[target.'cfg(all(unix, not(any(target_os = "macos", target_os = "ios", target_os = "android"))))'.dependencies]
+zbus-secret-service-keyring-store = { workspace = true }
+
+[dev-dependencies]
+nibkeep-testkit = { workspace = true }
+
+[lints]
+workspace = true
+
+[[test]]
+name = "tests"
+path = "tests/main.rs"

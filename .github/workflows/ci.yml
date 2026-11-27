@@ -107,7 +107,7 @@ jobs:
       # Windows, and the tests' crates. Some compile C code, such as BLAKE3's NEON
       # implementation, which needs the platform's toolchain: Xcode on macOS, the
       # Android NDK on Linux.
-      PHONE_CRATES: -p nibkeep-base -p nibkeep-time -p nibkeep-crypto -p nibkeep-model -p nibkeep-log -p nibkeep-sqlite-vfs -p nibkeep-store -p nibkeep-keys -p nibkeep-governance -p nibkeep-std -p nibkeep-sync -p nibkeep-bonjour -p nibkeep-net -p nibkeep-node -p nibkeep -p nibkeep-generate -p nibkeep-passwords
+      PHONE_CRATES: -p nibkeep-base -p nibkeep-time -p nibkeep-crypto -p nibkeep-model -p nibkeep-log -p nibkeep-sqlite-vfs -p nibkeep-store -p nibkeep-keys -p nibkeep-governance -p nibkeep-std -p nibkeep-sync -p nibkeep-bonjour -p nibkeep-net -p nibkeep-node -p nibkeep -p nibkeep-generate -p nibkeep-passwords -p nibkeep-app
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: dtolnay/rust-toolchain@e2a55d2ffb04f378e9626c28d38b36d230d1e12f # master, 2026-10-09

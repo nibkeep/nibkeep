@@ -3023,6 +3023,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "nibkeep-app"
+version = "0.2.0"
+dependencies = [
+ "apple-native-keyring-store",
+ "getrandom 0.4.3",
+ "jiff",
+ "keyring-core",
+ "nibkeep-base",
+ "nibkeep-crypto",
+ "nibkeep-node",
+ "nibkeep-testkit",
+ "serde_json",
+ "windows-native-keyring-store",
+ "zbus-secret-service-keyring-store",
+ "zeroize",
+]
+
+[[package]]
 name = "nibkeep-base"
 version = "0.2.0"
 dependencies = [

@@ -13,8 +13,9 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent.parent
 # The licenses' texts, which a package must carry itself: Cargo packs only what is in a
 # package's own folder.
 LICENSES = ("LICENSE-MIT", "LICENSE-APACHE")
-# Tools of this repository's own tests and benchmarks, which are not published.
-UNPUBLISHED = {"nibkeep-testkit", "nibkeep-generate", "nibkeep-end-to-end"}
+# Tools of this repository's own tests and benchmarks, which are not published, and the app
+# kit's crate, while its API still changes freely.
+UNPUBLISHED = {"nibkeep-testkit", "nibkeep-generate", "nibkeep-end-to-end", "nibkeep-app"}
 # The target of a Markdown link, inline or by reference.
 LINK = re.compile(r"\]\(\s*<?([^)\s>]+)|^\s{0,3}\[[^\]]+\]:\s*<?(\S+?)>?$", re.M)
 
@@ -42,7 +43,7 @@ def published(manifest):
 
 
 class Packages(unittest.TestCase):
-	def test_only_the_tools_of_tests_and_benchmarks_stay_unpublished(self):
+	def test_only_the_tools_of_tests_and_benchmarks_and_the_app_kit_stay_unpublished(self):
 		unpublished = {
 			manifest["package"]["name"] for manifest in manifests().values() if not published(manifest)
 		}

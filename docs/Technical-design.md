@@ -11,7 +11,7 @@ A decision is changed here, in place, with its reasons; the page's history keeps
 - **Apps use only the engine's public API,** that of `nibkeep-node`, which the crate `nibkeep` gives at its root. So an app could become a plugin ([P8](Design.md#p8-no-privileged-plugins)).
 - **`unsafe` is forbidden in the workspace,** except in a few marked crates: `nibkeep-sqlite-vfs` (the calls SQLite makes into the encrypting VFS), `nibkeep-bonjour` (Apple's DNS-SD), `nibkeep-drives` (Windows' calls that read a drive's partition table), `nibkeep-end-to-end` (process groups and jobs), and `nibkeep-generate` (the one call with which `nibkeep-bench` asks Windows for its peak memory). Every `unsafe` block says why it is sound.
 - **Fakes** that tests of several crates share are in `nibkeep-testkit`.
-- **All packages are published** but the test and benchmark tools: `nibkeep-testkit`, `nibkeep-generate` and `nibkeep-end-to-end`. Each published package carries copies of the workspace's two licenses, since Cargo packs only what is in a package's own folder.
+- **All packages are published** but the test and benchmark tools, `nibkeep-testkit`, `nibkeep-generate` and `nibkeep-end-to-end`, and `nibkeep-app`, while its API still changes freely. Each published package carries copies of the workspace's two licenses, since Cargo packs only what is in a package's own folder.
 - **Trees stay in `nibkeep-node`,** as their purges must reach their copies in every program. They may move out once the engine records every plain copy NibKeep writes.
 
 ## 2. Encoding, identifiers and hashes
@@ -1104,6 +1104,15 @@ A project's `.env`, its keys and its other secrets go into its tree as secret fi
 ## 17. Apps
 
 Apps are programs of their own on the engine. Each opens a library as [separate apps on one library](#710-separate-apps-on-one-library) describes, and uses the engine's crates as any Rust program does. Each app's design is kept with the app.
+
+An app's core is a library of its own, which the app's interface calls through one C function that takes a request as JSON and returns the answer as JSON. The core holds the library between calls, closed, and opens it for each, so that `nib` and other apps use it in between. What every core answers alike is in `nibkeep-app`:
+
+- the library held, unlocked and locked, where locking never waits for a call that holds it: the call lets go of it as it ends;
+- finding, making, joining and unlocking a library, and making a device from a copy of one ([copies of a replica](#72-copies-of-a-replica));
+- syncing with the person's other devices ([the sync role](#105-the-sync-role)), adding a device ([pairing](#104-pairing)), and joining a space that someone shares;
+- the spaces on a device ([devices that choose their spaces](#1310-devices-that-choose-their-spaces)), recovery codes ([recovery codes](#111-recovery-codes)) and syncing from login ([syncing from login](#106-syncing-from-login)).
+
+An app names itself, and on a phone gives the keystore, which only its own code reaches. It says whether it reads secrets: one that does not never asks for them, gives them or takes them there, whatever a request says. The C function and the app's own operations stay in the app, so `nibkeep-app` has no `unsafe` code. Its feature `testing` gives cheap passphrases and short waits, for an app's own tests only.
 
 ## 18. End-to-end tests
 
