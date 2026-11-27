@@ -1,0 +1,37 @@
+[package]
+autotests = false
+name = "nibkeep-plugins"
+description = "The plugin host of NibKeep's apps: WebAssembly components, compiled where the system allows it and interpreted where not, with a deadline and a ceiling of memory, and neither files nor the network"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+readme.workspace = true
+keywords.workspace = true
+# Not published while its API still changes freely; it carries the licenses all the same.
+publish = false
+
+[dependencies]
+blake3 = { workspace = true }
+getrandom = { workspace = true }
+thiserror = { workspace = true }
+wasmtime = { workspace = true }
+wasmtime-wasi = { workspace = true }
+
+[dev-dependencies]
+wat = { workspace = true }
+
+# Loading a compiled plugin is `unsafe`, as Wasmtime trusts its machine code: the one block
+# that does it says why it is sound.
+[lints.rust]
+unsafe_code = "deny"
+missing_docs = "warn"
+unreachable_pub = "warn"
+
+[lints.clippy]
+pedantic = { level = "warn", priority = -1 }
+
+[[test]]
+name = "tests"
+path = "tests/main.rs"

@@ -126,6 +126,11 @@ rustix = { version = "1.1", default-features = false, features = ["fs", "std"] }
 sysinfo = { version = "0.40", default-features = false, features = ["disk"] }
 winreg = "0.56"
 uuid = "1.28"
+# The plugin host (technical design: plugins): WebAssembly components, compiled by Cranelift or
+# interpreted by Pulley, whose bytecode Cranelift makes too.
+wasmtime = { version = "48.0.10", default-features = false, features = ["std", "runtime", "component-model", "cranelift", "pulley"] }
+# Of WASI, the host gives plugins only clocks, random numbers and streams in memory.
+wasmtime-wasi = { version = "48.0.10", default-features = false, features = ["p2"] }
 windows-native-keyring-store = { version = "1.1", default-features = false }
 xaes-256-gcm = { version = "0.1", default-features = false, features = ["zeroize"] }
 secret-service = { version = "5.2", default-features = false, features = ["rt-async-io-crypto-rust"] }
@@ -142,6 +147,8 @@ proptest = "1.12"
 # writes what it printed into the test.
 regex = "1.13"
 snapbox = { version = "1.2.2", features = ["regex"] }
+# The plugins of the plugin host's tests, written in WebAssembly's text format.
+wat = "1.263"
 # Windows' own calls: the end-to-end tests' job that ends a command with what it started, and
 # the drives under a volume and their partition tables, which nibkeep-drives reads.
 windows-sys = { version = "0.61", features = ["Win32_Foundation", "Win32_Security", "Win32_Storage_FileSystem", "Win32_System_IO", "Win32_System_Ioctl", "Win32_System_JobObjects", "Win32_System_Threading"] }

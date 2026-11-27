@@ -9,9 +9,9 @@ A decision is changed here, in place, with its reasons; the page's history keeps
 - **Crates when needed.** The workspace follows the crate map of the [development plan](Plan.md#2-from-layers-to-crates), and a crate is made when a phase first needs it. Libraries live in `crates/` and are named `nibkeep-*`. The crate `nibkeep` has no code of its own: it gives the engine and its API one name. Apps live in `apps/`. The command line is the package `nibkeep-cli` in `apps/nib`, with the binaries `nib` and `nibsync`, as the name `nib` is taken on crates.io.
 - **Dependencies point down.** The crates without I/O (`nibkeep-base`, `nibkeep-time`, `nibkeep-crypto`, `nibkeep-model`, `nibkeep-governance`, `nibkeep-log`, `nibkeep-std` and `nibkeep-sync`) touch no disk, network or system clock. They take randomness and time from their caller, so they test quickly and deterministically, and build for phones. A boundary that turns out wrong is changed on purpose, not quietly.
 - **Apps use only the engine's public API,** that of `nibkeep-node`, which the crate `nibkeep` gives at its root. So an app could become a plugin ([P8](Design.md#p8-no-privileged-plugins)).
-- **`unsafe` is forbidden in the workspace,** except in a few marked crates: `nibkeep-sqlite-vfs` (the calls SQLite makes into the encrypting VFS), `nibkeep-bonjour` (Apple's DNS-SD), `nibkeep-drives` (Windows' calls that read a drive's partition table), `nibkeep-end-to-end` (process groups and jobs), and `nibkeep-generate` (the one call with which `nibkeep-bench` asks Windows for its peak memory). Every `unsafe` block says why it is sound.
+- **`unsafe` is forbidden in the workspace,** except in a few marked crates: `nibkeep-sqlite-vfs` (the calls SQLite makes into the encrypting VFS), `nibkeep-bonjour` (Apple's DNS-SD), `nibkeep-drives` (Windows' calls that read a drive's partition table), `nibkeep-end-to-end` (process groups and jobs), `nibkeep-generate` (the one call with which `nibkeep-bench` asks Windows for its peak memory), and `nibkeep-plugins` (loading a plugin that it compiled before). Every `unsafe` block says why it is sound.
 - **Fakes** that tests of several crates share are in `nibkeep-testkit`.
-- **All packages are published** but the test and benchmark tools, `nibkeep-testkit`, `nibkeep-generate` and `nibkeep-end-to-end`, and `nibkeep-app`, while its API still changes freely. Each published package carries copies of the workspace's two licenses, since Cargo packs only what is in a package's own folder.
+- **All packages are published** but the test and benchmark tools, `nibkeep-testkit`, `nibkeep-generate` and `nibkeep-end-to-end`, and `nibkeep-app` and `nibkeep-plugins`, while their APIs still change freely. Each published package carries copies of the workspace's two licenses, since Cargo packs only what is in a package's own folder.
 - **Trees stay in `nibkeep-node`,** as their purges must reach their copies in every program. They may move out once the engine records every plain copy NibKeep writes.
 
 ## 2. Encoding, identifiers and hashes
@@ -1114,6 +1114,17 @@ An app's core is a library of its own, which the app's interface calls through o
 
 An app names itself, and on a phone gives the keystore, which only its own code reaches. It says whether it reads secrets: one that does not never asks for them, gives them or takes them there, whatever a request says. The C function and the app's own operations stay in the app, so `nibkeep-app` has no `unsafe` code. Its feature `testing` gives cheap passphrases and short waits, for an app's own tests only.
 
+### 17.1 Plugins
+
+A plugin runs in the app that installed it, on the host in `nibkeep-plugins` ([plugins](Design.md#71-plugins)).
+
+- **WebAssembly components on Wasmtime.** Each app writes its plugins' world in WIT, which is their API: plugins in Rust compile to it, and the bindings of other languages are generated from it. The host follows Wasmtime's versions of long-term support, now 48.
+- **Compiled where the system allows it, interpreted where not.** Cranelift compiles plugins to machine code on Windows, Linux, macOS and Android. On iOS, which lets no app generate machine code, Pulley, Wasmtime's interpreter, runs them, about twenty times slower. Cranelift makes Pulley's bytecode too, so each device compiles its own plugins and never runs code compiled elsewhere, which it would have to trust as its own.
+- **Compiled once.** An app compiles a plugin as it is installed and keeps what was compiled. What the host saves of it begins with a keyed hash, whose key is a secret of the device, and the host loads back only what carries that hash. Wasmtime itself refuses what another version, or other settings, wrote.
+- **Limits on every call.** A deadline, counted in milliseconds of Wasmtime's epochs, and a ceiling on the plugin's memory stop a plugin. One that stopped answers no more: the app starts it anew, or disables it.
+- **Of WASI, only clocks and random numbers,** with an empty environment and standard streams that lead nowhere, which a plugin's standard library reaches for. The file system, sockets and exiting are traps. A plugin reaches files and the network only through the app's own functions, which check what it may do.
+- **Rejected:** wasmi, WAMR and wasm3, interpreters without the component model, so that every API would be bytes of our own; Wasmer, which runs on iOS only through a web view; a JavaScript engine built into the app, whose limits on memory do not hold.
+
 ## 18. End-to-end tests
 
 - **Rust tests run `nib` as a program,** in `crates/nibkeep-end-to-end`, which does not depend on `nib`'s code. They run several programs at once, wait for output such as a pairing code, kill a program mid-write, and pass values between devices. Not chosen: trycmd's transcripts, which run one command at a time; cram and bats, which need a POSIX shell; and Python, a second toolchain.
@@ -1157,4 +1168,4 @@ Each is decided here, with its reasons, when its time comes.
 - **Time travel at scale:** "as of" queries across the whole graph may need indexes on time ranges, as in XTDB, a bitemporal database.
 - **Owners within one space** would need each change's header to name the entities it is about, such as by keyed hashes of their IDs.
 - **Adding files through `nib mcp`,** for files in the library's folder.
-- **Plugins:** the runtime, such as WebAssembly components, and how plugins are approved and their approval reaches a person's other devices ([plugins](Design.md#71-plugins)).
+- **Plugins:** their capabilities, how they are approved, and how an approval reaches a person's other devices ([plugins](Design.md#71-plugins)). The runtime is decided ([17.1](#171-plugins)).

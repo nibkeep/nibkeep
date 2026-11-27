@@ -53,7 +53,7 @@
 | `nibkeep-git` | Engine | Runs the person's own Git for the repositories in trees, shielded from variables that point it elsewhere. `nib` uses it; the engine knows nothing of it ([technical design](Technical-design.md#15-trees)) | Yes |
 | `nibkeep-import` | Engine | Importers on the engine's public API, such as for Google Takeout archives, read in place ([technical design](Technical-design.md#912-importers-and-where-files-came-from)) | Yes |
 | `nibkeep` | Engine | NibKeep under one name: the API of `nibkeep-node` at its root, and as modules the crates whose types that API uses: `base`, `model`, `time`, `vocabulary` (`nibkeep-std`) and `crypto` | Yes |
-| `nibkeep-plugins` | Plugin host | Plugin runtime and capabilities, planned for phase 9 ([plugins](Design.md#71-plugins)) | Yes |
+| `nibkeep-plugins` | Plugin host | Runs plugins, WebAssembly components, compiled or interpreted, with limits on every call ([technical design](Technical-design.md#171-plugins)); capabilities in phase 9 | Yes |
 
 Crates without I/O are plain, synchronous Rust. They are the easiest to test and to build for phones. Only the storage, keystore, network and engine crates touch disks, keystores, networks or the clock.
 
@@ -266,7 +266,7 @@ The fixture of version 1 is `fixtures/libraries/v1`. From now on fixtures are on
 Both come after version 1 of the formats, and are meant to add to the formats only. Each will be planned in detail when it comes closer.
 
 - **Phase 8. Phones and the Internet.** Sync over the Internet through self-hostable relays; file providers. Scenarios S1 (Grandma's story) and S4 ("That Christmas").
-- **Phase 9. Plugins.** The plugin runtime, once it and the way plugins are approved are decided ([open questions](Technical-design.md#20-open-questions)). Scenario S8 (installing a plugin).
+- **Phase 9. Plugins.** Plugins' capabilities and approvals, once they are decided ([open questions](Technical-design.md#20-open-questions)), on the host that runs them ([technical design](Technical-design.md#171-plugins)). Scenario S8 (installing a plugin).
 
 ## 6. Risks
 

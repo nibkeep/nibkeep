@@ -34,6 +34,8 @@ Each of these is one piece of work that closes several limits:
 - **On macOS and iOS, Bonjour chooses the networks it announces on** ([technical design](Technical-design.md#102-finding-replicas)), possibly a VPN's; NibKeep accepts only answers from home networks, and announces no names. *Mitigation:* register the service on each home network's interface by its index.
 - **An iPhone app that leaves the screen during a sync** keeps the sync role until the sync ends, and iOS may end the app for holding a file lock in a shared container. *Mitigation:* ask iOS for background time during a sync, and give up the role and the lock when the app leaves the screen.
 - **iOS gives an app 256 open files,** but the tests on an iPhone raise this limit, so they do not show whether an app with many spaces would run out. *Mitigation:* a test at iOS's own limit, and only the files of spaces in use kept open.
+- **On iOS, plugins are interpreted,** about twenty times slower than compiled, as iOS lets no app generate machine code ([plugins](Technical-design.md#171-plugins)). *Mitigation:* work that runs as a person types stays the host's, which every plugin may call.
+- **A Mac app signed with the hardened runtime runs compiled plugins only with the entitlement `com.apple.security.cs.allow-unsigned-executable-memory`,** as Wasmtime does not map its machine code with `MAP_JIT`, which the narrower `com.apple.security.cs.allow-jit` asks for ([wasmtime#11989](https://github.com/bytecodealliance/wasmtime/issues/11989)). *Mitigation:* `MAP_JIT` once Wasmtime has it; meanwhile the entitlement, or plugins interpreted.
 
 ### Android
 
@@ -49,6 +51,7 @@ Each of these is one piece of work that closes several limits:
 
 ### Every system
 
+- **Wasmtime's sandbox is a plugin's only wall** within the app's process, so a flaw in Wasmtime would let a plugin reach what the app reaches ([plugins](Technical-design.md#171-plugins)). *Mitigation:* the host follows Wasmtime's versions of long-term support and takes their fixes within days; plugins that read secrets in a process of their own, which has less than the app.
 - **Copying a secret** (`nib secret copy`) clears the clipboard only if it still holds the same text, so when one secret is copied twice, the first clear ends the second's time. Linux has no change counter to tell them apart, and `arboard` shows none. *Mitigation:* the counters of Windows and macOS (`GetClipboardSequenceNumber`, `changeCount`); on Linux, keep serving the clipboard and clear only while still holding it.
 - **A phone whose ID does not read,** as after a keystore or keychain error, takes its own library for a copy, and an app then offers to make the device from it, which revokes the phone's own device. *Mitigation:* tell an error reading the ID from a missing ID, and on an error offer only to try again.
 - **mdns-sd joins the mDNS group on every interface as it starts,** VPNs too, before it applies the choice of home networks. It sends nothing there, but the network sees the membership. *Mitigation:* a way for mdns-sd to start with no interface, offered to the crate.
@@ -300,6 +303,12 @@ Relays, in phase 8, let devices that never meet on one network sync. Until then:
 - **An AI agent's replica holds the names of all the person's spaces,** as it holds the personal space ([identity](spec/identity.md#8-spaces-of-ones-own)), so a program of the agent's that reads its replica's files can read the names of spaces not chosen for it; NibKeep's own tools name only those the replica holds. *Mitigation:* an AI agent's replica without the personal space, which a later step allows (above).
 - **An AI client is named as it names itself,** so two clients that give one name share a key, and history cannot tell them apart.
 
+### Plugins
+
+- **Plugins have no capabilities, approvals or extension points yet** (phase 9): the host runs a plugin with the functions its app gives it, and the app alone decides which.
+- **What a plugin writes to its standard streams is dropped,** so a plugin that panics stops with Wasmtime's message, not its own. *Mitigation:* the streams in memory, capped, shown with the message of a stopped plugin.
+- **A plugin's memory is freed, not overwritten, as it stops,** so what it read may stay in the process's memory for a while. *Mitigation:* for plugins that read secrets, memory that the host owns and overwrites as it drops it, which Wasmtime lets the host give.
+
 ### The command line
 
 - **Without a terminal, a passphrase that `nib` has to ask for** fails with the system's error, such as `Device not configured (os error 6)` on macOS, instead of pointing to `--passphrase-file`.
@@ -318,6 +327,7 @@ Relays, in phase 8, let devices that never meet on one network sync. Until then:
 
 ### What no test covers
 
+- **No test runs a plugin on a phone:** the plugin host's tests run on computers, and CI only builds it for Android and iOS.
 - **The simulation writes no languages or forms** (`crates/nibkeep-node/tests/simulation.rs`).
 - **The simulation's infected replica writes only part of what its key can sign** (`crates/nibkeep-node/tests/infected_simulation.rs`): changes of the personal space, as a device of the person's or an AI agent's replica, with any parents, times, kinds, keys, purges and statements, also on the replicas' records and in the field of passwords, whole or without their payload or key. It writes no secret statements, blobs or their keys, no keys of its own making or changes signed with them, and no sync messages that misstate what it holds, and is in no space with members; holes there are found only by review or by hand-written tests such as `infected_in_groups.rs`. Its checks of what counts skip a change without its payload or space key, or whose payload does not fit its kind, which adds nothing but is not set aside either. *Mitigation:* each step that widens what a device may write widens what this replica writes, and members, roles and groups are added to it.
 - **The end-to-end tests recover a library only from a backup, asking about each device kept,** not in place of a library that no longer unlocks, nor with `--keep`, which `nib`'s own tests cover in process. *Mitigation:* a story that forgets a library's passphrase and recovers in place, keeping a device with `--keep`.

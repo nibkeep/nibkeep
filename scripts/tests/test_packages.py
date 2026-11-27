@@ -14,8 +14,8 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent.parent
 # package's own folder.
 LICENSES = ("LICENSE-MIT", "LICENSE-APACHE")
 # Tools of this repository's own tests and benchmarks, which are not published, and the app
-# kit's crate, while its API still changes freely.
-UNPUBLISHED = {"nibkeep-testkit", "nibkeep-generate", "nibkeep-end-to-end", "nibkeep-app"}
+# kit's crate and the plugin host, while their APIs still change freely.
+UNPUBLISHED = {"nibkeep-testkit", "nibkeep-generate", "nibkeep-end-to-end", "nibkeep-app", "nibkeep-plugins"}
 # The target of a Markdown link, inline or by reference.
 LINK = re.compile(r"\]\(\s*<?([^)\s>]+)|^\s{0,3}\[[^\]]+\]:\s*<?(\S+?)>?$", re.M)
 
