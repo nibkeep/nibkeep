@@ -17,5 +17,9 @@ blake3 = { workspace = true }
 [target.'cfg(target_os = "ios")'.dependencies]
 rustix = { workspace = true, features = ["process"] }
 
+# Reading the size that the kernel holds of a file on LazyFS, without asking LazyFS.
+[target.'cfg(target_os = "linux")'.dependencies]
+rustix = { workspace = true }
+
 [lints]
 workspace = true

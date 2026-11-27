@@ -37,7 +37,7 @@ For each step:
    - `mdbook build`, then `python3 scripts/check-links.py`.
    - `python3 -m unittest discover -s scripts/tests`
    - The end-to-end tests of `nib`, when a step touches `nib`, syncing or storage: `cargo end-to-end`. They need the home network's multicast, and leave each test's folders and `commands.sh`, what it ran, in `target/tmp`.
-   - Power cuts, when a step touches storage, with `NIBKEEP_LAZYFS` pointing to a build of LazyFS: `NIBKEEP_POWER_LOSS_ROUNDS=60 cargo test -p nibkeep-node --test tests -- power_loss:: tree_crashes::`
+   - Power cuts, when a step touches storage, with `NIBKEEP_LAZYFS` pointing to a build of LazyFS with `scripts/lazyfs.patch`: `NIBKEEP_POWER_LOSS_ROUNDS=60 cargo test -p nibkeep-node --test tests -- power_loss:: tree_crashes::`
 3. Invoke the `code-review` skill. It runs in the background; wait for its notification.
 4. Fix the findings, or give the reasons for skipping them in the short summary for the user. A finding that is a hole in the design, rather than in the step's code, is worked as section 4 says.
 5. Commit with a brief yet descriptive message adhering to the rules in section "1. Commits and pull requests".
@@ -100,7 +100,7 @@ How to run and record them is in `CONTRIBUTING.md` (Benchmarks), including profi
 - **Compatibility fixtures.** When a format changes, regenerate them with `NIBKEEP_BLESS=1 cargo test -p nibkeep-generate --test compatibility`.
 - **The importer's recipe.** When what the importer makes of real data changes, the recipe test fails: raise `RECIPE` in `crates/nibkeep-generate/src/real.rs`, then `NIBKEEP_BLESS=1 cargo test -p nibkeep-generate --test tests -- real::`. A new recipe starts a new series of benchmarks, so raise it for that, and only that.
 - **Unchecked queries.** When fetching from Wikidata, check queries against real answers. The service writes times without a leading `+`, which once silently dropped every date.
-- **The power-cut test.** LazyFS itself sometimes aborts mid-run ("terminate called without an active exception"), and the test's child, or the test process itself, dies of SIGBUS (Known limits, Tests, says when). No data check has failed this way. Rerun it.
+- **The power-cut test.** Unpatched LazyFS makes a process that has SQLite's `-shm` mapped die of SIGBUS whenever its folder is listed, and loses what was written through the mapping, so SQLite finds the database malformed. It aborts at every unmount too ("terminate called without an active exception"). `scripts/lazyfs.patch` fixes all three, and a write that could shrink a file that another write grew; the tests refuse a LazyFS without its fix of listings.
 - **CI.** A job that does not start at all is not a code failure: look at why it did not start. Its jobs take the latest stable Rust, so after a release Formatting and Clippy can fail on code that a commit did not touch: `rustup update stable` first, then fix and commit that apart.
 - **The clipboard on the user's computer.** A test that copies, as those of `nib secret copy` do, replaces what the user copied. Run them where the user does not see them, with a clipboard of their own, as `CLAUDE.local.md` may say.
 - **Benchmarks in memory.** On Arch, `/tmp` is tmpfs: a library measured there never reaches a disk, and synchronizing costs nothing. `bench-record.py` keeps its libraries in `target/bench-libraries`; by hand, give `nibkeep-bench` a directory on a disk too.

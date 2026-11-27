@@ -1,0 +1,78 @@
+LazyFS fixes for NibKeep's power-cut tests, on LazyFS fa7d32e
+(https://github.com/dsrhaslab/lazyfs). Apply in LazyFS's checkout, then build it:
+
+    git apply /path/to/nibkeep/scripts/lazyfs.patch
+    cd lazyfs && ./build.sh
+
+1. readdir: each entry went to libfuse flagged FUSE_FILL_DIR_PLUS, as a complete stat,
+   with the inode and the type alone, so the kernel took a size of 0 for every file in a
+   listed folder and dropped the pages of every mapping of it, those not yet written back
+   too: a process with SQLite's -shm mapped died of SIGBUS, or SQLite read an older
+   WAL index and found the database malformed. NibKeep's test harness checks for this
+   when it mounts LazyFS.
+2. write: the new size was the larger of the write's end and the size read as the write
+   began, so a write that ran meanwhile and grew the file was undone. The kernel writes
+   back pages written through a shared mapping without the inode's lock, beside writes
+   that grow the file, as SQLite's 1-byte writes grow its -shm.
+3. destroy: the fault worker's std::thread was left joinable, so every unmount ended in
+   std::terminate, an abort and a core dump.
+
+diff --git i/lazyfs/src/lazyfs.cpp w/lazyfs/src/lazyfs.cpp
+index 0d4d48f..f9ef52e 100644
+--- i/lazyfs/src/lazyfs.cpp
++++ w/lazyfs/src/lazyfs.cpp
+@@ -683,7 +683,13 @@ void* LazyFS::lfs_init (struct fuse_conn_info* conn, struct fuse_config* cfg) {
+     return this_ ();
+ }
+ 
+-void LazyFS::lfs_destroy (void*) { spdlog::info ("[lazyfs]: stopping LazyFS..."); }
++void LazyFS::lfs_destroy (void*) {
++    spdlog::info ("[lazyfs]: stopping LazyFS...");
++    // The worker waits on the faults FIFO for good: left joinable, its std::thread ends the
++    // program with std::terminate, an abort and a core dump, at every unmount.
++    if (this_ ()->faults_handler_thread->joinable ())
++        this_ ()->faults_handler_thread->detach ();
++}
+ 
+ int LazyFS::lfs_getattr (const char* path, struct stat* stbuf, struct fuse_file_info* fi) {
+ 
+@@ -807,7 +813,9 @@ int LazyFS::lfs_readdir (const char* path,
+         memset (&st, 0, sizeof (st));
+         st.st_ino  = de->d_ino;
+         st.st_mode = de->d_type << 12;
+-        if (filler (buf, de->d_name, &st, 0, FUSE_FILL_DIR_PLUS))
++        // Not FUSE_FILL_DIR_PLUS: the stat holds the inode and the type alone, and the kernel
++        // would take its size of 0 as the file's, dropping the pages of every mapping of it.
++        if (filler (buf, de->d_name, &st, 0, (enum fuse_fill_dir_flags)0))
+             break;
+     }
+ 
+@@ -1244,9 +1252,17 @@ int LazyFS::lfs_write (const char* path,
+ 
+             off_t was_written_until_offset = offset + size;
+ 
++            // Another write may have grown the file since FILE_SIZE_BEFORE was read, such as
++            // one that extends it while the kernel writes back pages written through a
++            // shared mapping, which it does without the inode's lock: take the size as it is
++            // now, under the item's lock, so that this write never shrinks the file.
++            off_t size_now = FILE_SIZE_BEFORE;
++            Metadata* meta_now = this_ ()->FSCache->get_content_metadata (inode);
++            if (meta_now != nullptr)
++                size_now = meta_now->size;
++
+             Metadata meta;
+-            meta.size = was_written_until_offset > FILE_SIZE_BEFORE ? was_written_until_offset
+-                                                                    : FILE_SIZE_BEFORE;
++            meta.size = was_written_until_offset > size_now ? was_written_until_offset : size_now;
+ 
+             vector<string> values_to_change;
+             values_to_change.push_back ("size");
+@@ -1256,7 +1272,7 @@ int LazyFS::lfs_write (const char* path,
+             meta.mtim = modify_time;
+             values_to_change.push_back ("mtime");
+ 
+-            if (meta.size > FILE_SIZE_BEFORE) {
++            if (meta.size > size_now) {
+ 
+                 meta.ctim = modify_time;
+                 values_to_change.push_back ("ctime");

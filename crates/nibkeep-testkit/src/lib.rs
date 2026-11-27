@@ -511,7 +511,9 @@ pub mod child {
 /// written to files in memory until it is synced, and on command drops what is not, as a
 /// power cut does. It carries out creating, renaming and deleting files at once, so the
 /// syncing of directories is not tested with it; real power cuts on a Raspberry Pi test
-/// that. It runs on Linux, where FUSE is.
+/// that. It runs on Linux, where FUSE is, built with `scripts/lazyfs.patch`: without it,
+/// listing a folder takes the size of its files as 0, which ends a process that has
+/// SQLite's `-shm` mapped with SIGBUS.
 #[cfg(target_os = "linux")]
 pub mod lazyfs {
 	use std::fs;
@@ -540,7 +542,8 @@ pub mod lazyfs {
 		///
 		/// # Panics
 		///
-		/// Panics if LazyFS does not mount within half a minute.
+		/// Panics if LazyFS does not mount within half a minute, or lacks
+		/// `scripts/lazyfs.patch`.
 		#[must_use]
 		pub fn mount(program: &Path, directory: &Path) -> Self {
 			let mount = directory.join("mount");
@@ -612,12 +615,43 @@ pub mod lazyfs {
 					}
 				}
 			});
-			Self {
+			let lazyfs = Self {
 				process,
 				mount,
 				commands,
 				replies,
-			}
+			};
+			lazyfs.check_patched(program);
+			lazyfs
+		}
+
+		/// Panics, unmounting LazyFS, if listing a folder makes the kernel take the size of
+		/// its files as 0: LazyFS without `scripts/lazyfs.patch`, under which a process with
+		/// SQLite's `-shm` mapped dies of SIGBUS whenever its folder is listed. The size is
+		/// read as the kernel holds it, without asking LazyFS, which would give it again.
+		fn check_patched(&self, program: &Path) {
+			use rustix::fs::{AtFlags, StatxFlags, statx};
+			let path = self.mount.join("lazyfs-check");
+			fs::write(&path, [0; 4096]).expect("writes the check's file");
+			let file = fs::File::open(&path).expect("opens the check's file");
+			let _ = fs::read_dir(&self.mount).expect("lists the mount").count();
+			let held = statx(
+				&file,
+				"",
+				AtFlags::EMPTY_PATH | AtFlags::STATX_DONT_SYNC,
+				StatxFlags::SIZE,
+			)
+			.expect("reads the size")
+			.stx_size;
+			drop(file);
+			fs::remove_file(&path).expect("removes the check's file");
+			assert_eq!(
+				held,
+				4096,
+				"{} takes a file's size as 0 when its folder is listed, which ends the tests' \
+				 processes with SIGBUS: build it with scripts/lazyfs.patch",
+				program.display()
+			);
 		}
 
 		/// Drops all data that was written to files but not synced, as a power cut does, and

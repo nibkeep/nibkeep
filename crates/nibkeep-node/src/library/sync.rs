@@ -838,8 +838,6 @@ impl Drop for Syncing<'_> {
 /// How much of its disk a replica keeps free when it receives blobs: 1 GiB.
 pub(crate) const MIN_FREE_BYTES: u64 = 1 << 30;
 
-/// Whether a disk with `free` bytes free has room for a blob of `size` bytes, and
-/// [`MIN_FREE_BYTES`] besides.
 /// Whether a group's log gives the replica whose key is `own` the space `space`: whether a
 /// counting statement there gives it an entry for that space, on its record in the group.
 fn gave(
@@ -859,6 +857,8 @@ fn gave(
 	}))
 }
 
+/// Whether a disk with `free` bytes free has room for a blob of `size` bytes, and
+/// [`MIN_FREE_BYTES`] besides.
 fn leaves_room(free: u64, size: u64) -> bool {
 	free.checked_sub(size)
 		.is_some_and(|left| left >= MIN_FREE_BYTES)
