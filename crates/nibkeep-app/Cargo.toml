@@ -46,3 +46,8 @@ workspace = true
 [[test]]
 name = "tests"
 path = "tests/main.rs"
+
+# Sets the process's default keystore, which the other tests must not see.
+[[test]]
+name = "keystore"
+path = "tests/keystore.rs"

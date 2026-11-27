@@ -2,9 +2,12 @@
 
 mod calls;
 mod devices;
+mod joining;
 mod library;
+mod recovery;
 
 use std::path::PathBuf;
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex, MutexGuard, PoisonError};
 
 use keyring_core::CredentialStore;
@@ -16,8 +19,25 @@ static APP: App = App {
 	name: "Example",
 	keystore: mock,
 	secrets: None,
-	let_go: || {},
+	let_go,
 };
+
+/// Set, the tests' app locks the library the next time it lets go of it.
+static LOCK_AS_IT_LETS_GO: AtomicBool = AtomicBool::new(false);
+
+/// What the tests' app does as it lets go of the library: it locks it, once, if a test
+/// asked, as the person may lock it at any moment, here at a moment the test knows.
+fn let_go() {
+	if LOCK_AS_IT_LETS_GO.swap(false, Ordering::SeqCst) {
+		nibkeep_app::held::lock();
+	}
+}
+
+/// Has the tests' app lock the library the next time it lets go of it: within a call that
+/// makes, joins or brings back a library, once that library is there.
+fn lock_as_it_lets_go() {
+	LOCK_AS_IT_LETS_GO.store(true, Ordering::SeqCst);
+}
 
 /// A keystore in memory, never the computer's.
 #[expect(clippy::unnecessary_wraps, reason = "as App::keystore asks")]
@@ -31,6 +51,7 @@ static TURNS: Mutex<()> = Mutex::new(());
 /// This test's turn, with the app named, and never the person's syncing from login.
 fn turn() -> MutexGuard<'static, ()> {
 	let turn = TURNS.lock().unwrap_or_else(PoisonError::into_inner);
+	LOCK_AS_IT_LETS_GO.store(false, Ordering::SeqCst);
 	nibkeep_app::start(&APP);
 	nibkeep_app::at_login::set_place(&mut json!({}));
 	turn
@@ -64,13 +85,16 @@ fn ask(request: &Json) -> Json {
 
 /// The operations of the tests' app: the crate's, by the names the apps give them.
 fn dispatch(op: &str, request: &mut Json) -> Result<Json, nibkeep_app::Failure> {
-	use nibkeep_app::{held, holding, pairing, recovery, setup, spaces};
+	use nibkeep_app::{held, holding, joining, pairing, recovery, setup, spaces};
 	match op {
 		"library_at" => setup::library_at(&nibkeep_app::take(request, "folder")),
 		"create" => setup::create(request),
 		"join" => setup::join(request),
 		"from_copy" => setup::from_copy(request),
 		"unlock" => setup::unlock(request),
+		"create_and_join" => joining::create_and_join(request),
+		"join_space" => joining::join_space(request),
+		op if recovery::CLOSED.contains(&op) => recovery::answer(op, request),
 		"add_device" => pairing::add_device(request),
 		"pairing" => Ok(pairing::pairing()),
 		"stop_adding" => {

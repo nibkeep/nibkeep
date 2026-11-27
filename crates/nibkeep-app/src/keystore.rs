@@ -3,10 +3,12 @@
 //! on a computer, the computer's own; on a phone, the one the app gives ([`crate::App`]),
 //! which only the app's code reaches.
 
-use std::sync::{Arc, OnceLock};
+use std::sync::{Arc, Mutex, OnceLock};
 
 use keyring_core::CredentialStore;
 use nibkeep_node::{KeysError, NodeError};
+
+use crate::locked;
 
 /// The person turned a keystore's prompt down, or it was closed, as when the app went to
 /// the background: nothing was confirmed. A keystore that asks the person fails with it.
@@ -41,37 +43,45 @@ pub fn lost(error: &NodeError) -> bool {
 	)
 }
 
-/// Makes the app's keystore the one that libraries use, the first time: whether there is
-/// one. With `NIBKEEP_NO_KEYSTORE` set, as an app's own tests set it on computers, there is
-/// none. Before the app names itself ([`crate::start`]), there is none either, and the next
-/// call looks again.
+/// Makes the app's keystore the one that libraries use, once the app gives one: whether
+/// there is one. With `NIBKEEP_NO_KEYSTORE` set, as an app's own tests set it on computers,
+/// there is none, for good. Before the app names itself ([`crate::start`]), or while it
+/// gives none, as a phone's app before its code has what the keystore needs, there is none
+/// either, and the next call looks again.
 #[must_use]
 pub fn keystore() -> bool {
-	static KEYSTORE: OnceLock<bool> = OnceLock::new();
-	if let Some(found) = KEYSTORE.get() {
-		return *found;
-	}
+	/// Whether there is a keystore, once that is settled.
+	static SETTLED: Mutex<Option<bool>> = Mutex::new(None);
 	let Some(app) = crate::APP.get() else {
 		return false;
 	};
-	*KEYSTORE.get_or_init(|| {
-		if nibkeep_node::at_login::app::kept_away() {
-			return false;
-		}
-		match (app.keystore)() {
-			Some(store) => {
-				keyring_core::set_default_store(store);
-				true
-			}
-			None => false,
-		}
-	})
+	let mut settled = locked(&SETTLED);
+	if let Some(found) = *settled {
+		return found;
+	}
+	if nibkeep_node::at_login::app::kept_away() {
+		*settled = Some(false);
+		return false;
+	}
+	let Some(store) = (app.keystore)() else {
+		return false;
+	};
+	keyring_core::set_default_store(store);
+	*settled = Some(true);
+	true
 }
 
 /// The computer's keystore: macOS's keychain, Windows' credential manager, or the secret
-/// service of Linux and the BSDs; `None` where it cannot be reached, and on phones.
+/// service of Linux and the BSDs; `None` where it cannot be reached, and on phones. It is
+/// looked for once, as each look at the secret service may wait for it on D-Bus.
 #[must_use]
 pub fn computer() -> Option<Arc<CredentialStore>> {
+	static FOUND: OnceLock<Option<Arc<CredentialStore>>> = OnceLock::new();
+	FOUND.get_or_init(reach).clone()
+}
+
+/// The computer's keystore, reached anew.
+fn reach() -> Option<Arc<CredentialStore>> {
 	#[cfg(target_os = "macos")]
 	let store = apple_native_keyring_store::keychain::Store::new();
 	#[cfg(target_os = "windows")]

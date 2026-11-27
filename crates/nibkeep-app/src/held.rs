@@ -42,7 +42,7 @@ impl Held {
 	/// Whether the library was not locked since the call began.
 	#[must_use]
 	pub fn unchanged(&self) -> bool {
-		LOCKS.load(Ordering::SeqCst) == self.mark.locks
+		!self.mark.library_locked()
 	}
 }
 
@@ -62,9 +62,9 @@ impl DerefMut for Held {
 
 impl Drop for Held {
 	fn drop(&mut self) {
-		if !self.unchanged() {
+		if self.mark.library_locked() {
 			*self.guard = None;
-		} else if SECRETS_LOCKS.load(Ordering::SeqCst) != self.mark.secrets_locks
+		} else if self.mark.secrets_locked()
 			&& let Some(closed) = self.guard.as_mut()
 		{
 			closed.lock_secrets();
@@ -73,8 +73,8 @@ impl Drop for Held {
 }
 
 /// How many times the library and its secrets were locked by a moment: work that must not
-/// hold the library while it waits, as for the person to confirm, checks afterwards that
-/// neither was locked meanwhile.
+/// hold the library while it waits, as for the person to confirm or on the network, checks
+/// afterwards that neither was locked meanwhile, as [`keep`] does.
 #[derive(Clone, Copy, Debug)]
 pub struct Mark {
 	locks: u64,
@@ -83,11 +83,22 @@ pub struct Mark {
 
 impl Mark {
 	/// The locks so far.
-	fn now() -> Self {
+	#[must_use]
+	pub fn now() -> Self {
 		Self {
 			locks: LOCKS.load(Ordering::SeqCst),
 			secrets_locks: SECRETS_LOCKS.load(Ordering::SeqCst),
 		}
+	}
+
+	/// Whether the library was locked since the mark.
+	pub(crate) fn library_locked(&self) -> bool {
+		LOCKS.load(Ordering::SeqCst) != self.locks
+	}
+
+	/// Whether the secrets were locked since the mark.
+	fn secrets_locked(&self) -> bool {
+		SECRETS_LOCKS.load(Ordering::SeqCst) != self.secrets_locks
 	}
 
 	/// Whether the library and its secrets stayed unlocked since the mark: if the library
@@ -97,10 +108,10 @@ impl Mark {
 	///
 	/// As said.
 	pub fn check(&self) -> Result<(), Failure> {
-		if LOCKS.load(Ordering::SeqCst) != self.locks {
+		if self.library_locked() {
 			return Err(Failure::Locked);
 		}
-		if SECRETS_LOCKS.load(Ordering::SeqCst) != self.secrets_locks {
+		if self.secrets_locked() {
 			return Err(Failure::SecretsLocked);
 		}
 		Ok(())
@@ -187,11 +198,31 @@ pub fn waiting(open: impl FnMut() -> Result<Library, NodeError>) -> Result<Libra
 	}
 }
 
-/// Keeps a library that the app just unlocked, made or joined, closed, for the calls that
-/// follow: what the library held before did on the network stops first.
-pub fn keep(library: Library) {
+/// Keeps a library that the app just made, joined or brought back, closed, for the calls
+/// that follow, unless the library was locked since `since`, which the work took as it
+/// began: what the library held before did on the network stops first. If the secrets were
+/// locked since, the library kept has them locked.
+///
+/// # Errors
+///
+/// [`Failure::Locked`] if the library was locked since `since`: the library goes, locked,
+/// and the one held now, if any, stays.
+pub fn keep(library: Library, since: Mark) -> Result<(), Failure> {
+	if since.library_locked() {
+		return Err(Failure::Locked);
+	}
 	let_go();
-	*hold() = Some(library.close());
+	let mut held = hold();
+	// Again with the library held, which a lock from now on lets go of as the call ends.
+	if since.library_locked() {
+		return Err(Failure::Locked);
+	}
+	let mut closed = library.close();
+	if since.secrets_locked() {
+		closed.lock_secrets();
+	}
+	*held = Some(closed);
+	Ok(())
 }
 
 /// Locks the library at once: forgets it, or has the call that holds it forget it when it

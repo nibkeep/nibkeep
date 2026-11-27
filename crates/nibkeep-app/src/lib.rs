@@ -48,9 +48,10 @@ pub use failure::Failure;
 pub struct App {
 	/// The app's name: of the replicas it makes, and of the app in the records of syncing.
 	pub name: &'static str,
-	/// The keystore that libraries use, made the first time one is needed, or `None` where
-	/// there is none: on a computer, [`keystore::computer`]; on a phone, the app's own,
-	/// which only the app's code reaches; in tests, one in memory.
+	/// The keystore that libraries use, asked for as one is needed until it gives one, which
+	/// is kept then, or `None` where there is none, or none yet: on a computer,
+	/// [`keystore::computer`]; on a phone, the app's own, which only the app's code reaches;
+	/// in tests, one in memory.
 	pub keystore: fn() -> Option<Arc<CredentialStore>>,
 	/// How the app reads secrets, if it does.
 	pub secrets: Option<Secrets>,

@@ -1107,7 +1107,7 @@ Apps are programs of their own on the engine. Each opens a library as [separate 
 
 An app's core is a library of its own, which the app's interface calls through one C function that takes a request as JSON and returns the answer as JSON. The core holds the library between calls, closed, and opens it for each, so that `nib` and other apps use it in between. What every core answers alike is in `nibkeep-app`:
 
-- the library held, unlocked and locked, where locking never waits for a call that holds it: the call lets go of it as it ends;
+- the library held, unlocked and locked, where locking never waits for a call: one that holds the library lets go of it as it ends, and one that makes, joins or brings back a library leaves that one locked;
 - finding, making, joining and unlocking a library, and making a device from a copy of one ([copies of a replica](#72-copies-of-a-replica));
 - syncing with the person's other devices ([the sync role](#105-the-sync-role)), adding a device ([pairing](#104-pairing)), and joining a space that someone shares;
 - the spaces on a device ([devices that choose their spaces](#1310-devices-that-choose-their-spaces)), recovery codes ([recovery codes](#111-recovery-codes)) and syncing from login ([syncing from login](#106-syncing-from-login)).

@@ -17,7 +17,7 @@ use nibkeep_node::{
 };
 use serde_json::{Value as Json, json};
 
-use crate::held::{hold, keep, let_go, waiting};
+use crate::held::{Mark, hold, keep, let_go, waiting};
 use crate::keystore::keystore;
 use crate::{Failure, app, clock, syncing, take, wall_millis, wipe};
 
@@ -369,17 +369,19 @@ fn remove_empty(directory: &Path, made: &[PathBuf]) {
 
 /// Makes a library in the request's `folder`, as [`create_library`] does, with the names
 /// of its `user` and `device`, its keys protected by its `passphrase` or with `keystore`,
-/// the keystore, and holds it, unlocked.
+/// the keystore, and holds it, unlocked, unless the library was locked meanwhile.
 ///
 /// # Errors
 ///
-/// As [`create_library`].
+/// As [`create_library`], and [`Failure::Locked`] if the library was locked meanwhile.
 pub fn create(request: &mut Json) -> Result<Json, Failure> {
+	let since = Mark::now();
 	let folder = take(request, "folder");
 	let passphrase = take(request, "passphrase");
 	let protect = Protect::of(request, &passphrase);
 	let names = (take(request, "user"), take(request, "device"));
-	keep(create_library(&folder, (&names.0, &names.1), &protect)?);
+	let made = create_library(&folder, (&names.0, &names.1), &protect)?;
+	keep(made, since)?;
 	Ok(json!({}))
 }
 
@@ -430,12 +432,14 @@ pub fn create_library(
 /// the request's `folder`, with the `code` it shows, as the device named `device`, with
 /// its keys protected by `passphrase` or with `keystore`, the keystore; with `replace`,
 /// in place of the library there. In an app that reads secrets, with `secrets`, the
-/// secrets too, protected as it says. Holds the library, unlocked.
+/// secrets too, protected as it says. Holds the library, unlocked, unless the library was
+/// locked as it joined.
 ///
 /// # Errors
 ///
-/// As [`join_library`].
+/// As [`join_library`], and [`Failure::Locked`] if the library was locked as it joined.
 pub fn join(request: &mut Json) -> Result<Json, Failure> {
+	let since = Mark::now();
 	let folder = take(request, "folder");
 	let code = take(request, "code");
 	let device = take(request, "device");
@@ -459,7 +463,7 @@ pub fn join(request: &mut Json) -> Result<Json, Failure> {
 	if let Some(secrets) = secrets.as_mut() {
 		wipe(secrets);
 	}
-	keep(joined?);
+	keep(joined?, since)?;
 	Ok(json!({}))
 }
 
@@ -610,12 +614,13 @@ fn finish_replacing(folder: &str) {
 /// `copy_keystore`, the keystore, and its keys here protected by `passphrase` or with
 /// `keystore`. In an app that reads secrets, with `secrets`, the secrets too, opened by its
 /// `copy_passphrase` or `copy_keystore` and protected by its `passphrase` or `keystore`.
-/// Holds the library, unlocked.
+/// Holds the library, unlocked, unless the library was locked meanwhile.
 ///
 /// # Errors
 ///
-/// As [`library_from_copy`].
+/// As [`library_from_copy`], and [`Failure::Locked`] if the library was locked meanwhile.
 pub fn from_copy(request: &mut Json) -> Result<Json, Failure> {
+	let since = Mark::now();
 	let folder = take(request, "folder");
 	let copy_passphrase = take(request, "copy_passphrase");
 	let copy = Protect {
@@ -653,7 +658,7 @@ pub fn from_copy(request: &mut Json) -> Result<Json, Failure> {
 	if let Some(secrets) = secrets.as_mut() {
 		wipe(secrets);
 	}
-	keep(made?);
+	keep(made?, since)?;
 	Ok(json!({}))
 }
 

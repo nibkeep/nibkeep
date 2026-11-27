@@ -29,7 +29,7 @@ use nibkeep_node::{
 use serde_json::{Value as Json, json};
 use zeroize::Zeroizing;
 
-use crate::held::keep;
+use crate::held::{Mark, keep};
 use crate::keystore::keystore;
 use crate::setup::{Protect, data, replica_id};
 use crate::{Failure, app, clock, locked, take, wall_millis};
@@ -46,18 +46,22 @@ pub const CLOSED: [&str; 4] = [
 ];
 
 /// Answers the requests that need no library unlocked: starting, finishing and stopping a
-/// recovery, and forgetting the code shown last. A library brought back is held, unlocked.
+/// recovery, and forgetting the code shown last. A library brought back is held, unlocked,
+/// unless the library was locked as it came back.
 ///
 /// # Errors
 ///
-/// As [`start`] and [`finish`].
+/// As [`start`] and [`finish`], and [`Failure::Locked`] if the library was locked as it
+/// came back: it stays, locked.
 pub fn answer(op: &str, request: &mut Json) -> Result<Json, Failure> {
 	match op {
 		"start_recovery" => start(request),
-		"finish_recovery" => finish(request).map(|(library, done)| {
-			keep(library);
-			done
-		}),
+		"finish_recovery" => {
+			let since = Mark::now();
+			let (library, done) = finish(request)?;
+			keep(library, since)?;
+			Ok(done)
+		}
 		"stop_recovery" => {
 			stop();
 			Ok(json!({}))
