@@ -455,8 +455,8 @@ pub struct Syncing<'a> {
 	introduced: Option<(VerifyingKey, BTreeSet<SpaceId>)>,
 	/// The wall clock, read as each change arrives.
 	now: &'a dyn Fn() -> u64,
-	/// How many blobs and ordinary changes were refused, as the disk would have had too
-	/// little room left.
+	/// How many blobs and ordinary payloads were refused, as the disk would have had too
+	/// little room left, of those that this replica lacked.
 	refused: usize,
 	/// How many bytes the disk had free, as last read, less what was received since.
 	free: Option<u64>,
@@ -628,7 +628,7 @@ impl<'a> Syncing<'a> {
 		let directory = &self.library.directory;
 		let free = match self.free {
 			Some(free) if leaves_room(free, size.saturating_mul(2)) => free,
-			_ => fs4::available_space(directory).map_err(NodeError::file(directory))?,
+			_ => crate::place::available_space(directory).map_err(NodeError::file(directory))?,
 		};
 		if !leaves_room(free, size) {
 			self.free = Some(free);
@@ -639,7 +639,7 @@ impl<'a> Syncing<'a> {
 	}
 
 	/// How many blobs and ordinary changes were refused, as the disk would have had less
-	/// than 1 GiB free.
+	/// than 1 GiB free: those that this replica lacked, and lacks still.
 	#[must_use]
 	pub const fn refused(&self) -> usize {
 		self.refused
@@ -1260,8 +1260,12 @@ impl Holder for Syncing<'_> {
 		{
 			let size = u64::try_from(payload.byte_len()).unwrap_or(u64::MAX);
 			if !self.has_room(size)? {
-				self.refused += 1;
 				parcel.payload = None;
+				// A payload held already is no loss, as when a copy offers it again.
+				let log = self.library.space(space)?.stored.log();
+				if log.sealed_payload(parcel.id())?.is_none() {
+					self.refused += 1;
+				}
 			}
 		}
 		self.batch(space)?;
@@ -1353,7 +1357,11 @@ impl Holder for Syncing<'_> {
 		// Nor is one that would leave the disk too full, so that another replica cannot
 		// fill it; the sync goes on without it.
 		if !self.has_room(size)? {
-			self.refused += 1;
+			// A blob held already is no loss, as when a copy offers it again.
+			let stored = &self.space(space)?.stored;
+			if stored.open_sealed_blob(&sealed)?.is_none() {
+				self.refused += 1;
+			}
 			return Ok(false);
 		}
 		let now = (self.now)();

@@ -174,6 +174,9 @@ pub struct BackupUpdate {
 	pub taken: BackupMoved,
 	/// What it wrote to the backup.
 	pub written: BackupMoved,
+	/// How many changes and blobs of the backup's it left out, as the disk would have kept
+	/// less than 1 GiB free; a later update takes them in.
+	pub refused: usize,
 	/// How many items and files of purged content left the backup.
 	pub purged: usize,
 	/// How many purges wait on the backup before what they destroyed leaves it.
@@ -1269,8 +1272,9 @@ impl Library {
 
 	/// Takes in what the backup in `folder`, whose record is `backup`, holds of `spaces`, as
 	/// the first two steps of an update do, holding the backup meanwhile: for a library that a
-	/// recovery code brings back, which does not read the backup's record yet. `None` while
-	/// another program updates the backup.
+	/// recovery code brings back, which does not read the backup's record yet. Returns what
+	/// was taken in, and how much was left out, or `None` while another program updates the
+	/// backup.
 	///
 	/// # Errors
 	///
@@ -1281,7 +1285,7 @@ impl Library {
 		(folder, backup): (&Path, EntityId),
 		spaces: &[SpaceId],
 		now: &dyn Fn() -> u64,
-	) -> Result<Option<BackupMoved>, NodeError> {
+	) -> Result<Option<(BackupMoved, usize)>, NodeError> {
 		let name = folder
 			.file_name()
 			.map_or_else(String::new, |name| name.to_string_lossy().into_owned());
@@ -1292,7 +1296,7 @@ impl Library {
 		let mut done = BackupUpdate::default();
 		let packs = Packs::read(&updating, &mut done)?;
 		self.take_in_backup(&updating, &packs, spaces, now, &mut done)?;
-		Ok(Some(done.taken))
+		Ok(Some((done.taken, done.refused)))
 	}
 
 	/// What a backup keeps of what a purge of `space` destroyed, as its packs hold it while
@@ -1636,6 +1640,7 @@ impl Library {
 			}
 			syncing.finish_space(space)?;
 		}
+		done.refused += syncing.refused();
 		Ok(())
 	}
 

@@ -630,6 +630,12 @@ pub enum NodeError {
 	/// A backup that another program is updating, which a recovery reads once it is done.
 	#[error("another program is updating this backup; try again once it is done")]
 	BackupBusy,
+	/// A disk too full to take in all that a copy or a recovery's source holds, as NibKeep
+	/// keeps 1 GiB of it free: the new device was not made, and no device was revoked.
+	#[error(
+		"this disk has too little room for all that the library holds, as NibKeep keeps 1 GiB of it free; nothing was made: free some room and begin again"
+	)]
+	NoRoom,
 	/// A recovery of the library in the directory was cut short, as by a crash: its new
 	/// device is known to nobody, and running the recovery again starts it over.
 	#[error(

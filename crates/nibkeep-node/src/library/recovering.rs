@@ -255,8 +255,9 @@ impl Recovering<'_> {
 	/// # Errors
 	///
 	/// Returns [`NodeError::LibraryPassphrase`] if `secrets` is the library's passphrase,
-	/// [`NodeError::BackupBusy`] if another program updates the backup, and an error if the
-	/// source cannot be read, the replica written, or the replica it replaces set aside.
+	/// [`NodeError::BackupBusy`] if another program updates the backup, [`NodeError::NoRoom`]
+	/// if the disk has no room for all that the source holds, and an error if the source
+	/// cannot be read, the replica written, or the replica it replaces set aside.
 	pub fn finish(
 		mut self,
 		secrets: Option<&NewProtection<'_>>,
@@ -407,8 +408,9 @@ impl Library {
 	/// recovery file, [`NodeError::CodeOpensNothing`] if the code opens nothing there,
 	/// [`NodeError::RecoveryFileChanged`] if the file's entry for the code is not what the code
 	/// signed, all before anything is written, [`NodeError::RecoveryCodeRevoked`] if the source holds the
-	/// code's revocation, [`NodeError::BackupBusy`] if another program updates the backup, and
-	/// an error if the source cannot be read or the new replica made.
+	/// code's revocation, [`NodeError::BackupBusy`] if another program updates the backup,
+	/// [`NodeError::NoRoom`] if the disk has no room for all that the source holds of the
+	/// personal space, and an error if the source cannot be read or the new replica made.
 	pub fn start_recovery<'a>(
 		directory: &Path,
 		(source, code): (&'a Path, &'a RecoveryCode),
@@ -1055,21 +1057,32 @@ impl Library {
 	///
 	/// # Errors
 	///
-	/// Returns [`NodeError::BackupBusy`] if another program updates the backup, and an error
-	/// if what is taken in cannot be saved.
+	/// Returns [`NodeError::BackupBusy`] if another program updates the backup,
+	/// [`NodeError::NoRoom`] if the disk had no room for all of it, so that the recovery
+	/// revokes no device whose records it lacks, and an error if what is taken in cannot be
+	/// saved.
 	fn take_in_source(
 		&mut self,
 		source: &Source<'_>,
 		spaces: &[SpaceId],
 		now: &dyn Fn() -> u64,
 	) -> Result<usize, NodeError> {
-		match source {
-			Source::Backup(folder, backup) => Ok(self
-				.take_in_backup_at((folder, *backup), spaces, now)?
-				.ok_or(NodeError::BackupBusy)?
-				.changes),
-			Source::Library(folder, _) => self.take_in_lost_replica(folder, spaces, now),
+		let (taken, refused) = match source {
+			Source::Backup(folder, backup) => {
+				let (taken, refused) = self
+					.take_in_backup_at((folder, *backup), spaces, now)?
+					.ok_or(NodeError::BackupBusy)?;
+				(taken.changes, refused)
+			}
+			Source::Library(folder, _) => {
+				let taken = self.take_in_lost_replica(folder, spaces, now)?;
+				(taken.items, taken.refused)
+			}
+		};
+		if refused > 0 {
+			return Err(NodeError::NoRoom);
 		}
+		Ok(taken)
 	}
 }
 

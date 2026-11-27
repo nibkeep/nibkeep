@@ -19,7 +19,7 @@ use nibkeep_governance::{RecoveryStatement, SpaceEntry, recovery_record, state_r
 use nibkeep_model::{FieldName, Value};
 use nibkeep_node::{
 	Backup, Joining, Library, NewBackup, NodeError, RECOVERY_FILE, Recovered, RecoveredSecrets,
-	Recovering, RecoveryFile, Unlocker,
+	Recovering, RecoveryFile, Unlocker, declare_free_space,
 };
 
 const NOTE: &str = "local.note";
@@ -441,6 +441,36 @@ fn a_code_revoked_since_the_backup_introduces_nobody() {
 		});
 	// The backup, not updated since, still held the code; the phone knows it is revoked.
 	refused_by_the_phone(&mut devices, phone, new);
+}
+
+#[test]
+fn a_disk_too_full_for_what_the_backup_holds_brings_nothing_back() {
+	let mut devices = Devices::new("too full", false);
+	let written = note(&mut devices, 0, "the boiler's code is 4711");
+	let code = make_code(&mut devices, 0);
+	let (_, folder) = backup(&mut devices, "too full");
+	let directory = new_computer("too full");
+	// The new disk would keep less than 1 GiB free: rather than leave the note out, and
+	// revoke the devices that hold it, nothing is made.
+	declare_free_space(&directory, Some(512 << 20));
+	let error = recover(&mut devices, &directory, (&folder, &code))
+		.err()
+		.expect("no room");
+	assert!(matches!(error, NodeError::NoRoom), "{error}");
+	assert!(
+		matches!(
+			Library::replica_folder(&directory),
+			Err(NodeError::NoLibrary)
+		),
+		"nothing was made"
+	);
+	// Once there is room, it comes back whole.
+	declare_free_space(&directory, None);
+	let (library, _) = recover(&mut devices, &directory, (&folder, &code)).expect("recovers");
+	assert_eq!(
+		notes(&library, written),
+		[Value::Text("the boiler's code is 4711".to_owned())]
+	);
 }
 
 #[test]

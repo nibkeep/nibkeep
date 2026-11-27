@@ -154,6 +154,42 @@ fn declare(declared: Declared) {
 	all.push(declared);
 }
 
+/// The folders whose drives tests declared nearly full, each with the bytes it has free.
+static FREE: Mutex<Vec<(PathBuf, u64)>> = Mutex::new(Vec::new());
+
+/// Declares that the drive of the folders in `folder` has `free` bytes free, whatever the
+/// system reports, or with `None`, what the system reports again: for tests, which pretend
+/// that a disk is nearly full.
+#[doc(hidden)]
+pub fn declare_free_space(folder: &Path, free: Option<u64>) {
+	let folder = canonical(folder);
+	let mut all = FREE
+		.lock()
+		.unwrap_or_else(std::sync::PoisonError::into_inner);
+	all.retain(|(other, _)| *other != folder);
+	all.extend(free.map(|free| (folder, free)));
+}
+
+/// How many bytes the drive of `folder` has free for this user, as the system reports it, or
+/// as a test declared it.
+pub(crate) fn available_space(folder: &Path) -> io::Result<u64> {
+	let declared = {
+		let all = FREE
+			.lock()
+			.unwrap_or_else(std::sync::PoisonError::into_inner);
+		if all.is_empty() {
+			None
+		} else {
+			let folder = canonical(folder);
+			all.iter()
+				.filter(|(declared, _)| folder.starts_with(declared))
+				.max_by_key(|(declared, _)| declared.components().count())
+				.map(|(_, free)| *free)
+		}
+	};
+	declared.map_or_else(|| fs4::available_space(folder), Ok)
+}
+
 /// A folder as the file system resolves it: the deepest folder of it that exists, resolved,
 /// and the rest of its names after it, so that a folder declared before it exists, through a
 /// link such as Android's `/data/user/0`, is the same folder once it does.

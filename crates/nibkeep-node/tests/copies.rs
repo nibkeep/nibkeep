@@ -12,12 +12,15 @@ use crate::common::{files, now, pair_with, sync_in_memory};
 use nibkeep_base::EntityId;
 use nibkeep_node::{
 	Drive, Library, NewLibrary, NewProtection, NodeError, PairingCode, PassphraseParams, Unlocker,
-	declare_drive,
+	declare_drive, declare_free_space,
 };
 use nibkeep_std::CONTENT;
 use nibkeep_testkit::{TestRng, copy_folder};
 
 const PASSPHRASE: &str = "correct horse";
+
+/// Free space that leaves less than the 1 GiB that NibKeep keeps free.
+const TOO_LITTLE: u64 = 512 << 20;
 
 fn protection() -> NewProtection<'static> {
 	NewProtection::Passphrase(PASSPHRASE, PassphraseParams::new(64, 1, 1).expect("valid"))
@@ -259,9 +262,16 @@ fn a_device_that_joins_beside_a_copy_takes_in_what_only_the_copy_held() {
 	paired.expect("the desk paired");
 	let mut new = joined.expect("the new laptop joined").library;
 	assert!(!has_content(&new, added), "the desk never had it");
+	// A disk that would keep less than 1 GiB free leaves the file out, and counts it.
+	declare_free_space(&new_folder, Some(TOO_LITTLE));
+	let taken = new.take_in_copies(&|| now() + 90_000).expect("takes in");
+	assert!(taken.refused > 0);
+	assert!(!has_content(&new, added), "no room for it");
+	declare_free_space(&new_folder, None);
 	let taken = new.take_in_copies(&|| now() + 120_000).expect("takes in");
 	assert_eq!(taken.copies, 1);
 	assert!(taken.items > 0);
+	assert_eq!(taken.refused, 0);
 	assert!(has_content(&new, added), "the copy held it");
 	// Nothing of the copy was written, and it is still a copy.
 	for (path, bytes) in copied {
@@ -273,13 +283,11 @@ fn a_device_that_joins_beside_a_copy_takes_in_what_only_the_copy_held() {
 	first.expect("syncs");
 	second.expect("syncs");
 	assert!(has_content(&desk, added));
-	// Taking in again brings nothing new.
-	assert_eq!(
-		new.take_in_copies(&|| now() + 240_000)
-			.expect("takes in")
-			.items,
-		0
-	);
+	// Taking in again brings nothing new, and leaves nothing out, even where the disk would
+	// have no room for it.
+	declare_free_space(&new_folder, Some(TOO_LITTLE));
+	let taken = new.take_in_copies(&|| now() + 240_000).expect("takes in");
+	assert_eq!((taken.items, taken.refused), (0, 0));
 }
 
 #[test]
@@ -753,6 +761,54 @@ fn a_phones_folder_declared_through_a_link_before_it_exists_is_the_same_once_it_
 		),
 		Err(NodeError::NoPhoneId)
 	));
+}
+
+#[test]
+fn a_disk_too_full_for_what_a_copy_holds_makes_no_device_from_it() {
+	let mut rng = TestRng::new("too full");
+	let root = root("too full");
+	let (old, new) = (root.join("old disk"), root.join("new disk"));
+	on(&old, "old disk", true, false, "old laptop");
+	on(&new, "new disk", true, false, "new laptop");
+	let mut only = start(&old.join(".nib"), &mut rng);
+	let notes = root.join("notes.txt");
+	fs::write(&notes, "Milk, eggs, bread.\n").expect("writes");
+	let personal = only.personal_space();
+	let added = only
+		.add_file(personal, &notes, now() + 1_000, &mut rng)
+		.expect("adds")
+		.file;
+	drop(only);
+	copy_folder(&old, &new);
+	let nib = new.join(".nib");
+	let copy_folder = Library::copies_in(&nib).remove(0).folder;
+	let copied = files(&copy_folder);
+	let attempt = |rng: &mut TestRng| {
+		let joining = nibkeep_node::Joining::new("new laptop", "nib", rng).expect("names");
+		Library::add_from_copy(
+			&nib,
+			(&copy_folder, &unlocker()),
+			joining,
+			&protection(),
+			None,
+			&|| now() + 60_000,
+			rng,
+		)
+	};
+	// The new disk would keep less than 1 GiB free: rather than leave the file out, and
+	// revoke the copy's device, which alone holds it then, nothing is made.
+	declare_free_space(&new, Some(TOO_LITTLE));
+	let error = attempt(&mut rng).err().expect("no room");
+	assert!(matches!(error, NodeError::NoRoom), "{error}");
+	assert!(
+		matches!(Library::replica_folder(&nib), Err(NodeError::Copied)),
+		"nothing was made"
+	);
+	assert_eq!(files(&copy_folder), copied);
+	// Once there is room, it is.
+	declare_free_space(&new, None);
+	let library = attempt(&mut rng).expect("adds this computer");
+	assert!(has_content(&library, added));
 }
 
 #[test]

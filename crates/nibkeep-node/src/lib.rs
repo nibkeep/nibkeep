@@ -99,8 +99,8 @@ pub use nibkeep_governance::Role as MemberRole;
 pub use nibkeep_log::DeviceRole;
 pub use nibkeep_log::list::Member;
 pub use place::{
-	Drive, Whereabouts, declare_drive, declare_phone, declare_phone_with_disk, disk_name,
-	serial_disk_name,
+	Drive, Whereabouts, declare_drive, declare_free_space, declare_phone, declare_phone_with_disk,
+	disk_name, serial_disk_name,
 };
 pub use recovery_file::{OpenedRecovery, RECOVERY_FILE, RecoveryFile};
 pub use role::{

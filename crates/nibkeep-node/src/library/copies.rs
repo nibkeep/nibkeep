@@ -75,6 +75,8 @@ pub struct TakenIn {
 	pub copies: usize,
 	/// The changes, keys and blobs that were new to this replica.
 	pub items: usize,
+	/// The changes and blobs left out, as the disk would have kept less than 1 GiB free.
+	pub refused: usize,
 }
 
 impl Library {
@@ -120,11 +122,13 @@ impl Library {
 	/// protect them here, the secrets too, as [`Library::take_secrets_from_copy`] does; then
 	/// it revokes the replicas of the copy's device, whose keys a thief of that device may
 	/// hold. A device of the person's that turns up later does not know the new one, and is
-	/// added anew.
+	/// added anew. Where the disk has no room for all that the copy holds, nothing is made,
+	/// and nothing revoked.
 	///
 	/// # Errors
 	///
-	/// Returns [`NodeError::Exists`] if a replica is here already, an error of the keys if
+	/// Returns [`NodeError::Exists`] if a replica is here already, [`NodeError::NoRoom`] if
+	/// the disk has no room for all that the copy holds, an error of the keys if
 	/// `unlocker` does not open the copy's, [`NodeError::AiAgentMayNot`] if the copy is an AI
 	/// agent's, [`NodeError::NewerFormats`] if a later version of NibKeep changed the copy,
 	/// and an error if the copy does not read, or the new replica cannot be made.
@@ -181,7 +185,11 @@ impl Library {
 			// The new device is known only to the private copy, which goes: if what follows
 			// fails, it goes too, and the person can begin again.
 			let finished = (|| {
-				library.take_in_from(copy, now)?;
+				// The copy offers all that it holds once more, so that what this replica
+				// lacks now, the disk had no room for.
+				if library.take_in_from(copy, now)?.refused > 0 {
+					return Err(NodeError::NoRoom);
+				}
 				// Before the copy's device is revoked, whose secrets would be lost with it.
 				if let Some((unlocker, protection)) = secrets {
 					library.take_secrets_from_copy(copy, unlocker, protection, now(), rng)?;
@@ -229,7 +237,7 @@ impl Library {
 	/// Takes in what the replica in `folder`, of a lost device, holds of `spaces` and this
 	/// replica lacks, as [`Library::take_in_copies`] does, but taking each change as from its
 	/// author, as a backup's are, so that what a replica that the space ended made after that
-	/// is left out. Returns how many changes, keys and blobs were new.
+	/// is left out.
 	///
 	/// # Errors
 	///
@@ -239,10 +247,8 @@ impl Library {
 		folder: &Path,
 		spaces: &[SpaceId],
 		now: &dyn Fn() -> u64,
-	) -> Result<usize, NodeError> {
-		Ok(self
-			.take_in(&[folder.to_owned()], spaces, As::Authors, now)?
-			.items)
+	) -> Result<TakenIn, NodeError> {
+		self.take_in(&[folder.to_owned()], spaces, As::Authors, now)
 	}
 
 	/// Adds a new replica of this library in `directory`, which `joining` asks for, as
@@ -352,6 +358,7 @@ impl Library {
 			}
 			taken.copies += usize::from(read);
 		}
+		taken.refused = syncing.refused();
 		Ok(taken)
 	}
 }
